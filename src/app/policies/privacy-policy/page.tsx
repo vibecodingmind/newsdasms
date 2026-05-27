@@ -101,7 +101,7 @@ export default function PrivacyPolicyPage() {
       <ul>
         <li>Email: privacy@sdasms.com</li>
         <li>Website: sdasms.com/contact</li>
-        <li>Address: SDASMS Africa, Dar es Salaam, Tanzania</li>
+        <li>Address: PAPU Tower 6th Floor, 10636 Moshi Rd, Arusha, Tanzania</li>
       </ul>
     </PolicyLayout>
   )

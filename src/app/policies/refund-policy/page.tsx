@@ -90,7 +90,7 @@ export default function RefundPolicyPage() {
       <ul>
         <li>Email: billing@sdasms.com</li>
         <li>Website: sdasms.com/contact</li>
-        <li>Address: SDASMS Africa, Dar es Salaam, Tanzania</li>
+        <li>Address: PAPU Tower 6th Floor, 10636 Moshi Rd, Arusha, Tanzania</li>
       </ul>
     </PolicyLayout>
   )

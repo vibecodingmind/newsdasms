@@ -26,7 +26,7 @@ const CONTACT_INFO = [
   {
     icon: MapPin,
     title: 'Location',
-    value: 'Dar es Salaam, Tanzania',
+    value: 'PAPU Tower 6th Floor, 10636 Moshi Rd, Arusha, Tanzania',
     description: 'Visit our office',
     href: '#',
   },
@@ -253,8 +253,8 @@ export default function ContactPage() {
                     </div>
                     <div className="text-center relative z-10">
                       <MapPin className="w-10 h-10 text-[#FF8340] mx-auto mb-3" />
-                      <p className="text-white font-semibold text-lg">Dar es Salaam</p>
-                      <p className="text-white/50 text-sm">Tanzania</p>
+                      <p className="text-white font-semibold text-lg">Arusha</p>
+                      <p className="text-white/50 text-sm">PAPU Tower, Moshi Rd</p>
                     </div>
                   </div>
                 </div>

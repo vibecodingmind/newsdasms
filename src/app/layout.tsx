@@ -102,7 +102,10 @@ export default function RootLayout({
               },
               "address": {
                 "@type": "PostalAddress",
-                "addressLocality": "Dar es Salaam",
+                "addressLocality": "Arusha",
+                "addressRegion": "Arusha",
+                "postalCode": "10636",
+                "streetAddress": "PAPU Tower 6th Floor, Moshi Rd",
                 "addressCountry": "TZ"
               },
               "sameAs": []

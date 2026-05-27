@@ -166,7 +166,7 @@ export default function AboutPage() {
           badge={{ icon: <Sparkles className="w-3.5 h-3.5 text-[#FF8340]" />, text: 'Our Story' }}
           title="About "
           titleAccent="SDASMS"
-          subtitle="A Digital Evangelism Messaging Platform spreading the Gospel, one message at a time — built in Dar es Salaam for churches and ministries across Africa."
+          subtitle="A Digital Evangelism Messaging Platform spreading the Gospel, one message at a time — based in Arusha, Tanzania for churches and ministries across Africa."
           nextSectionBg="light"
         />
 
@@ -249,7 +249,7 @@ export default function AboutPage() {
                         </div>
                         <div>
                           <span className="text-black dark:text-white text-sm font-bold">2015</span>
-                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm font-medium mt-0.5">Founded in Dar es Salaam by Godlisten Timotheo</p>
+                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm font-medium mt-0.5">Founded in Arusha, Tanzania by Godlisten Timotheo</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-4">
@@ -297,7 +297,7 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
                   <p>
-                    SDASMS was born in 2015 in the heart of Dar es Salaam, Tanzania, when
+                    SDASMS was born in 2015 in Arusha, Tanzania, when
                     Godlisten Timotheo saw a simple yet powerful need: the Gospel deserves the best
                     communication technology available.
                   </p>
@@ -315,7 +315,7 @@ export default function AboutPage() {
                   <p>
                     Today, SDASMS serves thousands of ministries across 31+ African countries,
                     delivering over 10 million messages with industry-leading reliability. What
-                    started as one person&apos;s conviction in Dar es Salaam has grown into the
+                    started as one person&apos;s conviction in Arusha has grown into the
                     continent&apos;s most trusted digital evangelism platform — and we&apos;re just
                     getting started.
                   </p>
@@ -373,7 +373,7 @@ export default function AboutPage() {
                       <div className="space-y-5 text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
                         <p>
                           When I first imagined SDASMS in 2015, I didn&apos;t see a business — I saw a
-                          calling. Growing up in Dar es Salaam, I watched churches and ministries
+                          calling. Growing up in Arusha, I watched churches and ministries
                           struggle to communicate with their congregations. Important announcements
                           were missed, prayer requests went unheard, and the Gospel — the most
                           important message ever given — was hindered by broken tools and unreliable

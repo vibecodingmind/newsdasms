@@ -95,7 +95,7 @@ export default function TermsOfServicePage() {
 
       <h2>Governing Law</h2>
       <p>
-        These Terms shall be governed and construed in accordance with the laws of the United Republic of Tanzania, without regard to its conflict of law provisions. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of Dar es Salaam, Tanzania. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
+        These Terms shall be governed and construed in accordance with the laws of the United Republic of Tanzania, without regard to its conflict of law provisions. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts of Arusha, Tanzania. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
       </p>
 
       <h2>Changes to These Terms</h2>
@@ -110,7 +110,7 @@ export default function TermsOfServicePage() {
       <ul>
         <li>Email: legal@sdasms.com</li>
         <li>Website: sdasms.com/contact</li>
-        <li>Address: SDASMS Africa, Dar es Salaam, Tanzania</li>
+        <li>Address: PAPU Tower 6th Floor, 10636 Moshi Rd, Arusha, Tanzania</li>
       </ul>
     </PolicyLayout>
   )
