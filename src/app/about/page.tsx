@@ -215,6 +215,31 @@ export default function AboutPage() {
               <FadeInWhenVisible direction="left">
                 <div className="relative">
                   <div className="bg-gradient-to-br from-[#D72444]/10 via-[#FF8340]/10 to-[#7C3AED]/10 rounded-2xl p-8 sm:p-12">
+                    {/* Anniversary Badge */}
+                    <div className="flex justify-center mb-8">
+                      <div className="relative flex flex-col items-center">
+                        {/* Crown / Trophy icon */}
+                        <div className="relative">
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-[#D72444] via-[#FF8340] to-[#7C3AED] flex items-center justify-center shadow-xl shadow-[#D72444]/25">
+                            <svg className="w-10 h-10 sm:w-12 sm:h-12 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                              {/* Crown */}
+                              <path d="M2 17l2-9 4 5 4-7 4 7 4-5 2 9H2z" fill="rgba(255,255,255,0.2)" />
+                              <path d="M2 17l2-9 4 5 4-7 4 7 4-5 2 9H2z" />
+                              <rect x="3" y="17" width="18" height="3" rx="1" fill="rgba(255,255,255,0.15)" stroke="currentColor" strokeWidth="1.8" />
+                            </svg>
+                          </div>
+                          {/* Glow ring */}
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#D72444]/20 via-[#FF8340]/20 to-[#7C3AED]/20 animate-pulse" style={{ transform: 'scale(1.2)', zIndex: -1 }} />
+                        </div>
+                        <span className="text-3xl sm:text-4xl font-extrabold text-black dark:text-white mt-3 leading-none">
+                          {new Date().getFullYear() - 2015}
+                        </span>
+                        <span className="text-[#D72444] text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] mt-1">
+                          Years of Service
+                        </span>
+                      </div>
+                    </div>
+
                     {/* Timeline */}
                     <div className="space-y-6">
                       <div className="flex items-start gap-4">
