@@ -1,132 +1,118 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Preloader() {
-  const [loading, setLoading] = useState(true)
-  const [progress, setProgress] = useState(0)
+  const [visible, setVisible] = useState(true)
+  const [fading, setFading] = useState(false)
 
   useEffect(() => {
-    // Simulate progress while resources load
-    let frame: number
-    let start: number | null = null
-    const duration = 1800 // ms
-
-    const animate = (timestamp: number) => {
-      if (!start) start = timestamp
-      const elapsed = timestamp - start
-      const pct = Math.min((elapsed / duration) * 100, 100)
-      setProgress(pct)
-
-      if (pct < 100) {
-        frame = requestAnimationFrame(animate)
-      }
-    }
-
-    frame = requestAnimationFrame(animate)
-
-    // Dismiss after window load + a minimum display time
-    const minDisplay = 2000
     const dismiss = () => {
-      const elapsed = start ? Date.now() - start : minDisplay
-      const remaining = Math.max(minDisplay - elapsed, 0)
-      setTimeout(() => {
-        setProgress(100)
-        setTimeout(() => setLoading(false), 400)
-      }, remaining)
+      setFading(true)
+      setTimeout(() => setVisible(false), 500) // match CSS transition
     }
 
     if (document.readyState === 'complete') {
-      dismiss()
-    } else {
-      window.addEventListener('load', dismiss, { once: true })
+      const t = setTimeout(dismiss, 600)
+      return () => clearTimeout(t)
     }
 
-    // Safety: force dismiss after 5s
-    const safety = setTimeout(() => {
-      setProgress(100)
-      setTimeout(() => setLoading(false), 400)
-    }, 5000)
-
+    window.addEventListener('load', dismiss, { once: true })
+    const safety = setTimeout(dismiss, 4000)
     return () => {
-      cancelAnimationFrame(frame)
       clearTimeout(safety)
       window.removeEventListener('load', dismiss)
     }
   }, [])
 
+  if (!visible) return null
+
   return (
-    <AnimatePresence>
-      {loading && (
-        <motion.div
-          key="preloader"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0B0518]"
-        >
-          {/* Background glow orbs */}
-          <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-[#D72444]/8 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 left-1/4 w-[350px] h-[350px] bg-[#7C3AED]/8 rounded-full blur-[100px]" />
-
-          {/* Content */}
-          <div className="relative flex flex-col items-center gap-8">
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      id="sdasms-preloader"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#0B0518',
+        opacity: fading ? 0 : 1,
+        transition: 'opacity 0.5s ease-out',
+        pointerEvents: fading ? 'none' : 'auto',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
+        {/* Spinning circle with texting icon inside */}
+        <div style={{ position: 'relative', width: 56, height: 56 }}>
+          {/* Spinning ring */}
+          <div className="preloader-ring" style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: '50%',
+            border: '3px solid transparent',
+            borderTopColor: '#D72444',
+            borderRightColor: '#FF8340',
+          }} />
+          {/* Text message icon in center */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(255,255,255,0.7)"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <img
-                src="/sdasms-logo.png"
-                alt="SDASMS"
-                className="h-12 sm:h-16 w-auto"
-              />
-            </motion.div>
-
-            {/* Spinning ring */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-              className="relative w-12 h-12"
-            >
-              {/* Outer ring - spinning */}
-              <div className="absolute inset-0 rounded-full border-[3px] border-white/[0.06]" />
-              <div
-                className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-[#D72444] border-r-[#FF8340]"
-                style={{ animation: 'preloader-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite' }}
-              />
-              {/* Inner dot pulse */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div
-                  className="w-2 h-2 rounded-full bg-[#D72444]"
-                  style={{ animation: 'preloader-pulse 1.5s ease-in-out infinite' }}
-                />
-              </div>
-            </motion.div>
-
-            {/* Progress bar */}
-            <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: 180 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-              className="flex flex-col items-center gap-3"
-            >
-              <div className="w-[180px] h-[3px] bg-white/[0.06] rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-[#D72444] via-[#FF8340] to-[#7C3AED]"
-                  style={{ width: `${progress}%`, transition: 'width 0.15s ease-out' }}
-                />
-              </div>
-              <span className="text-white/20 text-[10px] font-semibold uppercase tracking-[0.2em]">
-                Loading
-              </span>
-            </motion.div>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              <circle className="preloader-dot1" cx="8" cy="10" r="1" fill="rgba(255,255,255,0.7)" stroke="none" />
+              <circle className="preloader-dot2" cx="12" cy="10" r="1" fill="rgba(255,255,255,0.7)" stroke="none" />
+              <circle className="preloader-dot3" cx="16" cy="10" r="1" fill="rgba(255,255,255,0.7)" stroke="none" />
+            </svg>
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        </div>
+        <span style={{
+          color: 'rgba(255,255,255,0.2)',
+          fontSize: '10px',
+          fontWeight: 600,
+          textTransform: 'uppercase',
+          letterSpacing: '0.25em',
+        }}>
+          Loading
+        </span>
+      </div>
+
+      {/* Scoped animations via global style tag */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .preloader-ring {
+          animation: sdasms-preloader-spin 0.9s linear infinite;
+        }
+        .preloader-dot1 {
+          animation: sdasms-preloader-blink 1.4s ease-in-out infinite;
+        }
+        .preloader-dot2 {
+          animation: sdasms-preloader-blink 1.4s ease-in-out 0.2s infinite;
+        }
+        .preloader-dot3 {
+          animation: sdasms-preloader-blink 1.4s ease-in-out 0.4s infinite;
+        }
+        @keyframes sdasms-preloader-spin {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes sdasms-preloader-blink {
+          0%, 60%, 100% { opacity: 0.2; }
+          30% { opacity: 1; }
+        }
+      `}} />
+    </div>
   )
 }
