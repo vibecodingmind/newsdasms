@@ -135,7 +135,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-sm font-medium">
-            2025 &copy; SDASMS Africa. All Rights Reserved.
+            2015&ndash;{new Date().getFullYear()} &copy; SDASMS Africa. All Rights Reserved.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/policies/privacy-policy" className="text-gray-500 text-sm hover:text-[#FF8340] transition-colors font-medium">Privacy</Link>
