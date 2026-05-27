@@ -35,7 +35,6 @@ import { Badge } from '@/components/ui/badge'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { FadeInWhenVisible, StaggerContainer, StaggerItem } from '@/components/AnimationHelpers'
-import { DEMO_API_TOKEN, SDASMS_API_URL } from '@/lib/config'
 
 /* ─── Data ─────────────────────────────────────────────────── */
 
@@ -371,24 +370,22 @@ function HeroSection() {
     const fullMessage = message + SMS_FOOTER
 
     try {
-      // Call SDASMS HTTP API directly from client
-      const res = await fetch(SDASMS_API_URL, {
+      // Call our server-side API route (handles v3 + HTTP API with proper auth)
+      const res = await fetch('/api/send-sms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
         },
         body: JSON.stringify({
-          api_token: DEMO_API_TOKEN,
-          sender: senderId,
-          recipient: fullNumber,
+          senderId: senderId,
+          phoneNumber: fullNumber,
           message: fullMessage,
         }),
       })
 
-      const data = await res.json()
+      const result = await res.json()
 
-      if (data.status === 'success') {
+      if (result.success && result.data?.status === 'success') {
         recordAttempt()
         setSendResult({
           success: true,
@@ -397,9 +394,10 @@ function HeroSection() {
         setMessage('')
         setCharCount(0)
       } else {
+        const errorMsg = result.data?.message || result.message || 'Failed to send SMS. Please try again.'
         setSendResult({
           success: false,
-          message: data.message || data.error || 'Failed to send SMS. Please try again.',
+          message: errorMsg,
         })
       }
     } catch {
