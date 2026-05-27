@@ -12,23 +12,23 @@ const CONTACT_INFO = [
   {
     icon: Mail,
     title: 'Email',
-    value: 'info@sdasms.com',
+    value: 'hello@sdasms.com',
     description: 'Send us an email anytime',
-    href: 'mailto:info@sdasms.com',
+    href: 'mailto:hello@sdasms.com',
   },
   {
     icon: Phone,
     title: 'Phone',
-    value: '+255 123 456 789',
+    value: '+255 658 600 302',
     description: 'Mon-Fri, 9am-6pm EAT',
-    href: 'tel:+255123456789',
+    href: 'tel:+255658600302',
   },
   {
     icon: MapPin,
     title: 'Location',
     value: 'PAPU Tower 6th Floor, 10636 Moshi Rd, Arusha, Tanzania',
     description: 'Visit our office',
-    href: '#',
+    href: 'https://www.google.com/maps/search/PAPU+Tower+Moshi+Road+Arusha+Tanzania',
   },
 ]
 
@@ -71,14 +71,14 @@ export default function ContactPage() {
         setTimeout(() => setSubmitted(false), 5000)
       } else {
         // Fallback: open mailto link
-        const mailtoLink = `mailto:info@sdasms.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`
+        const mailtoLink = `mailto:hello@sdasms.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`
         window.open(mailtoLink, '_blank')
         setSubmitted(true)
         setTimeout(() => setSubmitted(false), 5000)
       }
     } catch {
       // Fallback: open mailto link on network error
-      const mailtoLink = `mailto:info@sdasms.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`
+      const mailtoLink = `mailto:hello@sdasms.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`
       window.open(mailtoLink, '_blank')
       setSubmitted(true)
       setTimeout(() => setSubmitted(false), 5000)
@@ -245,16 +245,29 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Map Placeholder */}
+                {/* Map */}
                 <div className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-2xl overflow-hidden">
-                  <div className="w-full h-64 bg-gradient-to-br from-[#1A0A2E] to-[#460544] flex items-center justify-center relative">
-                    <div className="absolute inset-0 opacity-10">
-                      <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                    </div>
-                    <div className="text-center relative z-10">
-                      <MapPin className="w-10 h-10 text-[#FF8340] mx-auto mb-3" />
-                      <p className="text-white font-semibold text-lg">Arusha</p>
-                      <p className="text-white/50 text-sm">PAPU Tower, Moshi Rd</p>
+                  <div className="w-full h-64 relative">
+                    <iframe
+                      src="https://www.openstreetmap.org/export/embed.html?bbox=36.6800%2C-3.3800%2C36.7000%2C-3.3600&layer=mapnik&marker=-3.3702%2C36.6880"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(0.95) contrast(0.9)' }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="SDASMS Office - PAPU Tower, Arusha"
+                      className="dark:filter-none"
+                    />
+                    {/* Overlay with address info */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-[#FF8340] shrink-0" />
+                        <div>
+                          <p className="text-white font-semibold text-sm">PAPU Tower, 6th Floor</p>
+                          <p className="text-white/60 text-xs">10636 Moshi Rd, Arusha</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -282,7 +295,7 @@ export default function ContactPage() {
                   <ArrowRight className="w-5 h-5" />
                 </a>
                 <a
-                  href="mailto:info@sdasms.com"
+                  href="mailto:hello@sdasms.com"
                   className="inline-flex items-center gap-2 border border-white/20 text-white hover:bg-white/10 rounded-full px-8 py-4 h-auto text-base font-semibold transition-all duration-300"
                 >
                   <Mail className="w-5 h-5" />

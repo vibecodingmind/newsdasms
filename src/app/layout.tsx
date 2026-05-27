@@ -95,7 +95,8 @@ export default function RootLayout({
               "logo": "https://sdasms.com/sdasms-logo.png",
               "contactPoint": {
                 "@type": "ContactPoint",
-                "email": "info@sdasms.com",
+                "telephone": "+255658600302",
+                "email": "hello@sdasms.com",
                 "contactType": "customer service",
                 "areaServed": "AF",
                 "availableLanguage": ["English", "Swahili"]
