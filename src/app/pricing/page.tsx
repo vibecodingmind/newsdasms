@@ -58,7 +58,7 @@ const RECHARGE_TIERS = [
 const PRICING_FAQ = [
   {
     question: 'What is the Starter Pack?',
-    answer: 'The Starter Pack is our entry-level package at Tsh 34,900 that includes 1,000 SMS credits and a free Sender ID. It\'s perfect for individuals or small organizations just getting started with bulk messaging.',
+    answer: 'The Starter Pack is our entry-level package at Tsh 34,900 that includes 2,500 SMS credits and 1 Sender ID. It\'s perfect for individuals or small organizations just getting started with bulk messaging.',
   },
   {
     question: 'How does the recharge pricing work?',
@@ -142,7 +142,7 @@ export default function PricingPage() {
                             <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-wider">Tsh</span>
                             <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">34,900</span>
                           </div>
-                          <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time payment</span>
+                          <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time setup</span>
                         </div>
                         <div className="w-px h-12 bg-gray-200 dark:bg-white/10 dark:bg-white/10 hidden sm:block" />
                         <div className="hidden sm:flex flex-col items-start gap-2">
@@ -150,13 +150,13 @@ export default function PricingPage() {
                             <div className="w-5 h-5 flex items-center justify-center shrink-0">
                               <MessageSquare className="w-4 h-4 text-[#FF8340]" />
                             </div>
-                            <span className="text-black dark:text-white font-bold text-sm">1,000 SMS</span>
+                            <span className="text-black dark:text-white font-bold text-sm">2,500 SMS</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <div className="w-5 h-5 flex items-center justify-center shrink-0">
                               <Shield className="w-4 h-4 text-[#FF8340]" />
                             </div>
-                            <span className="text-black dark:text-white font-bold text-sm">Sender ID Included</span>
+                            <span className="text-black dark:text-white font-bold text-sm">1 Sender ID</span>
                           </div>
                         </div>
                       </div>
@@ -176,13 +176,13 @@ export default function PricingPage() {
                         <div className="w-5 h-5 flex items-center justify-center shrink-0">
                           <MessageSquare className="w-4 h-4 text-[#FF8340]" />
                         </div>
-                        <span className="text-black dark:text-white font-bold text-sm">1,000 SMS</span>
+                        <span className="text-black dark:text-white font-bold text-sm">2,500 SMS</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-5 h-5 flex items-center justify-center shrink-0">
                           <Shield className="w-4 h-4 text-[#FF8340]" />
                         </div>
-                        <span className="text-black dark:text-white font-bold text-sm">Sender ID Included</span>
+                        <span className="text-black dark:text-white font-bold text-sm">1 Sender ID</span>
                       </div>
                     </div>
                   </div>

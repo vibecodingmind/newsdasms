@@ -958,7 +958,7 @@ function PricingSection() {
                         <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-wider">Tsh</span>
                         <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">34,900</span>
                       </div>
-                      <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time payment</span>
+                      <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time setup</span>
                     </div>
                     <div className="w-px h-12 bg-gray-200 hidden sm:block" />
                     <div className="hidden sm:flex flex-col items-start gap-2">
@@ -966,13 +966,13 @@ function PricingSection() {
                         <div className="w-5 h-5 flex items-center justify-center shrink-0">
                           <MessageSquare className="w-4 h-4 text-[#FF8340]" />
                         </div>
-                        <span className="text-black dark:text-white font-bold text-sm">1,000 SMS</span>
+                        <span className="text-black dark:text-white font-bold text-sm">2,500 SMS</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-5 h-5 flex items-center justify-center shrink-0">
                           <Shield className="w-4 h-4 text-[#FF8340]" />
                         </div>
-                        <span className="text-black dark:text-white font-bold text-sm">Sender ID Included</span>
+                        <span className="text-black dark:text-white font-bold text-sm">1 Sender ID</span>
                       </div>
                     </div>
                   </div>
@@ -992,13 +992,13 @@ function PricingSection() {
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
                       <MessageSquare className="w-4 h-4 text-[#FF8340]" />
                     </div>
-                    <span className="text-black dark:text-white font-bold text-sm">1,000 SMS</span>
+                    <span className="text-black dark:text-white font-bold text-sm">2,500 SMS</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-5 h-5 flex items-center justify-center shrink-0">
                       <Shield className="w-4 h-4 text-[#FF8340]" />
                     </div>
-                    <span className="text-black dark:text-white font-bold text-sm">Sender ID Included</span>
+                    <span className="text-black dark:text-white font-bold text-sm">1 Sender ID</span>
                   </div>
                 </div>
               </div>
