@@ -24,9 +24,6 @@ import {
   BarChart3,
   Lock,
   MessageSquare,
-  Code2,
-  Copy,
-  Check,
   ChevronDown,
   Bell,
   Rocket,
@@ -38,7 +35,7 @@ import { Badge } from '@/components/ui/badge'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { FadeInWhenVisible, StaggerContainer, StaggerItem } from '@/components/AnimationHelpers'
-import { DEMO_API_TOKEN, SDASMS_API_URL, SDASMS_OAUTH_URL, SDASMS_HTTP_URL } from '@/lib/config'
+import { DEMO_API_TOKEN, SDASMS_API_URL } from '@/lib/config'
 
 /* ─── Data ─────────────────────────────────────────────────── */
 
@@ -245,42 +242,6 @@ const TRUSTED_LOGOS = [
   { src: '/logo-onevoice27.png', alt: 'OneVoice27', large: true },
   { src: '/logo-sdas-church.png', alt: 'SDAS Church' },
 ]
-
-/* ─── API Config Line Component (for Hero) ──────────────────── */
-
-function ApiConfigLine({ label, value }: { label: string; value: string }) {
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(value)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
-    } catch {
-      // fallback - ignore
-    }
-  }
-
-  return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 group">
-      <span className="text-white/35 shrink-0 select-none text-[10px] sm:text-inherit">{label}=</span>
-      <div className="flex items-center gap-2">
-        <span className="text-[#28C840] break-all text-[10px] sm:text-inherit">&quot;{value}&quot;</span>
-        <button
-          onClick={handleCopy}
-          className="shrink-0 sm:opacity-0 sm:group-hover:opacity-100 opacity-70 transition-opacity duration-200 p-1.5 rounded-md hover:bg-white/[0.06] focus:opacity-100"
-          aria-label={`Copy ${label}`}
-        >
-          {copied ? (
-            <Check className="w-3.5 h-3.5 text-[#28C840]" />
-          ) : (
-            <Copy className="w-3.5 h-3.5 text-white/40 hover:text-white/70" />
-          )}
-        </button>
-      </div>
-    </div>
-  )
-}
 
 /* ─── Hero Section with Quick Send Widget ──────────────────── */
 
@@ -562,33 +523,7 @@ function HeroSection() {
               ))}
             </motion.div>
 
-            {/* Developer Ready - API Endpoints Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.85 }}
-              className="mt-8 w-full max-w-xl"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Code2 className="w-4 h-4 text-[#FF8340]" />
-                <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-widest">Developer Ready</span>
-              </div>
-              <div className="rounded-xl bg-[#0D0B1A]/90 backdrop-blur-xl border border-white/[0.06] overflow-hidden shadow-2xl shadow-black/20">
-                {/* Terminal header */}
-                <div className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] border-b border-white/[0.06]">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-                  <span className="text-white/30 text-[11px] font-mono ml-2">api-config.env</span>
-                </div>
-                {/* Code content */}
-                <div className="p-4 space-y-2.5 font-mono text-xs sm:text-[13px]">
-                  <ApiConfigLine label="OAUTH2_ENDPOINT" value={SDASMS_OAUTH_URL} />
-                  <ApiConfigLine label="HTTP_ENDPOINT" value={SDASMS_HTTP_URL} />
-                  <ApiConfigLine label="YOUR_API_TOKEN" value="your_api_token_here" />
-                </div>
-              </div>
-            </motion.div>
+
           </div>
 
           {/* Right - Quick Send SMS Widget */}
@@ -747,28 +682,7 @@ function HeroSection() {
                 </div>
               </div>
 
-              {/* Phone preview floating element - positioned to top-right, away from SEND NOW button */}
-              <motion.div
-                initial={{ opacity: 0, x: 30, y: -10 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: 0.6, delay: 1 }}
-                className="absolute -right-3 top-0 hidden xl:block"
-              >
-                <div className="bg-[#0F0A1F]/90 backdrop-blur border border-white/[0.06] rounded-2xl p-3.5 shadow-2xl shadow-black/30 w-[190px]">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#D72444] to-[#FF8340] flex items-center justify-center">
-                      <MessageSquare className="w-3 h-3 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white/70 text-[10px] font-bold">SDASMS</p>
-                      <p className="text-white/20 text-[8px]">Just now</p>
-                    </div>
-                  </div>
-                  <p className="text-white/30 text-[9px] leading-relaxed">
-                    Hello! This is a sample SMS from SDASMS. Try sending one now!
-                  </p>
-                </div>
-              </motion.div>
+
             </div>
           </motion.div>
         </div>

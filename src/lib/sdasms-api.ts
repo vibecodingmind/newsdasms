@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
  * with a fallback default for development.
  */
 export const SDASMS_API_TOKEN =
-  process.env.SDASMS_API_TOKEN ?? "1|0Gkb0vZAovcZJ8MIqmHvIa9eFR7TQGDmJemU9ptK";
+  process.env.SDASMS_API_TOKEN ?? "158|uXKGmvYYrvKBaw0pr9in439L8qxkAzkfqhzjbv0G32c3bb88";
 
 export const SDASMS_HTTP_API_URL = "https://my.sdasms.com/api/http";
 export const SDASMS_SMS_SEND_URL = "https://my.sdasms.com/api/http/sms/send";
