@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://sdasms.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://sdasms.com/features</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sdasms.com/coverage</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sdasms.com/pricing</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sdasms.com/use-cases</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://sdasms.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://sdasms.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://sdasms.com/api-docs</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Products -->
+  <url><loc>https://sdasms.com/products/sms</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/whatsapp</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/voice</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/email</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/mms</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/rcs</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/live-chat</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/messenger</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/instagram</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://sdasms.com/products/viber</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- Policies -->
+  <url><loc>https://sdasms.com/policies/privacy-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://sdasms.com/policies/refund-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://sdasms.com/policies/cookies-policy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://sdasms.com/policies/terms-of-service</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+</urlset>
