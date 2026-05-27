@@ -73,10 +73,10 @@ const CORE_VALUES = [
 
 const TEAM_MEMBERS = [
   {
-    name: 'Joshua Mwangi',
-    role: 'Chief Executive Officer',
+    name: 'Godlisten Timotheo',
+    role: 'Founder & Chief Executive Officer',
     description:
-      'A passionate advocate for digital evangelism, Joshua leads SDASMS with a vision to transform how ministries communicate across Africa.',
+      'A visionary leader and passionate advocate for digital evangelism, Godlisten founded SDASMS in 2015 to transform how ministries communicate across Africa.',
     color: '#D72444',
   },
   {
@@ -215,39 +215,45 @@ export default function AboutPage() {
               <FadeInWhenVisible direction="left">
                 <div className="relative">
                   <div className="bg-gradient-to-br from-[#D72444]/10 via-[#FF8340]/10 to-[#7C3AED]/10 rounded-2xl p-8 sm:p-12">
+                    {/* Timeline */}
                     <div className="space-y-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-3 h-3 rounded-full bg-[#D72444]" />
-                        <span className="text-[#7F7F7F] dark:text-white/50 text-sm font-semibold uppercase tracking-widest">
-                          Founded 2024
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="w-3 h-3 rounded-full bg-[#FF8340]" />
-                        <span className="text-[#7F7F7F] dark:text-white/50 text-sm font-semibold uppercase tracking-widest">
-                          Dar es Salaam, Tanzania
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="w-3 h-3 rounded-full bg-[#7C3AED]" />
-                        <span className="text-[#7F7F7F] dark:text-white/50 text-sm font-semibold uppercase tracking-widest">
-                          Serving 31+ Countries
-                        </span>
-                      </div>
-                    </div>
-                    <div className="mt-8 pt-8 border-t border-gray-200 dark:border-white/10">
-                      <div className="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                          <p className="text-3xl font-bold text-[#D72444]">10M+</p>
-                          <p className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium mt-1">Messages</p>
+                      <div className="flex items-start gap-4">
+                        <div className="flex flex-col items-center">
+                          <div className="w-3 h-3 rounded-full bg-[#D72444] shrink-0 mt-1" />
+                          <div className="w-0.5 h-8 bg-gradient-to-b from-[#D72444]/30 to-transparent" />
                         </div>
                         <div>
-                          <p className="text-3xl font-bold text-[#FF8340]">5K+</p>
-                          <p className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium mt-1">Users</p>
+                          <span className="text-black dark:text-white text-sm font-bold">2015</span>
+                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm font-medium mt-0.5">Founded in Dar es Salaam by Godlisten Timotheo</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="flex flex-col items-center">
+                          <div className="w-3 h-3 rounded-full bg-[#FF8340] shrink-0 mt-1" />
+                          <div className="w-0.5 h-8 bg-gradient-to-b from-[#FF8340]/30 to-transparent" />
                         </div>
                         <div>
-                          <p className="text-3xl font-bold text-[#7C3AED]">99.2%</p>
-                          <p className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium mt-1">Delivery</p>
+                          <span className="text-black dark:text-white text-sm font-bold">2017</span>
+                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm font-medium mt-0.5">Expanded SMS coverage across East Africa</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="flex flex-col items-center">
+                          <div className="w-3 h-3 rounded-full bg-[#7C3AED] shrink-0 mt-1" />
+                          <div className="w-0.5 h-8 bg-gradient-to-b from-[#7C3AED]/30 to-transparent" />
+                        </div>
+                        <div>
+                          <span className="text-black dark:text-white text-sm font-bold">2020</span>
+                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm font-medium mt-0.5">Launched WhatsApp, Voice &amp; Email channels</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-4">
+                        <div className="flex flex-col items-center">
+                          <div className="w-3 h-3 rounded-full bg-[#10B981] shrink-0 mt-1" />
+                        </div>
+                        <div>
+                          <span className="text-black dark:text-white text-sm font-bold">Today</span>
+                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm font-medium mt-0.5">Serving ministries in 31+ African countries</p>
                         </div>
                       </div>
                     </div>
@@ -266,9 +272,9 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
                   <p>
-                    SDASMS was born in 2024 in the heart of Dar es Salaam, Tanzania, from a simple
-                    yet powerful conviction: that the Gospel deserves the best communication
-                    technology available.
+                    SDASMS was born in 2015 in the heart of Dar es Salaam, Tanzania, when
+                    Godlisten Timotheo saw a simple yet powerful need: the Gospel deserves the best
+                    communication technology available.
                   </p>
                   <p>
                     We saw churches and ministries across Africa struggling with outdated tools,
@@ -283,9 +289,10 @@ export default function AboutPage() {
                   </p>
                   <p>
                     Today, SDASMS serves thousands of ministries across 31+ African countries,
-                    delivering over 10 million messages with industry-leading reliability. But
-                    we&apos;re just getting started — our mission is to ensure every church on the
-                    continent has access to world-class communication tools.
+                    delivering over 10 million messages with industry-leading reliability. What
+                    started as one person&apos;s conviction in Dar es Salaam has grown into the
+                    continent&apos;s most trusted digital evangelism platform — and we&apos;re just
+                    getting started.
                   </p>
                 </div>
               </FadeInWhenVisible>
@@ -340,11 +347,12 @@ export default function AboutPage() {
 
                       <div className="space-y-5 text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
                         <p>
-                          When I first imagined SDASMS, I didn&apos;t see a business — I saw a calling.
-                          Growing up in Dar es Salaam, I watched churches and ministries struggle to
-                          communicate with their congregations. Important announcements were missed,
-                          prayer requests went unheard, and the Gospel — the most important message
-                          ever given — was hindered by broken tools and unreliable services.
+                          When I first imagined SDASMS in 2015, I didn&apos;t see a business — I saw a
+                          calling. Growing up in Dar es Salaam, I watched churches and ministries
+                          struggle to communicate with their congregations. Important announcements
+                          were missed, prayer requests went unheard, and the Gospel — the most
+                          important message ever given — was hindered by broken tools and unreliable
+                          services.
                         </p>
                         <p>
                           I believed then, as I believe now, that the message of hope deserves the
@@ -366,7 +374,7 @@ export default function AboutPage() {
                         <div className="flex flex-col">
                           {/* Handwritten-style signature */}
                           <span className="text-2xl sm:text-3xl font-bold text-black dark:text-white italic tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
-                            Joshua Mwangi
+                            Godlisten Timotheo
                           </span>
                           <span className="text-[#D72444] text-sm font-semibold mt-1">
                             Founder &amp; CEO, SDASMS Africa
