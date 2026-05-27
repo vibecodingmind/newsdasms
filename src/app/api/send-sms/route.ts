@@ -19,6 +19,11 @@ export async function OPTIONS() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Guard: reject if API token is not configured on the server
+    if (!SDASMS_API_TOKEN) {
+      return errorResponse("Service not configured. Please contact support.", 503);
+    }
+
     // Rate limiting check
     const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "unknown";
     const rateLimitResult = checkRateLimit(ip);

@@ -2,11 +2,17 @@ import { NextResponse } from "next/server";
 
 /**
  * SDASMS API Configuration
- * The API token is read from the SDASMS_API_TOKEN environment variable
- * with a fallback default for development.
+ * The API token is read EXCLUSIVELY from the SDASMS_API_TOKEN environment variable.
+ * Never hardcode tokens — even server-side bundles can be inspected.
  */
-export const SDASMS_API_TOKEN =
-  process.env.SDASMS_API_TOKEN ?? "158|uXKGmvYYrvKBaw0pr9in439L8qxkAzkfqhzjbv0G32c3bb88";
+const _token = process.env.SDASMS_API_TOKEN;
+if (!_token) {
+  console.error(
+    "[sdasms-api] FATAL: SDASMS_API_TOKEN environment variable is not set. " +
+    "All API requests will fail. Set it in your .env file."
+  );
+}
+export const SDASMS_API_TOKEN = _token ?? "";
 
 export const SDASMS_HTTP_API_URL = "https://my.sdasms.com/api/http";
 export const SDASMS_SMS_SEND_URL = "https://my.sdasms.com/api/http/sms/send";
