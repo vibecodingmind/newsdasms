@@ -5,8 +5,10 @@ import { Moon, Sun } from 'lucide-react'
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(true)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     // Check stored preference or default to dark
     const stored = localStorage.getItem('sdasms-theme')
     if (stored === 'light') {
@@ -28,6 +30,18 @@ export default function ThemeToggle() {
       localStorage.setItem('sdasms-theme', 'dark')
       setDark(true)
     }
+  }
+
+  // Avoid hydration mismatch — render a placeholder until mounted
+  if (!mounted) {
+    return (
+      <button
+        className="relative w-11 h-11 rounded-full flex items-center justify-center"
+        aria-label="Toggle theme"
+      >
+        <Moon className="w-5 h-5 text-white/70" />
+      </button>
+    )
   }
 
   return (

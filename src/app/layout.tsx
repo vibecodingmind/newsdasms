@@ -70,12 +70,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function(){
+                try {
                 var t = localStorage.getItem('sdasms-theme');
                 if (t === 'light') {
                   document.documentElement.classList.remove('dark');
                 } else {
                   document.documentElement.classList.add('dark');
                 }
+                } catch(e){}
               })();
             `,
           }}
@@ -111,12 +113,15 @@ export default function RootLayout({
             __html: `
               var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
               (function(){
+              try {
               var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
               s1.async=true;
               s1.src='https://embed.tawk.to/67726ec3af5bfec1dbe484a7/1igbg1bae';
               s1.charset='UTF-8';
               s1.setAttribute('crossorigin','*');
-              s0.parentNode.insertBefore(s1,s0);
+              if(s0&&s0.parentNode){s0.parentNode.insertBefore(s1,s0);}
+              else{document.head.appendChild(s1);}
+              } catch(e){console.warn('Tawk.to load skipped:',e);}
               })();
             `,
           }}
