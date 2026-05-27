@@ -15,6 +15,8 @@ import {
   Zap,
   CheckCircle2,
   User,
+  PenLine,
+  Quote,
 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -288,6 +290,94 @@ export default function AboutPage() {
                 </div>
               </FadeInWhenVisible>
             </div>
+          </div>
+        </section>
+
+        {/* Founder's Note */}
+        <section className="py-20 sm:py-28 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <FadeInWhenVisible className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-[#D72444]/10 border border-[#D72444]/20 text-[#D72444] text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-full mb-6">
+                <PenLine className="w-3.5 h-3.5" />
+                A Word from Our Founder
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white">
+                Founder&apos;s{' '}
+                <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
+                  Note
+                </span>
+              </h2>
+            </FadeInWhenVisible>
+
+            <FadeInWhenVisible delay={0.15}>
+              <div className="relative bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-3xl overflow-hidden">
+                {/* Decorative top accent */}
+                <div className="h-1.5 bg-gradient-to-r from-[#D72444] via-[#FF8340] to-[#7C3AED]" />
+
+                <div className="p-8 sm:p-12 lg:p-14">
+                  <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
+                    {/* Founder photo */}
+                    <div className="shrink-0 flex flex-col items-center gap-4 mx-auto lg:mx-0">
+                      <div className="relative">
+                        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden border-4 border-white dark:border-[#1A0A2E] shadow-xl shadow-[#D72444]/10">
+                          <img
+                            src="/founder-photo.jpg"
+                            alt="Founder"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        {/* Decorative corner badge */}
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-lg bg-gradient-to-br from-[#D72444] to-[#FF8340] flex items-center justify-center shadow-lg">
+                          <Quote className="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Note content */}
+                    <div className="flex-1 min-w-0">
+                      {/* Quote mark */}
+                      <div className="text-[#D72444]/15 text-7xl sm:text-8xl font-serif leading-none select-none mb-[-1.5rem]">&ldquo;</div>
+
+                      <div className="space-y-5 text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
+                        <p>
+                          When I first imagined SDASMS, I didn&apos;t see a business — I saw a calling.
+                          Growing up in Dar es Salaam, I watched churches and ministries struggle to
+                          communicate with their congregations. Important announcements were missed,
+                          prayer requests went unheard, and the Gospel — the most important message
+                          ever given — was hindered by broken tools and unreliable services.
+                        </p>
+                        <p>
+                          I believed then, as I believe now, that the message of hope deserves the
+                          most reliable technology we can build. No church should be too small to
+                          afford professional communication tools, and no ministry should have to
+                          choose between spreading the Word and staying within budget.
+                        </p>
+                        <p>
+                          SDASMS was built to close that gap. Every feature we ship, every message
+                          we deliver, and every partnership we form is driven by one purpose: to
+                          ensure that the Gospel reaches every corner of Africa — instantly,
+                          affordably, and reliably. This is more than technology to us. It is
+                          ministry.
+                        </p>
+                      </div>
+
+                      {/* Signature */}
+                      <div className="mt-8 pt-8 border-t border-gray-200 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <div className="flex flex-col">
+                          {/* Handwritten-style signature */}
+                          <span className="text-2xl sm:text-3xl font-bold text-black dark:text-white italic tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                            Joshua Mwangi
+                          </span>
+                          <span className="text-[#D72444] text-sm font-semibold mt-1">
+                            Founder &amp; CEO, SDASMS Africa
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FadeInWhenVisible>
           </div>
         </section>
 
