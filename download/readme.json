@@ -1,0 +1,18 @@
+{
+  "code": 200,
+  "data": {
+    "description": "",
+    "html": "<html><head><meta name=\"color-scheme\" content=\"light dark\"></head><body><pre style=\"word-wrap: break-word; white-space: pre-wrap;\"># SDASMS - Digital Evangelism & Communication Platform\n\nA modern landing page and communication platform built for Seventh-day Adventist churches and ministries across Africa. Powered by the SDASMS API for multi-channel messaging (SMS, WhatsApp, Voice, Email, and more).\n\n## Tech Stack\n\n- **Framework**: Next.js 16 (App Router)\n- **Language**: TypeScript\n- **Styling**: Tailwind CSS 4\n- **UI Components**: shadcn/ui\n- **API Integration**: SDASMS HTTP API & v3 REST API\n\n## Features\n\n- Multi-channel messaging: SMS, WhatsApp, Voice, Email, MMS, RCS, Viber, Instagram, Messenger, Live Chat\n- Real API integration for SMS sending via SDASMS backend\n- Contacts API integration (CRUD operations via SDASMS API)\n- Quick Send widget with rate limiting\n- Dark purple/black theme optimized for readability\n- Responsive design for all devices\n- Policy pages (Privacy, Terms, Cookies, Refund)\n\n## Getting Started\n\n### Prerequisites\n\n- Node.js 18+ \n- Bun (recommended) or npm\n\n### Installation\n\n```bash\nbun install\n```\n\n### Environment Setup\n\nCreate a `.env` file in the root directory:\n\n```env\nSDASMS_API_TOKEN=your_api_token_here\n```\n\n### Development\n\n```bash\nbun dev\n```\n\nOpen [http://localhost:3000](http://localhost:3000) in your browser.\n\n### Production Build\n\n```bash\nbun build\nbun start\n```\n\n## Project Structure\n\n```\nsrc/\n├── app/\n│   ├── page.tsx                    # Home page (hero + Quick Send + API config)\n│   ├── layout.tsx                  # Root layout with header/footer\n│   ├── api/\n│   │   ├── send-sms/route.ts       # SMS sending endpoint\n│   │   └── contacts/[groupId]/     # Contacts CRUD API routes\n│   ├── products/                   # 10 product pages (sms, whatsapp, voice, etc.)\n│   ├── pricing/                    # Pricing page\n│   ├── features/                   # Features overview\n│   ├── coverage/                   # Africa coverage map\n│   ├── contact/                    # Contact form\n│   ├── use-cases/                  # Use cases page\n│   └── policies/                   # Legal pages\n├── components/\n│   ├── Header.tsx                  # Navigation header\n│   ├── Footer.tsx                  # Site footer\n│   ├── PageHero.tsx               # Reusable hero component\n│   └── ui/                         # shadcn/ui components\n└── lib/\n    ├── sdasms-api.ts              # SDASMS API client\n    ├── utils.ts                    # Utility functions\n    └── db.ts                       # Database utilities\n```\n\n## API Endpoints\n\n### Send SMS\n```\nPOST /api/send-sms\nBody: { phone: \"255XXXXXXXXX\", message: \"Hello\" }\n```\n\n### Contacts Management\n```\nPOST   /api/contacts/{groupId}/store          # Create contact\nGET    /api/contacts/{groupId}/all             # List all contacts\nGET    /api/contacts/{groupId}/search/{uid}    # Search contact\nPUT    /api/contacts/{groupId}/update/{uid}    # Update contact\nDELETE /api/contacts/{groupId}/delete/{uid}    # Delete contact\n```\n\n## License\n\nPrivate - All rights reserved.\n</pre></body></html>",
+    "title": "",
+    "url": "https://raw.githubusercontent.com/vibecodingmind/newsdasms/main/README.md",
+    "usage": {
+      "tokens": 772
+    }
+  },
+  "meta": {
+    "usage": {
+      "tokens": 772
+    }
+  },
+  "status": 20000
+}
