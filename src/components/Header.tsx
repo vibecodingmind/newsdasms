@@ -110,10 +110,17 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center group">
+            {/* Colored logo for light mode */}
+            <img
+              src="/logo-colored.svg"
+              alt="SDASMS Logo"
+              className="h-8 sm:h-10 w-auto block dark:hidden"
+            />
+            {/* White/dark logo for dark mode */}
             <img
               src="/sdasms-logo.png"
               alt="SDASMS Logo"
-              className="h-8 sm:h-10 w-auto"
+              className="h-8 sm:h-10 w-auto hidden dark:block"
             />
           </Link>
 

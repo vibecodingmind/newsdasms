@@ -32,10 +32,17 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="flex items-center mb-5">
+              {/* Colored logo for light mode */}
+              <img
+                src="/logo-colored.svg"
+                alt="SDASMS Logo"
+                className="h-12 w-auto block dark:hidden"
+              />
+              {/* Inverted logo for dark mode */}
               <img
                 src="/sdasms-logo.png"
                 alt="SDASMS Logo"
-                className="h-12 w-auto brightness-0 invert"
+                className="h-12 w-auto brightness-0 invert hidden dark:block"
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm font-medium">
