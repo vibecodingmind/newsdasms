@@ -1150,7 +1150,7 @@ function StepPayment({
         </div>
 
         {/* Payment Details - shown when a method is selected */}
-        {isManualPayment && (
+        {data.paymentMethod && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -1333,6 +1333,9 @@ export default function GetStartedPage() {
       fd.append('city', formData.city)
       fd.append('region', formData.region)
       fd.append('country', formData.country)
+      fd.append('repIdType', formData.repIdType)
+      fd.append('repIdNumber', formData.repIdNumber)
+      if (formData.repIdCopy) fd.append('repIdCopy', formData.repIdCopy)
     } else {
       fd.append('orgName', formData.orgName)
       fd.append('orgEmail', formData.orgEmail)
