@@ -80,6 +80,19 @@ export default function RootLayout({
                 }
                 } catch(e){}
               })();
+              // Suppress Next.js 16 Turbopack "true" console noise
+              (function(){
+                var _origWarn = console.warn;
+                var _origError = console.error;
+                console.warn = function(){
+                  if (arguments[0] === true) return;
+                  return _origWarn.apply(console, arguments);
+                };
+                console.error = function(){
+                  if (arguments[0] === true) return;
+                  return _origError.apply(console, arguments);
+                };
+              })();
             `,
           }}
         />
@@ -134,6 +147,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        suppressHydrationWarning
       >
         <a
           href="#main-content"
