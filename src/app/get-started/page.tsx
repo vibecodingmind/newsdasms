@@ -53,10 +53,16 @@ const ORG_TYPES = [
 ]
 
 const MOBILE_MONEY_INFO = [
+  { provider: 'M-PESA', number: '51720044', color: '#E4202E' },
   { provider: 'TIGO PESA', number: '8008206', color: '#1A9C48' },
-  { provider: 'M-PESA', number: '5845779', color: '#E4202E' },
   { provider: 'AIRTEL MONEY', number: '997199', color: '#FF0000' },
 ]
+
+const BANK_INFO = {
+  bank: 'Equity Bank Tanzania',
+  accountName: 'SDASMS Marketing Agency',
+  accountNumber: '3002211802039',
+}
 
 const STARTER_PACK_FEATURES = [
   'Sender ID Registration',
@@ -1013,9 +1019,7 @@ function StepPayment({
         <div className="space-y-3">
           {/* Pesapal */}
           <a
-            href="https://pay.pesapal.com/sdasms"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/api/pesapal/checkout"
             className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#1A9C48]/40 hover:bg-[#1A9C48]/5 dark:hover:bg-[#1A9C48]/10 transition-all duration-300 group"
           >
             <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
@@ -1030,7 +1034,7 @@ function StepPayment({
 
           {/* Stripe */}
           <a
-            href="#"
+            href={`/api/stripe/checkout`}
             className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-indigo-500/40 hover:bg-indigo-500/5 dark:hover:bg-indigo-500/10 transition-all duration-300 group"
           >
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
@@ -1041,21 +1045,6 @@ function StepPayment({
               <p className="text-sm text-[#7F7F7F] dark:text-white/50">International debit & credit cards</p>
             </div>
             <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
-          </a>
-
-          {/* PayPal */}
-          <a
-            href="#"
-            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-blue-500/40 hover:bg-blue-500/5 dark:hover:bg-blue-500/10 transition-all duration-300 group"
-          >
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-              <Globe className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div className="flex-1">
-              <p className="font-bold text-black dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Pay with PayPal</p>
-              <p className="text-sm text-[#7F7F7F] dark:text-white/50">International payments</p>
-            </div>
-            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
           </a>
         </div>
       </div>
@@ -1083,6 +1072,31 @@ function StepPayment({
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/10 flex items-center justify-between">
             <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Merchant Name</span>
             <span className="font-bold text-[#D72444]">SDASMS</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bank Transfer */}
+      <div>
+        <h4 className="text-base font-bold text-black dark:text-white mb-4">Pay via Bank Transfer</h4>
+        <div className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-2xl p-6 border border-gray-200 dark:border-white/10">
+          <p className="text-sm text-[#7F7F7F] dark:text-white/50 mb-4">
+            Transfer the starter pack fee directly to our bank account and send proof of payment to{' '}
+            <a href="mailto:hello@sdasms.com" className="text-[#D72444] font-semibold hover:underline">hello@sdasms.com</a>
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+              <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Bank</span>
+              <span className="font-semibold text-black dark:text-white text-sm">{BANK_INFO.bank}</span>
+            </div>
+            <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+              <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Account Name</span>
+              <span className="font-semibold text-black dark:text-white text-sm">{BANK_INFO.accountName}</span>
+            </div>
+            <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+              <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Account Number</span>
+              <span className="font-mono font-bold text-sm text-[#D72444]">{BANK_INFO.accountNumber}</span>
+            </div>
           </div>
         </div>
       </div>
