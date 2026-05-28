@@ -52,16 +52,18 @@ export async function POST(request: NextRequest) {
       const fullName = getTextField(formData, 'fullName')
       const email = getTextField(formData, 'email')
       const phone = getTextField(formData, 'phone')
-      if (!fullName || !email || !phone) {
-        return errorResponse('Missing required fields: fullName, email, phone')
+      const country = getTextField(formData, 'country')
+      if (!fullName || !email || !phone || !country) {
+        return errorResponse('Missing required fields: fullName, email, phone, country')
       }
     } else {
       // Organization account
       const orgName = getTextField(formData, 'orgName')
       const orgEmail = getTextField(formData, 'orgEmail')
       const orgPhone = getTextField(formData, 'orgPhone')
-      if (!orgName || !orgEmail || !orgPhone) {
-        return errorResponse('Missing organization fields: orgName, orgEmail, orgPhone')
+      const orgCountry = getTextField(formData, 'orgCountry')
+      if (!orgName || !orgEmail || !orgPhone || !orgCountry) {
+        return errorResponse('Missing organization fields: orgName, orgEmail, orgPhone, orgCountry')
       }
 
       // Validate representative details for organization
@@ -81,13 +83,13 @@ export async function POST(request: NextRequest) {
 
       // Validate file uploads for organization
       const repIdCopy = formData.get('repIdCopy')
-      const orgRegDoc = formData.get('orgRegDoc')
+      const legalDocsEntries = formData.getAll('legalDocs')
       const authLetter = formData.get('authLetter')
       if (!repIdCopy || !(repIdCopy instanceof File)) {
         return errorResponse('Representative ID copy is required')
       }
-      if (!orgRegDoc || !(orgRegDoc instanceof File)) {
-        return errorResponse('Organization registration document is required')
+      if (legalDocsEntries.length === 0 || !legalDocsEntries.some((f) => f instanceof File)) {
+        return errorResponse('At least one legal document is required')
       }
       if (!authLetter || !(authLetter instanceof File)) {
         return errorResponse('Request & authorization letter is required')
@@ -113,10 +115,19 @@ export async function POST(request: NextRequest) {
           fileInfo.repIdCopy = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB)`
         }
 
-        const orgRegDoc = formData.get('orgRegDoc')
-        if (orgRegDoc instanceof File) {
-          savedFiles.orgRegDoc = await saveUploadedFile(orgRegDoc, `${orgName}_regdoc`)
-          fileInfo.orgRegDoc = `${orgRegDoc.name} (${(orgRegDoc.size / 1024).toFixed(1)}KB)`
+        // Handle multiple legal documents
+        const legalDocsEntries = formData.getAll('legalDocs')
+        const legalDocInfos: string[] = []
+        for (let i = 0; i < legalDocsEntries.length; i++) {
+          const doc = legalDocsEntries[i]
+          if (doc instanceof File) {
+            const key = `legalDoc_${i}`
+            savedFiles[key] = await saveUploadedFile(doc, `${orgName}_legaldoc_${i}`)
+            legalDocInfos.push(`${doc.name} (${(doc.size / 1024).toFixed(1)}KB)`)
+          }
+        }
+        if (legalDocInfos.length > 0) {
+          fileInfo.legalDocs = legalDocInfos.join(', ')
         }
 
         const authLetter = formData.get('authLetter')
@@ -140,6 +151,7 @@ export async function POST(request: NextRequest) {
           address: getTextField(formData, 'address') || 'N/A',
           city: getTextField(formData, 'city') || 'N/A',
           region: getTextField(formData, 'region') || 'N/A',
+          country: getTextField(formData, 'country'),
         }
       : {
           accountType: 'Organization',
@@ -149,6 +161,7 @@ export async function POST(request: NextRequest) {
           orgAddress: getTextField(formData, 'orgAddress') || 'N/A',
           orgCity: getTextField(formData, 'orgCity') || 'N/A',
           orgRegion: getTextField(formData, 'orgRegion') || 'N/A',
+          orgCountry: getTextField(formData, 'orgCountry'),
           orgWebsite: getTextField(formData, 'orgWebsite') || 'N/A',
           representative: getTextField(formData, 'repName'),
           repEmail: getTextField(formData, 'repEmail'),
@@ -182,6 +195,7 @@ Email: ${getTextField(formData, 'email')}
 Phone: ${getTextField(formData, 'phone')}
 Address: ${getTextField(formData, 'address') || 'N/A'}
 City: ${getTextField(formData, 'city') || 'N/A'}, Region: ${getTextField(formData, 'region') || 'N/A'}
+Country: ${getTextField(formData, 'country')}
 
 Package: Starter - Tsh 94,500
           `.trim()
@@ -192,6 +206,7 @@ Organization: ${getTextField(formData, 'orgName')}
 Org Email: ${getTextField(formData, 'orgEmail')}
 Org Phone: ${getTextField(formData, 'orgPhone')}
 Address: ${getTextField(formData, 'orgAddress') || 'N/A'}, ${getTextField(formData, 'orgCity') || 'N/A'}, ${getTextField(formData, 'orgRegion') || 'N/A'}
+Country: ${getTextField(formData, 'orgCountry')}
 Website: ${getTextField(formData, 'orgWebsite') || 'N/A'}
 
 Authorized Representative: ${getTextField(formData, 'repName')}
@@ -204,7 +219,7 @@ Organization Type: ${getTextField(formData, 'orgType')}${getTextField(formData, 
 
 Uploaded Documents:
 - ID Copy: ${fileInfo.repIdCopy || 'N/A'} → ${savedFiles.repIdCopy || 'not saved'}
-- Registration Doc: ${fileInfo.orgRegDoc || 'N/A'} → ${savedFiles.orgRegDoc || 'not saved'}
+- Legal Docs: ${fileInfo.legalDocs || 'N/A'}
 - Request & Authorization Letter: ${fileInfo.authLetter || 'N/A'} → ${savedFiles.authLetter || 'not saved'}
 
 Package: Starter - Tsh 94,500

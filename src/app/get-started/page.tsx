@@ -23,6 +23,8 @@ import {
   Upload,
   X,
   FileText,
+  Plus,
+  Trash2,
 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -65,6 +67,38 @@ const STARTER_PACK_FEATURES = [
   'Priority Support',
 ]
 
+const MAX_LEGAL_DOCS = 5
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+
+const COUNTRIES = [
+  { value: 'TZ', label: 'Tanzania' },
+  { value: 'KE', label: 'Kenya' },
+  { value: 'UG', label: 'Uganda' },
+  { value: 'RW', label: 'Rwanda' },
+  { value: 'BI', label: 'Burundi' },
+  { value: 'CD', label: 'DR Congo' },
+  { value: 'ET', label: 'Ethiopia' },
+  { value: 'SO', label: 'Somalia' },
+  { value: 'MW', label: 'Malawi' },
+  { value: 'MZ', label: 'Mozambique' },
+  { value: 'ZM', label: 'Zambia' },
+  { value: 'ZW', label: 'Zimbabwe' },
+  { value: 'NG', label: 'Nigeria' },
+  { value: 'GH', label: 'Ghana' },
+  { value: 'ZA', label: 'South Africa' },
+  { value: 'CM', label: 'Cameroon' },
+  { value: 'SN', label: 'Senegal' },
+  { value: 'CI', label: 'Côte d\'Ivoire' },
+  { value: 'US', label: 'United States' },
+  { value: 'GB', label: 'United Kingdom' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'AU', label: 'Australia' },
+  { value: 'DE', label: 'Germany' },
+  { value: 'FR', label: 'France' },
+  { value: 'IN', label: 'India' },
+  { value: 'OTHER', label: 'Other' },
+]
+
 /* ─── Form State Type ────────────────────────────────────── */
 
 interface FormData {
@@ -77,6 +111,7 @@ interface FormData {
   address: string
   city: string
   region: string
+  country: string
   // Organization-specific
   orgName: string
   orgEmail: string
@@ -84,6 +119,7 @@ interface FormData {
   orgAddress: string
   orgCity: string
   orgRegion: string
+  orgCountry: string
   orgWebsite: string
   // Step 3 - Representative & Org Details
   repName: string
@@ -96,7 +132,7 @@ interface FormData {
   orgTypeOther: string
   // File uploads (organization only)
   repIdCopy: File | null
-  orgRegDoc: File | null
+  legalDocs: File[]
   authLetter: File | null
   // Step 4 - Payment
   termsAccepted: boolean
@@ -110,12 +146,14 @@ const INITIAL_FORM: FormData = {
   address: '',
   city: '',
   region: '',
+  country: '',
   orgName: '',
   orgEmail: '',
   orgPhone: '',
   orgAddress: '',
   orgCity: '',
   orgRegion: '',
+  orgCountry: '',
   orgWebsite: '',
   repName: '',
   repEmail: '',
@@ -126,7 +164,7 @@ const INITIAL_FORM: FormData = {
   orgType: '',
   orgTypeOther: '',
   repIdCopy: null,
-  orgRegDoc: null,
+  legalDocs: [],
   authLetter: null,
   termsAccepted: false,
 }
@@ -213,6 +251,137 @@ function FileUpload({
                 }
                 onFileChange(f)
               }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ─── Multi-File Upload Component ────────────────────────── */
+
+function MultiFileUpload({
+  label,
+  id,
+  required,
+  files,
+  onFilesChange,
+  maxFiles = MAX_LEGAL_DOCS,
+  accept = '.pdf,.jpg,.jpeg,.png',
+  helpText,
+}: {
+  label: string
+  id: string
+  required?: boolean
+  files: File[]
+  onFilesChange: (files: File[]) => void
+  maxFiles?: number
+  accept?: string
+  helpText?: string
+}) {
+  const inputId = `${id}-input`
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const dropped = Array.from(e.dataTransfer.files)
+    addFiles(dropped)
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
+  const addFiles = (newFiles: File[]) => {
+    const remaining = maxFiles - files.length
+    if (remaining <= 0) return
+
+    const valid: File[] = []
+    for (const f of newFiles) {
+      if (valid.length >= remaining) break
+      if (f.size > MAX_FILE_SIZE) {
+        alert(`"${f.name}" exceeds 5MB limit and was skipped.`)
+        continue
+      }
+      valid.push(f)
+    }
+
+    if (valid.length > 0) {
+      onFilesChange([...files, ...valid])
+    }
+  }
+
+  const removeFile = (index: number) => {
+    onFilesChange(files.filter((_, i) => i !== index))
+  }
+
+  const canAddMore = files.length < maxFiles
+
+  return (
+    <div>
+      <label className={LABEL_CLASS}>
+        {label}
+        {required && <span className="text-[#D72444] ml-1">*</span>}
+        <span className="text-xs font-normal text-[#7F7F7F] dark:text-white/40 ml-2">
+          ({files.length}/{maxFiles} uploaded)
+        </span>
+      </label>
+
+      {/* Uploaded files list */}
+      {files.length > 0 && (
+        <div className="space-y-2 mb-3">
+          {files.map((file, idx) => (
+            <div
+              key={`${file.name}-${idx}`}
+              className="flex items-center gap-3 p-3 rounded-xl border border-[#D72444]/30 bg-[#D72444]/5 dark:bg-[#D72444]/10"
+            >
+              <div className="w-9 h-9 rounded-lg bg-[#D72444]/10 flex items-center justify-center shrink-0">
+                <FileText className="w-4 h-4 text-[#D72444]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-black dark:text-white truncate">{file.name}</p>
+                <p className="text-xs text-[#7F7F7F] dark:text-white/50">{(file.size / 1024).toFixed(1)} KB</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeFile(idx)}
+                className="w-7 h-7 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors shrink-0"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-red-500 dark:text-red-400" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Upload area */}
+      {canAddMore && (
+        <div
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onClick={() => document.getElementById(inputId)?.click()}
+          className="cursor-pointer border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl p-5 text-center hover:border-[#D72444]/40 hover:bg-[#D72444]/5 dark:hover:bg-[#D72444]/5 transition-all duration-300"
+        >
+          <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center mx-auto mb-2">
+            <Plus className="w-4 h-4 text-gray-400 dark:text-white/30" />
+          </div>
+          <p className="text-sm font-semibold text-black dark:text-white mb-1">
+            Add {files.length === 0 ? 'documents' : 'more documents'}
+          </p>
+          <p className="text-xs text-[#7F7F7F] dark:text-white/40">
+            {helpText || `PDF, JPG, PNG (max 5MB each, up to ${maxFiles} files)`}
+          </p>
+          <input
+            id={inputId}
+            type="file"
+            accept={accept}
+            multiple
+            className="hidden"
+            onChange={(e) => {
+              const selected = e.target.files ? Array.from(e.target.files) : []
+              if (selected.length > 0) addFiles(selected)
+              // Reset input so the same file can be selected again
+              e.target.value = ''
             }}
           />
         </div>
@@ -445,6 +614,23 @@ function StepInfo({
             </FormField>
           </div>
 
+          <FormField label="Country" id="orgCountry" required>
+            <div className="relative">
+              <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <select
+                id="orgCountry"
+                value={data.orgCountry}
+                onChange={(e) => onChange('orgCountry', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+              >
+                <option value="">Select country</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+          </FormField>
+
           <FormField label="Website" id="orgWebsite">
             <div className="relative">
               <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
@@ -540,6 +726,23 @@ function StepInfo({
               />
             </FormField>
           </div>
+
+          <FormField label="Country" id="country" required>
+            <div className="relative">
+              <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <select
+                id="country"
+                value={data.country}
+                onChange={(e) => onChange('country', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+              >
+                <option value="">Select country</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
+              </select>
+            </div>
+          </FormField>
         </>
       )}
     </div>
@@ -552,10 +755,12 @@ function StepDetails({
   data,
   onChange,
   onFileChange,
+  onLegalDocsChange,
 }: {
   data: FormData
   onChange: (field: keyof FormData, value: string) => void
   onFileChange: (field: keyof FormData, file: File | null) => void
+  onLegalDocsChange: (files: File[]) => void
 }) {
   const isOrg = data.accountType === 'organization'
 
@@ -724,13 +929,13 @@ function StepDetails({
             <h4 className="text-base font-bold text-black dark:text-white">Organization Documents</h4>
           </div>
 
-          <FileUpload
-            label="Organization Registration Document"
-            id="orgRegDoc"
+          <MultiFileUpload
+            label="Legal Documents (Registration, Licence, etc.)"
+            id="legalDocs"
             required
-            file={data.orgRegDoc}
-            onFileChange={(f) => onFileChange('orgRegDoc', f)}
-            helpText="Upload certificate of registration or incorporation (PDF, JPG, PNG max 5MB)"
+            files={data.legalDocs}
+            onFilesChange={onLegalDocsChange}
+            helpText="Upload registration, licence, or other legal documents (PDF, JPG, PNG max 5MB each, up to 5 files)"
           />
 
           <FileUpload
@@ -934,12 +1139,12 @@ export default function GetStartedPage() {
         return formData.accountType !== ''
       case 2:
         if (formData.accountType === 'organization') {
-          return !!(formData.orgName && formData.orgEmail && formData.orgPhone)
+          return !!(formData.orgName && formData.orgEmail && formData.orgPhone && formData.orgCountry)
         }
-        return !!(formData.fullName && formData.email && formData.phone)
+        return !!(formData.fullName && formData.email && formData.phone && formData.country)
       case 3:
         if (formData.accountType === 'organization') {
-          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.orgType && formData.repIdCopy && formData.orgRegDoc && formData.authLetter)
+          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.orgType && formData.repIdCopy && formData.legalDocs.length >= 1 && formData.authLetter)
         }
         return true
       case 4:
@@ -979,6 +1184,7 @@ export default function GetStartedPage() {
         fd.append('address', formData.address)
         fd.append('city', formData.city)
         fd.append('region', formData.region)
+        fd.append('country', formData.country)
       } else {
         fd.append('orgName', formData.orgName)
         fd.append('orgEmail', formData.orgEmail)
@@ -986,6 +1192,7 @@ export default function GetStartedPage() {
         fd.append('orgAddress', formData.orgAddress)
         fd.append('orgCity', formData.orgCity)
         fd.append('orgRegion', formData.orgRegion)
+        fd.append('orgCountry', formData.orgCountry)
         fd.append('orgWebsite', formData.orgWebsite)
         fd.append('repName', formData.repName)
         fd.append('repEmail', formData.repEmail)
@@ -996,7 +1203,7 @@ export default function GetStartedPage() {
         fd.append('orgType', formData.orgType)
         fd.append('orgTypeOther', formData.orgTypeOther)
         if (formData.repIdCopy) fd.append('repIdCopy', formData.repIdCopy)
-        if (formData.orgRegDoc) fd.append('orgRegDoc', formData.orgRegDoc)
+        formData.legalDocs.forEach((file) => fd.append('legalDocs', file))
         if (formData.authLetter) fd.append('authLetter', formData.authLetter)
       }
       fd.append('termsAccepted', String(formData.termsAccepted))
@@ -1119,6 +1326,7 @@ export default function GetStartedPage() {
                             data={formData}
                             onChange={handleChange}
                             onFileChange={handleFileChange}
+                            onLegalDocsChange={(files) => setFormData((prev) => ({ ...prev, legalDocs: files }))}
                           />
                         )}
                         {currentStep === 4 && (
