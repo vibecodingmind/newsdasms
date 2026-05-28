@@ -52,6 +52,82 @@ function createTransporter() {
   })
 }
 
+// Build user confirmation email HTML
+function buildUserConfirmationHtml(data: {
+  accountType: string
+  subjectName: string
+  paymentMethod: string
+  paymentLabel: string
+}): string {
+  const { accountType, subjectName, paymentMethod, paymentLabel } = data
+
+  // Payment instructions based on method
+  const paymentInstructions = paymentMethod === 'mpesa'
+    ? `
+      <div style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 16px; margin: 16px 0;">
+        <h4 style="margin: 0 0 8px; color: #92400e; font-size: 14px;">M-PESA Payment Instructions</h4>
+        <p style="margin: 4px 0; color: #78350f; font-size: 14px;"><strong>Lipa Number:</strong> 51720044</p>
+        <p style="margin: 4px 0; color: #78350f; font-size: 13px;">Go to M-PESA > Lipa na M-PESA > Enter Lipa Number > 51720044 > Enter Amount: 94,500 > Enter PIN > Confirm</p>
+      </div>`
+    : `
+      <div style="background: #dbeafe; border: 1px solid #93c5fd; border-radius: 8px; padding: 16px; margin: 16px 0;">
+        <h4 style="margin: 0 0 8px; color: #1e40af; font-size: 14px;">Bank Transfer Instructions</h4>
+        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Bank:</strong> EQUITY BANK TANZANIA</p>
+        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Account Name:</strong> SDASMS MARKETING AGENCY</p>
+        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Account Number:</strong> 3002211802039</p>
+        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Amount:</strong> 94,500 TZS</p>
+      </div>`
+
+  return `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, #D72444, #7C3AED); padding: 32px; text-align: center;">
+        <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700;">Welcome to SDASMS!</h1>
+        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 15px;">Your registration has been received</p>
+      </div>
+
+      <!-- Body -->
+      <div style="padding: 28px 32px;">
+        <p style="margin: 0 0 16px; color: #374151; font-size: 15px; line-height: 1.6;">Dear <strong>${subjectName}</strong>,</p>
+        <p style="margin: 0 0 16px; color: #374151; font-size: 15px; line-height: 1.6;">Thank you for registering with SDASMS — Africa's leading Digital Evangelism Messaging Platform! We're excited to have you on board.</p>
+
+        <!-- Registration Summary -->
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 16px 0;">
+          <h3 style="margin: 0 0 12px; color: #374151; font-size: 15px;">Registration Summary</h3>
+          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Account Type:</strong> ${accountType}</p>
+          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Package:</strong> Starter Pack</p>
+          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Amount:</strong> 94,500 TZS</p>
+          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Payment Method:</strong> ${paymentLabel}</p>
+        </div>
+
+        <!-- Payment Instructions -->
+        <h3 style="color: #374151; font-size: 16px; margin: 24px 0 8px;">Complete Your Payment</h3>
+        <p style="margin: 0 0 8px; color: #6b7280; font-size: 14px; line-height: 1.5;">To activate your account, please complete the payment of <strong>94,500 TZS</strong> using the details below:</p>
+        ${paymentInstructions}
+
+        <!-- What's Next -->
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+          <h4 style="margin: 0 0 8px; color: #166534; font-size: 14px;">What Happens Next?</h4>
+          <ol style="margin: 0; padding-left: 20px; color: #374151; font-size: 13px; line-height: 1.8;">
+            <li>Our team will verify your registration and payment</li>
+            <li>Your account will be activated within 24 hours after payment confirmation</li>
+            <li>You'll receive login credentials via email once your account is ready</li>
+            <li>Start sending messages and spreading the Gospel!</li>
+          </ol>
+        </div>
+
+        <p style="margin: 16px 0 0; color: #6b7280; font-size: 14px; line-height: 1.5;">If you have any questions, feel free to reach out to us at <a href="mailto:hello@sdasms.com" style="color: #D72444; text-decoration: none;">hello@sdasms.com</a> or call <strong>+255 658 600 302</strong>.</p>
+      </div>
+
+      <!-- Footer -->
+      <div style="background: #f9fafb; padding: 20px 32px; border-top: 1px solid #e5e7eb; text-align: center;">
+        <p style="margin: 0 0 4px; color: #6b7280; font-size: 13px;">SDASMS Africa — Spreading the Gospel, One Message at a Time</p>
+        <p style="margin: 0; color: #9ca3af; font-size: 11px;">PAPU Tower 6th Floor, Moshi Rd, Arusha, Tanzania</p>
+      </div>
+    </div>
+  `
+}
+
 // Build HTML email body for registration
 function buildEmailHtml(data: {
   accountType: string
@@ -370,7 +446,34 @@ export async function POST(request: NextRequest) {
         emailSent = true
         console.log('[onboard] Email notification sent to hello@sdasms.com')
       } catch (emailErr) {
-        console.error('[onboard] Failed to send email notification:', emailErr)
+        console.error('[onboard] Failed to send admin email notification:', emailErr)
+      }
+
+      // Send confirmation email to the user
+      try {
+        const userEmail = accountType === 'personal'
+          ? getTextField(formData, 'email')
+          : getTextField(formData, 'repEmail') || getTextField(formData, 'orgEmail')
+
+        if (userEmail) {
+          const userConfirmationHtml = buildUserConfirmationHtml({
+            accountType: accountType === 'personal' ? 'Personal' : 'Organization',
+            subjectName,
+            paymentMethod,
+            paymentLabel,
+          })
+
+          await transporter.sendMail({
+            from: `"SDASMS" <${process.env.SMTP_USER}>`,
+            to: userEmail,
+            subject: `Welcome to SDASMS — Your ${accountType === 'personal' ? 'Personal' : 'Organization'} Registration is Received`,
+            html: userConfirmationHtml,
+          })
+
+          console.log(`[onboard] Confirmation email sent to user: ${userEmail}`)
+        }
+      } catch (userEmailErr) {
+        console.error('[onboard] Failed to send user confirmation email:', userEmailErr)
       }
     } else {
       console.log('[onboard] Email skipped — SMTP not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS in .env.local')
