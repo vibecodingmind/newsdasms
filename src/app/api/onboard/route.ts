@@ -96,9 +96,32 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Extract payment fields
+    const paymentMethod = getTextField(formData, 'paymentMethod')
+    const paymentConfirmed = getTextField(formData, 'paymentConfirmed')
+
+    // Payment method label map
+    const paymentLabels: Record<string, string> = {
+      pesapal: 'PesaPal (Auto)',
+      stripe: 'Stripe Card (Auto)',
+      mpesa: 'M-PESA (Manual) — 51720044',
+      tigo: 'TIGO PESA (Manual) — 8008206',
+      airtel: 'AIRTEL MONEY (Manual) — 997199',
+      bank: 'Bank Transfer (Manual) — Equity Bank Tanzania, Acc: 3002211802039',
+    }
+    const paymentLabel = paymentLabels[paymentMethod] || paymentMethod
+
     // Validate terms acceptance
     if (termsAccepted !== 'true') {
       return errorResponse('You must accept the Terms & Conditions to proceed')
+    }
+
+    // Validate payment selection
+    if (!paymentMethod) {
+      return errorResponse('Please select a payment method')
+    }
+    if (paymentConfirmed !== 'true') {
+      return errorResponse('Please confirm your payment to proceed')
     }
 
     // Save uploaded files to disk (organization only)
@@ -179,6 +202,8 @@ export async function POST(request: NextRequest) {
     console.log('[onboard] New registration submitted:', {
       ...registrationSummary,
       package: 'Starter - Tsh 94,500',
+      paymentMethod: paymentLabel,
+      paymentConfirmed: paymentConfirmed === 'true',
       submittedAt: new Date().toISOString(),
     })
 
@@ -196,6 +221,9 @@ Phone: ${getTextField(formData, 'phone')}
 Address: ${getTextField(formData, 'address') || 'N/A'}
 City: ${getTextField(formData, 'city') || 'N/A'}, Region: ${getTextField(formData, 'region') || 'N/A'}
 Country: ${getTextField(formData, 'country')}
+
+Payment Method: ${paymentLabel}
+Payment Confirmed: ${paymentConfirmed === 'true' ? 'Yes' : 'No'}
 
 Package: Starter - Tsh 94,500
           `.trim()
@@ -221,6 +249,9 @@ Uploaded Documents:
 - ID Copy: ${fileInfo.repIdCopy || 'N/A'} → ${savedFiles.repIdCopy || 'not saved'}
 - Legal Docs: ${fileInfo.legalDocs || 'N/A'}
 - Request & Authorization Letter: ${fileInfo.authLetter || 'N/A'} → ${savedFiles.authLetter || 'not saved'}
+
+Payment Method: ${paymentLabel}
+Payment Confirmed: ${paymentConfirmed === 'true' ? 'Yes' : 'No'}
 
 Package: Starter - Tsh 94,500
           `.trim()

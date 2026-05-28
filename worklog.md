@@ -21,3 +21,35 @@ Stage Summary:
 - `/home/z/my-project/src/app/get-started/page.tsx` - Completely redesigned with 4-step flow
 - `/home/z/my-project/src/app/api/onboard/route.ts` - Updated to support personal/organization account types
 - Key design decisions: Conditional rendering based on account type, consolidated representative+org details into one step, payment+terms combined into final step
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Payment system redesign — Manual vs Auto payment categories with TIGO PESA, AIRTEL MONEY, remove PayPal
+
+Work Log:
+- Read current get-started page, payment API routes, .env files
+- Saved all payment credentials to .env.local (PesaPal, Stripe, M-PESA, TIGO PESA, AIRTEL MONEY, Bank)
+- Redesigned Step 4 payment section with two categories:
+  - **Auto Payment (Instant)**: PesaPal and Stripe — payment confirmed automatically, redirects to checkout on submit
+  - **Manual Payment (Verify After Payment)**: M-PESA (51720044), TIGO PESA (8008206), AIRTEL MONEY (997199), Bank Transfer — requires user to select, view instructions, and check "I have completed the payment" confirmation
+- Added `paymentMethod` and `paymentConfirmed` fields to FormData type
+- Removed PayPal (was already gone from previous session)
+- Removed unused `MOBILE_MONEY_INFO` constant (replaced by PAYMENT_METHODS.manual)
+- Updated step 4 validation: requires payment method selection + payment confirmation + terms acceptance
+- Updated handleSubmit to redirect to PesaPal/Stripe checkout for auto payments, submit normally for manual
+- Extracted `submitRegistration()` helper function for reuse
+- Updated onboard API route:
+  - Added payment method and payment confirmation validation
+  - Added payment method labels (e.g., "M-PESA (Manual) — 51720044")
+  - Included payment method and confirmation in email body sent to hello@sdasms.com
+  - Included payment info in console log
+- Build verified successfully
+
+Stage Summary:
+- Payment UI now has clear Auto vs Manual categorization
+- Manual payments require user to select provider and confirm payment
+- Auto payments (PesaPal/Stripe) redirect to checkout on form submit
+- All payment details sent to hello@sdasms.com for admin tracking
+- PayPal removed
+- Credentials stored securely in .env.local
