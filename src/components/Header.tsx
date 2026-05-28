@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight,
+  LogIn,
   Menu,
   ChevronDown,
   MessageSquare,
@@ -385,13 +386,13 @@ export default function Header() {
             <ThemeToggle />
             <a
               href="https://my.sdasms.com/login"
-              className={`inline-flex items-center gap-1 text-sm font-medium transition-colors px-5 py-2.5 rounded-full border ${
+              className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors px-5 py-2.5 rounded-full border ${
                 isTransparent
                   ? 'text-white border-white/30 hover:border-white/60 hover:text-white/80'
                   : 'dark:text-[#FF8340] text-[#D72444] dark:border-[#FF8340]/30 border-[#D72444]/30 dark:hover:border-[#FF8340]/60 hover:border-[#D72444]/60 dark:hover:text-[#FF9A5C] hover:text-[#E03355]'
               }`}
             >
-              <ArrowRight className="w-4 h-4" />
+              <LogIn className="w-4 h-4" />
               Login
             </a>
             <a
@@ -404,7 +405,9 @@ export default function Header() {
 
           {/* Mobile Menu */}
           <div className="lg:hidden flex items-center gap-1">
-            <ThemeToggle />
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className={`hover:bg-black/10 dark:hover:bg-white/10 h-11 w-11 ${isTransparent ? 'text-white' : 'text-gray-800 dark:text-white'}`}>
@@ -412,13 +415,18 @@ export default function Header() {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="bg-[#460544] border-white/10 w-72">
-                <SheetTitle className="text-white">
+              <SheetContent side="right" className="dark:bg-[#460544] bg-white border-white/10 dark:border-white/10 border-gray-200 w-72">
+                <SheetTitle className="dark:text-white text-gray-900">
                   <div className="flex items-center">
                     <img
                       src="/sdasms-logo.png"
                       alt="SDASMS Logo"
-                      className="h-8 w-auto"
+                      className="h-8 w-auto dark:block hidden"
+                    />
+                    <img
+                      src="/logo-colored.svg"
+                      alt="SDASMS Logo"
+                      className="h-8 w-auto dark:hidden block"
                     />
                   </div>
                 </SheetTitle>
@@ -427,7 +435,7 @@ export default function Header() {
                   <div>
                     <button
                       onClick={() => setMobileProductsOpen((v) => !v)}
-                      className="w-full flex items-center justify-between transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 text-white"
+                      className="w-full flex items-center justify-between transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 dark:text-white text-gray-800 hover:bg-gray-100"
                     >
                       <span>Products</span>
                       <ChevronDown
@@ -446,14 +454,14 @@ export default function Header() {
                           className="overflow-hidden"
                         >
                           <div className="pl-3 pb-2 space-y-0.5">
-                            <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest px-3 pt-2 pb-1">
+                            <p className="dark:text-white/30 text-gray-400 text-[10px] font-bold uppercase tracking-widest px-3 pt-2 pb-1">
                               Channels
                             </p>
                             {PRODUCT_CHANNELS.map((item) => (
                               <a
                                 key={item.label}
                                 href={item.href}
-                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 transition-colors"
                                 onClick={() => setOpen(false)}
                               >
                                 <div
@@ -463,19 +471,19 @@ export default function Header() {
                                   <item.icon className="w-3.5 h-3.5" style={{ color: item.color }} />
                                 </div>
                                 <div>
-                                  <span className="text-white/80 text-sm font-medium block">{item.label}</span>
-                                  <span className="text-white/25 text-[10px]">{item.desc}</span>
+                                  <span className="dark:text-white/80 text-gray-800 text-sm font-medium block">{item.label}</span>
+                                  <span className="dark:text-white/25 text-gray-500 text-[10px]">{item.desc}</span>
                                 </div>
                               </a>
                             ))}
-                            <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest px-3 pt-3 pb-1">
+                            <p className="dark:text-white/30 text-gray-400 text-[10px] font-bold uppercase tracking-widest px-3 pt-3 pb-1">
                               Business APIs
                             </p>
                             {PRODUCT_APIS.map((item) => (
                               <a
                                 key={item.label}
                                 href={item.href}
-                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors"
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 transition-colors"
                                 onClick={() => setOpen(false)}
                               >
                                 <div
@@ -485,8 +493,8 @@ export default function Header() {
                                   <item.icon className="w-3.5 h-3.5" style={{ color: item.color }} />
                                 </div>
                                 <div>
-                                  <span className="text-white/80 text-sm font-medium block">{item.label}</span>
-                                  <span className="text-white/25 text-[10px]">{item.desc}</span>
+                                  <span className="dark:text-white/80 text-gray-800 text-sm font-medium block">{item.label}</span>
+                                  <span className="dark:text-white/25 text-gray-500 text-[10px]">{item.desc}</span>
                                 </div>
                               </a>
                             ))}
@@ -505,8 +513,8 @@ export default function Header() {
                         <a
                           key={link.label}
                           href={link.href}
-                          className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
-                            isActive ? 'text-[#FF8340]' : 'text-white hover:text-sda-accent'
+                          className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 ${
+                            isActive ? 'text-[#FF8340]' : 'dark:text-white text-gray-800 hover:text-sda-accent'
                           }`}
                           onClick={(e) => {
                             setOpen(false)
@@ -525,10 +533,10 @@ export default function Header() {
                       <Link
                         key={link.label}
                         href={link.href}
-                        className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
+                        className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 ${
                           isActive
                             ? 'text-[#FF8340]'
-                            : 'text-white hover:text-sda-accent'
+                            : 'dark:text-white text-gray-800 hover:text-sda-accent'
                         }`}
                         onClick={() => setOpen(false)}
                       >
@@ -538,10 +546,10 @@ export default function Header() {
                   })}
                   <Link
                     href="/about"
-                    className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
+                    className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 ${
                       pathname === '/about'
                         ? 'text-[#FF8340]'
-                        : 'text-white hover:text-sda-accent'
+                        : 'dark:text-white text-gray-800 hover:text-sda-accent'
                     }`}
                     onClick={() => setOpen(false)}
                   >
@@ -549,27 +557,27 @@ export default function Header() {
                   </Link>
                   <Link
                     href="/contact"
-                    className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
+                    className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 dark:hover:bg-white/5 hover:bg-gray-100 ${
                       pathname === '/contact'
                         ? 'text-[#FF8340]'
-                        : 'text-white hover:text-sda-accent'
+                        : 'dark:text-white text-gray-800 hover:text-sda-accent'
                     }`}
                     onClick={() => setOpen(false)}
                   >
                     Contact
                   </Link>
                 </nav>
-                <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-white/10">
+                <div className="flex flex-col gap-3 mt-6 pt-6 border-t dark:border-white/10 border-gray-200">
                   <a
                     href="https://my.sdasms.com/login"
-                    className="inline-flex items-center justify-center gap-1 text-sm font-medium text-[#FF8340] border border-[#FF8340]/30 rounded-full px-5 py-2.5 hover:bg-[#FF8340]/10"
+                    className="inline-flex items-center justify-center gap-1 text-sm font-medium text-[#D72444] dark:text-[#FF8340] border border-[#D72444]/30 dark:border-[#FF8340]/30 rounded-full px-4 py-2 hover:bg-[#D72444]/10 dark:hover:bg-[#FF8340]/10"
                   >
-                    <ArrowRight className="w-4 h-4" />
+                    <LogIn className="w-4 h-4" />
                     Login
                   </a>
                   <a
                     href="/get-started"
-                    className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-white bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-full shadow-lg shadow-[#D72444]/25"
+                    className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-white bg-[#D72444] hover:bg-[#E03355] transition-colors px-4 py-2 rounded-full shadow-lg shadow-[#D72444]/25"
                   >
                     Get Started
                   </a>

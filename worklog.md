@@ -1,46 +1,174 @@
----
-Task ID: 1
-Agent: Main Agent
-Task: Fix light mode header text visibility + dark mode mega menu text visibility + make onboard form fields required + remove Stripe/PesaPal
+# SDASMS Site Polish, Mobile Fixes & SEO Worklog
 
-Work Log:
-- Diagnosed light mode header issue: on homepage, header had transparent background but text was dark (text-gray-900), making it invisible against the always-dark hero section (bg-[#0B0518])
-- Fixed header background logic: changed from `scrolled || !isHome` to `isTransparent` (which is only true in dark mode on homepage when not scrolled), ensuring solid white header in light mode
-- Updated text colors from text-gray-900 to text-gray-800 for better visibility
-- Fixed ThemeToggle placeholder from `text-white/70` to `text-gray-700 dark:text-white/70` for light mode visibility
-- Improved mega menu text contrast in both modes: section headers from text-gray-500/white-70 to text-gray-700/white-90, descriptions from text-gray-500/white-70 to text-gray-700/white-85
-- Added `required` attribute to all select elements (country, ID type) and orgTypeOther input in onboard form
-- Removed unused Stripe and PesaPal API route directories
-- Cleaned up isManualPayment variable (no longer needed since all payments are manual)
-- Verified build succeeds
+## Date: 2026-05-28
 
-Stage Summary:
-- Light mode header: Now always has solid white/95 background with blur when not in dark transparent mode, text is clearly visible
-- Dark mode mega menu: All text now uses white/85-90 opacity instead of white/70, much more readable
-- Onboard form: All fields now have `required` attribute, validation enforces all fields
-- Payment: Only Bank Transfer + M-PESA remain, no online payment options
-- Removed: /api/stripe/checkout, /api/pesapal/checkout, /api/payment/stripe, /api/payment/pesapal
+## TASK 1: POLISH THE SITE
 
----
-Task ID: 2
-Agent: Main Agent
-Task: Link Use Cases to homepage section, fix onboard email sending, push to GitHub
+### Homepage (src/app/page.tsx)
+- ✅ Fixed hero heading grammar: "that's matter" → "that matter"
+- ✅ Increased hero subtitle text-white/50 → text-white/70 for better readability
+- ✅ Increased "Explore Features" CTA text-white/70 → text-white/80
+- ✅ Increased stats label text-white/30 → text-white/40
+- ✅ Fixed "Why Choosing Us?" → "Why Choose Us?"
+- ✅ Fixed testimonial heading: "We couldn't have said it better" → "Trusted by Ministries Across Africa"
+- ✅ Fixed "Explore" links in Use Cases: "#" → "/use-cases"
+- ✅ Fixed "Contact Us" link in CTA: "#" → "/contact"
+- ✅ Fixed "Custom Pricing" link: "#" → "/get-started"
+- ✅ Added gradient hover overlays to Features and Why Choose cards
+- ✅ Improved trusted logos marquee spacing (gap-12/16/20, px-4 py-3)
+- ✅ CTA section now uses gradient background instead of plain bg-white
 
-Work Log:
-- Changed "Use Cases" nav link from `/use-cases` to `/#use-cases` in Header.tsx
-- Added smooth scroll handling for hash links (both desktop and mobile nav menus)
-- When on homepage, clicking "Use Cases" scrolls to #use-cases section smoothly
-- When on other pages, clicking "Use Cases" navigates to homepage/#use-cases
-- Replaced broken `sdk.sendEmail` (doesn't exist in z-ai-web-dev-sdk) with nodemailer
-- Built professional HTML email template with registration details, payment info, and attachments
-- Email is sent to hello@sdasms.com with all registration details + uploaded files as attachments
-- Removed Stripe/PesaPal payment labels from onboard route
-- Cleaned .env.local: removed PesaPal/Stripe keys, added SMTP config vars
-- Installed nodemailer + @types/nodemailer packages
-- Committed changes locally (872e9af)
-- Could not push to GitHub: no SSH client or GitHub credentials available in the environment
+### Header (src/components/Header.tsx)
+- ✅ Mobile menu (Sheet) now respects light mode: dark:bg-[#460544] bg-white with appropriate text colors
+- ✅ Fixed Login button: ArrowRight → LogIn icon
+- ✅ All mobile nav links now have dark:text-white text-gray-800 variants
+- ✅ Mobile product items now have dark/light text variants
+- ✅ Bottom Login/Get Started buttons now compact (px-4 py-2)
 
-Stage Summary:
-- Use Cases nav link now points to /#use-cases (homepage section) with smooth scroll
-- Onboard email now uses nodemailer with SMTP (needs SMTP_HOST, SMTP_USER, SMTP_PASS configured)
-- Git commit ready locally, user needs to push manually: `git push origin main`
+### Footer (src/components/Footer.tsx)
+- ✅ Added subtle top border: border-t border-white/5
+- ✅ "Our Policies" links now use text-gray-300 (brighter) instead of text-gray-400
+
+## TASK 2: FIX MOBILE VIEWS
+
+### Header mobile improvements
+- ✅ ThemeToggle hidden on mobile (wrapped in hidden sm:block)
+- ✅ Mobile menu buttons compact (px-4 py-2, text-xs)
+
+### Hero section mobile improvements
+- ✅ Hero heading reduced to text-3xl on very small screens
+- ✅ CTA buttons use smaller text (text-sm), smaller padding (px-5 py-2.5), stack vertically (w-full sm:w-auto)
+- ✅ SMS widget body uses p-4 on mobile instead of p-6
+- ✅ Sender ID dropdown hidden on mobile (hidden sm:block)
+- ✅ Stats row is now horizontal scrollable (overflow-x-auto no-scrollbar)
+
+### Cards grid mobile improvements
+- ✅ Feature cards: p-4 sm:p-6, text-base sm:text-lg titles
+- ✅ Why Choose cards: p-4 sm:p-6, text-base sm:text-lg titles
+- ✅ Testimonial cards: p-4 sm:p-6
+- ✅ All cards have gradient hover overlays with proper overflow-hidden and z-index
+
+### Testimonials mobile improvements
+- ✅ Show 1 testimonial on mobile (itemsPerPage responsive via useEffect)
+- ✅ Hide left/right arrow buttons on mobile (hidden sm:flex)
+- ✅ Dots indicator still visible for mobile navigation
+- ✅ Card grid uses gap-4 sm:gap-6 and mx-4 sm:mx-12
+
+### FAQ section mobile improvements
+- ✅ Reduced section padding: py-16 sm:py-32
+- ✅ Reduced heading: text-2xl sm:text-4xl
+- ✅ Reduced description: text-sm sm:text-xl
+- ✅ FAQ items: p-4 sm:p-7
+- ✅ Question text: text-sm sm:text-lg
+- ✅ Answer text: text-sm sm:text-lg with px-4 sm:px-7
+
+### CTA section mobile improvements
+- ✅ Buttons full-width on mobile (w-full sm:w-auto)
+- ✅ Smaller text (text-sm sm:text-base) and padding (px-5 py-2.5 sm:px-8 sm:py-4)
+- ✅ Smaller heading: text-2xl sm:text-4xl
+- ✅ Reduced padding: py-16 sm:py-28
+
+### General mobile improvements
+- ✅ Added viewport-safe padding for notched phones (env(safe-area-inset-*))
+- ✅ Added minimum touch target size (44px) for mobile
+- ✅ Reduced animation durations on mobile (10s instead of 5-7s)
+- ✅ Added no-scrollbar utility class for horizontal scroll areas
+- ✅ Slower marquee on mobile (40s instead of 30s)
+
+## TASK 3: COMPREHENSIVE SEO
+
+### 3a. Dynamic Sitemap (src/app/sitemap.ts)
+- ✅ Created dynamic sitemap with all 24 routes
+- ✅ Proper changeFrequency and priority values
+- ✅ Verified working at /sitemap.xml
+
+### 3b. Dynamic Robots (src/app/robots.ts)
+- ✅ Created dynamic robots.txt with allow/disallow rules
+- ✅ Disallow /api/ and /uploads/ directories
+- ✅ Sitemap reference included
+- ✅ Verified working at /robots.txt
+
+### 3c. Enhanced Root Layout Metadata (src/app/layout.tsx)
+- ✅ Added metadataBase: new URL('https://sdasms.com')
+- ✅ Added alternates.canonical: 'https://sdasms.com'
+- ✅ Added openGraph.url, locale, and images
+- ✅ Added twitter.images with og-image.png
+- ✅ Expanded keywords (24 SEO-relevant keywords)
+- ✅ Enhanced description (keyword-rich, 155 chars)
+- ✅ Added WebSite schema with SearchAction
+- ✅ Added SoftwareApplication schema with aggregateRating
+- ✅ Added FAQPage schema with all 8 FAQ items
+- ✅ Kept existing Organization schema
+
+### 3d. Sub-page Metadata (19 layout.tsx files)
+- ✅ /about - "About SDASMS | Africa's Leading Digital Evangelism Platform"
+- ✅ /features - "Features | SDASMS Omnichannel Messaging Platform"
+- ✅ /coverage - "Coverage | SDASMS SMS Coverage Across Africa"
+- ✅ /pricing - "Pricing | Affordable SMS Plans - SDASMS"
+- ✅ /get-started - "Get Started | Create Your SDASMS Account"
+- ✅ /use-cases - "Use Cases | How Ministries Use SDASMS"
+- ✅ /why-sdasms - "Why SDASMS | Trusted by Ministries Across Africa"
+- ✅ /contact - "Contact Us | SDASMS Support"
+- ✅ /api-docs - "API Documentation | SDASMS Developer Hub"
+- ✅ /products/sms - "SMS API | Bulk SMS Messaging - SDASMS"
+- ✅ /products/whatsapp - "WhatsApp Business API | SDASMS"
+- ✅ /products/voice - "Voice Broadcasting | SDASMS"
+- ✅ /products/email - "Email Marketing | SDASMS"
+- ✅ /products/mms - "MMS Messaging | SDASMS"
+- ✅ /products/rcs - "RCS Messaging | SDASMS"
+- ✅ /products/live-chat - "Live Chat | SDASMS"
+- ✅ /products/messenger - "Messenger API | SDASMS"
+- ✅ /products/instagram - "Instagram DM API | SDASMS"
+- ✅ /products/viber - "Viber for Business | SDASMS"
+
+Each layout.tsx includes:
+- Unique, keyword-rich title
+- Compelling 150-160 character description
+- OpenGraph metadata with og-image.png
+- Twitter card metadata
+- Canonical URL
+- Relevant keywords
+
+### 3e. Structured Data
+- ✅ WebSite schema with SearchAction for sitelinks search box
+- ✅ SoftwareApplication schema with aggregateRating
+- ✅ FAQPage schema with all 8 FAQ items embedded in homepage
+- ✅ Organization schema (pre-existing, preserved)
+
+### 3f. OG Image
+- ✅ Generated og-image.png (1344x768) at public/og-image.png
+- ✅ Professional social media banner with SDASMS branding
+
+### 3g. Static File Cleanup
+- ✅ Deleted public/sitemap.xml (replaced by dynamic src/app/sitemap.ts)
+- ✅ Deleted public/robots.txt (replaced by dynamic src/app/robots.ts)
+
+### 3h. Mobile/Responsive CSS (src/app/globals.css)
+- ✅ Added .no-scrollbar utility class
+- ✅ Added safe-area-inset padding for notched phones
+- ✅ Reduced animation durations on mobile
+- ✅ Ensured minimum touch target size (44px) on mobile
+
+## FILES MODIFIED
+1. src/app/page.tsx - Polish + mobile fixes
+2. src/components/Header.tsx - Polish + mobile fixes + light mode
+3. src/components/Footer.tsx - Border + link visibility
+4. src/app/layout.tsx - Enhanced SEO metadata + structured data
+5. src/app/globals.css - Mobile/responsive CSS
+
+## FILES CREATED
+1. src/app/sitemap.ts - Dynamic sitemap
+2. src/app/robots.ts - Dynamic robots
+3. public/og-image.png - OG image
+4-22. 19 layout.tsx files for sub-pages with unique SEO metadata
+
+## FILES DELETED
+1. public/sitemap.xml (replaced by dynamic)
+2. public/robots.txt (replaced by dynamic)
+
+## VERIFICATION
+- All pages return HTTP 200
+- Dynamic sitemap.xml working
+- Dynamic robots.txt working
+- No new lint errors introduced
+- Dev server running successfully

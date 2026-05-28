@@ -554,11 +554,11 @@ function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-extrabold text-white leading-[1.05] mb-6 tracking-[-0.02em]">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-extrabold text-white leading-[1.05] mb-6 tracking-[-0.02em]">
                 For messages
                 <br />
                 <span className="bg-gradient-to-r from-[#FF8340] via-[#D72444] to-[#7C3AED] bg-clip-text text-transparent">
-                  that&apos;s matter
+                  that matter
                 </span>
               </h1>
             </motion.div>
@@ -568,7 +568,7 @@ function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.35 }}
-              className="text-base sm:text-lg md:text-xl text-white/50 max-w-xl mb-10 leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-white/70 max-w-xl mb-8 sm:mb-10 leading-relaxed"
             >
               Transform digital evangelism with every message sent. Inspire,
               uplift, and share the Gospel instantly across Africa and beyond.
@@ -579,18 +579,18 @@ function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col sm:flex-row items-start gap-4 mb-12"
+              className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-10 sm:mb-12"
             >
               <a
                 href="/get-started"
-                className="group inline-flex items-center gap-2.5 bg-[#D72444] hover:bg-[#E03355] text-white font-bold text-base px-8 py-4 rounded-full shadow-2xl shadow-[#D72444]/25 transition-all duration-300 hover:shadow-[0_0_50px_rgba(215,36,68,0.4)] hover:-translate-y-0.5"
+                className="group inline-flex items-center gap-2 sm:gap-2.5 bg-[#D72444] hover:bg-[#E03355] text-white font-bold text-sm sm:text-base px-5 py-2.5 sm:px-8 sm:py-4 rounded-full shadow-2xl shadow-[#D72444]/25 transition-all duration-300 hover:shadow-[0_0_50px_rgba(215,36,68,0.4)] hover:-translate-y-0.5 w-full sm:w-auto justify-center"
               >
                 Get Started
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
               </a>
               <a
                 href="/features"
-                className="group inline-flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] text-white/70 hover:bg-white/[0.08] hover:text-white font-semibold text-base px-8 py-4 rounded-full transition-all duration-300"
+                className="group inline-flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] text-white/80 hover:bg-white/[0.08] hover:text-white font-semibold text-sm sm:text-base px-5 py-2.5 sm:px-8 sm:py-4 rounded-full transition-all duration-300 w-full sm:w-auto justify-center"
               >
                 Explore Features
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
@@ -602,7 +602,7 @@ function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.65 }}
-              className="flex flex-wrap items-center gap-4 sm:gap-8 md:gap-10"
+              className="flex items-center gap-4 sm:gap-8 md:gap-10 overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap no-scrollbar"
             >
               {[
                 { value: '10M+', label: 'Messages Delivered', icon: MessageSquare },
@@ -615,7 +615,7 @@ function HeroSection() {
                   </div>
                   <div>
                     <p className="text-white font-extrabold text-lg leading-none">{stat.value}</p>
-                    <p className="text-white/30 text-[11px] font-medium mt-0.5">{stat.label}</p>
+                    <p className="text-white/40 text-[11px] font-medium mt-0.5">{stat.label}</p>
                   </div>
                 </div>
               ))}
@@ -652,9 +652,9 @@ function HeroSection() {
                 </div>
 
                 {/* Widget Body */}
-                <div className="p-6 space-y-4">
+                <div className="p-4 sm:p-6 space-y-4">
                   {/* Sender ID */}
-                  <div>
+                  <div className="hidden sm:block">
                     <label className="text-white/30 text-[10px] font-bold uppercase tracking-[0.12em] mb-2 block">
                       Sender ID
                     </label>
@@ -670,7 +670,7 @@ function HeroSection() {
                         <option value="HARUSI" className="bg-[#1A0A2E] text-white">HARUSI</option>
                       </select>
                       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-                        <span className="hidden sm:inline text-[10px] font-bold text-[#22C55E] bg-[#22C55E]/10 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-bold text-[#22C55E] bg-[#22C55E]/10 px-2 py-0.5 rounded-md">
                           VERIFIED
                         </span>
                         <ChevronDown className="w-4 h-4 text-white/20" />
@@ -814,11 +814,11 @@ function TrustedByStrip() {
         <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-20 md:w-32 bg-gradient-to-r from-[#0B0518] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-20 md:w-32 bg-gradient-to-l from-[#0B0518] to-transparent z-10 pointer-events-none" />
 
-        <div className="logo-marquee flex items-center gap-10 sm:gap-14 lg:gap-16 w-max">
+        <div className="logo-marquee flex items-center gap-12 sm:gap-16 lg:gap-20 w-max">
           {slidingLogos.map((logo, i) => (
             <div
               key={i}
-              className="flex-shrink-0 flex items-center justify-center px-2 py-2"
+              className="flex-shrink-0 flex items-center justify-center px-4 py-3"
             >
               <img
                 src={logo.src}
@@ -853,16 +853,19 @@ function FeaturesSection() {
         <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {FEATURES.map((feature) => (
             <StaggerItem key={feature.title}>
-              <div className="group bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+              <div className="group relative bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-4 sm:p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#D72444]/0 via-transparent to-[#7C3AED]/0 group-hover:from-[#D72444]/5 group-hover:to-[#7C3AED]/5 transition-all duration-500 pointer-events-none" />
+                <div className="relative z-10">
                 <div className="w-14 h-14 rounded-2xl bg-[#D72444]/10 flex items-center justify-center mb-5 group-hover:bg-[#D72444]/20 transition-colors">
                   <feature.icon className="w-7 h-7 text-[#D72444]" />
                 </div>
-                <h3 className="text-lg font-bold text-black dark:text-white mb-2">
+                <h3 className="text-base sm:text-lg font-bold text-black dark:text-white mb-2">
                   {feature.title}
                 </h3>
                 <p className="text-[#7F7F7F] dark:text-white/50 text-sm leading-relaxed font-medium">
                   {feature.description}
                 </p>
+                </div>
               </div>
             </StaggerItem>
           ))}
@@ -966,7 +969,7 @@ function UseCasesSection() {
                   {useCase.description}
                 </p>
                 <a
-                  href="#"
+                  href="/use-cases"
                   className="inline-flex items-center gap-1 text-[#D72444] text-sm font-semibold hover:gap-2 transition-all duration-300"
                 >
                   Explore
@@ -1130,7 +1133,7 @@ function PricingSection() {
                     </div>
                   </div>
                   <a
-                    href="#"
+                    href="/get-started"
                     className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 shadow-lg shadow-[#D72444]/20 text-sm shrink-0"
                   >
                     Custom Pricing
@@ -1281,7 +1284,7 @@ function WhyChooseSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeInWhenVisible className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
-            Why Choosing Us?
+            Why Choose Us?
           </h2>
           <p className="text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
             We understand our customers rely on our services and expect us to
@@ -1292,16 +1295,19 @@ function WhyChooseSection() {
         <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {WHY_CHOOSE.map((item) => (
             <StaggerItem key={item.title}>
-              <div className="group bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center h-full">
+              <div className="group relative bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-4 sm:p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center h-full overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#D72444]/0 via-transparent to-[#7C3AED]/0 group-hover:from-[#D72444]/5 group-hover:to-[#7C3AED]/5 transition-all duration-500 pointer-events-none" />
+                <div className="relative z-10">
                 <div className="w-16 h-16 rounded-2xl bg-[#D72444]/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-[#D72444]/20 transition-colors">
                   <item.icon className="w-8 h-8 text-[#D72444]" />
                 </div>
-                <h3 className="text-lg font-bold text-black dark:text-white mb-2">
+                <h3 className="text-base sm:text-lg font-bold text-black dark:text-white mb-2">
                   {item.title}
                 </h3>
                 <p className="text-[#7F7F7F] dark:text-white/50 text-sm leading-relaxed font-medium">
                   {item.description}
                 </p>
+                </div>
               </div>
             </StaggerItem>
           ))}
@@ -1315,7 +1321,16 @@ function WhyChooseSection() {
 
 function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const itemsPerPage = 3
+  const [itemsPerPage, setItemsPerPage] = useState(3)
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      setItemsPerPage(window.innerWidth < 640 ? 1 : 3)
+    }
+    updateItemsPerPage()
+    window.addEventListener('resize', updateItemsPerPage)
+    return () => window.removeEventListener('resize', updateItemsPerPage)
+  }, [])
 
   const maxIndex = Math.max(0, TESTIMONIALS.length - itemsPerPage)
 
@@ -1330,7 +1345,7 @@ function TestimonialsSection() {
         {/* Header */}
         <FadeInWhenVisible className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
-            We couldn&apos;t have said it better
+            Trusted by Ministries Across Africa
           </h2>
           <p className="text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed mb-4 font-medium">
             Our customers rate us Excellent. That&apos;s an industry-leading
@@ -1356,7 +1371,7 @@ function TestimonialsSection() {
           <button
             onClick={goLeft}
             disabled={currentIndex === 0}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-[#0D0B1A] border border-gray-200 dark:border-white/10 shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-[#0D0B1A] border border-gray-200 dark:border-white/10 shadow-lg items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-5 h-5 text-black dark:text-white rotate-180" />
           </button>
@@ -1365,13 +1380,13 @@ function TestimonialsSection() {
           <button
             onClick={goRight}
             disabled={currentIndex >= maxIndex}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-[#0D0B1A] border border-gray-200 dark:border-white/10 shadow-lg flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-5 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-[#0D0B1A] border border-gray-200 dark:border-white/10 shadow-lg items-center justify-center hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-5 h-5 text-black dark:text-white" />
           </button>
 
           {/* Cards */}
-          <div className="mx-8 sm:mx-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="mx-4 sm:mx-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {visibleTestimonials.map((testimonial, idx) => (
               <FadeInWhenVisible key={currentIndex + idx} delay={idx * 0.1}>
                 <TestimonialCard testimonial={testimonial} />
@@ -1410,7 +1425,7 @@ function TestimonialCard({
   }
 }) {
   return (
-    <div className="bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-4 sm:p-6 h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
       {/* Metric badge */}
       <div className="inline-flex items-center gap-1.5 bg-[#FF8340]/10 border border-[#FF8340]/20 rounded-full px-3 py-1 mb-4 self-start">
         <TrendingUp className="w-3.5 h-3.5 text-[#FF8340]" />
@@ -1454,13 +1469,13 @@ function FAQSection() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="py-24 sm:py-32 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
+    <section id="faq" className="py-16 sm:py-32 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <FadeInWhenVisible className="text-center mb-16 sm:mb-20">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black dark:text-white mb-6">
+        <FadeInWhenVisible className="text-center mb-10 sm:mb-20">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black dark:text-white mb-4 sm:mb-6">
             Frequently Asked <span className="text-[#D72444]">Questions</span>
           </h2>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-lg sm:text-xl leading-relaxed font-medium max-w-2xl mx-auto">
+          <p className="text-[#7F7F7F] dark:text-white/50 text-sm sm:text-xl leading-relaxed font-medium max-w-2xl mx-auto">
             Everything you need to know about SDASMS and our SMS services.
           </p>
         </FadeInWhenVisible>
@@ -1477,7 +1492,7 @@ function FAQSection() {
                 >
                   <button
                     onClick={() => setOpenFAQ(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between gap-4 p-6 sm:p-7 text-left group"
+                    className="w-full flex items-center justify-between gap-4 p-4 sm:p-7 text-left group"
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
@@ -1485,7 +1500,7 @@ function FAQSection() {
                       }`}>
                         <span className={`text-sm font-bold transition-colors ${isOpen ? 'text-[#D72444]' : 'text-gray-400 dark:text-white/40'}`}>{String(index + 1).padStart(2, '0')}</span>
                       </div>
-                      <span className="text-base sm:text-lg font-semibold text-black dark:text-white pr-4">
+                      <span className="text-sm sm:text-lg font-semibold text-black dark:text-white pr-4">
                         {faq.question}
                       </span>
                     </div>
@@ -1505,8 +1520,8 @@ function FAQSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                       >
-                        <div className="px-6 sm:px-7 pb-6 sm:pb-7 ml-12">
-                          <p className="text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed font-medium">
+                        <div className="px-4 sm:px-7 pb-4 sm:pb-7 ml-12">
+                          <p className="text-[#7F7F7F] dark:text-white/50 text-sm sm:text-lg leading-relaxed font-medium">
                             {faq.answer}
                           </p>
                         </div>
@@ -1527,30 +1542,30 @@ function FAQSection() {
 
 function CTASection() {
   return (
-    <section className="py-20 sm:py-28 bg-white dark:bg-[#0D0B1A]">
+    <section className="py-16 sm:py-28 bg-gradient-to-br from-white via-[#FFF5F5]/30 dark:via-[#1A0A2E]/50 to-white dark:to-[#0D0B1A]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <FadeInWhenVisible>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-6 leading-tight">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-6 leading-tight">
             Ready to get started?
             <br />
             <span className="text-[#D72444]">Create your account now</span>
           </h2>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed mb-10 max-w-2xl mx-auto font-medium">
+          <p className="text-[#7F7F7F] dark:text-white/50 text-sm sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto font-medium">
             Ready to transform digital evangelism and reach more souls with
             every message? Join SDASMS and start sharing the Gospel
             effortlessly.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <a
               href="/get-started"
-              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#D72444]/25 transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold rounded-full px-5 py-2.5 sm:px-8 sm:py-4 h-auto text-sm sm:text-base shadow-lg shadow-[#D72444]/25 transition-all duration-300 w-full sm:w-auto justify-center"
             >
               Get Started
               <ArrowRight className="w-5 h-5" />
             </a>
             <a
-              href="#"
-              className="inline-flex items-center gap-2 border border-gray-200 dark:border-white/10 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 rounded-full px-8 py-4 h-auto text-base font-semibold transition-all duration-300"
+              href="/contact"
+              className="inline-flex items-center gap-2 border border-gray-200 dark:border-white/10 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 rounded-full px-5 py-2.5 sm:px-8 sm:py-4 h-auto text-sm sm:text-base font-semibold transition-all duration-300 w-full sm:w-auto justify-center"
             >
               Contact Us
             </a>

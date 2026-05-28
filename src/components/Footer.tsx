@@ -21,7 +21,7 @@ const FOOTER_LINKS_COL3 = [
 
 export default function Footer() {
   return (
-    <footer aria-label="Footer navigation" className="bg-black dark:bg-black pt-16 pb-8">
+    <footer aria-label="Footer navigation" className="bg-black dark:bg-black pt-16 pb-8 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 mb-12">
           {/* Brand column */}
@@ -123,7 +123,7 @@ export default function Footer() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="text-gray-400 text-sm hover:text-[#FF8340] transition-colors font-medium block py-1.5"
+                    className="text-gray-300 text-sm hover:text-[#FF8340] transition-colors font-medium block py-1.5"
                   >
                     {item.label}
                   </Link>

@@ -324,3 +324,44 @@ html {
   background-color: rgba(215, 36, 68, 0.15);
   color: inherit;
 }
+
+/* Hide scrollbar utility for horizontal scroll areas */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Viewport safe area padding for notched phones */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Reduce motion on mobile for better performance */
+@media (max-width: 640px) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-float-slow {
+    animation-duration: 10s;
+  }
+  
+  .logo-marquee {
+    animation-duration: 40s;
+  }
+}
+
+/* Ensure minimum touch target size */
+@media (max-width: 640px) {
+  button,
+  a.btn,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
