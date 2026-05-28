@@ -18,7 +18,6 @@ import {
   Shield,
   Zap,
   Users,
-  CheckCircle2,
   TrendingUp,
   Clock,
   BarChart3,
@@ -247,268 +246,42 @@ const TRUSTED_LOGOS = [
   { src: '/logo-asi.png', alt: 'ASI' },
 ]
 
-/* ─── Hero Section with Quick Send Widget ──────────────────── */
+/* ─── Hero Section with Retro Phone Visual ──────────────────── */
 
 function HeroSection() {
-  const [senderId, setSenderId] = useState('SDASMS')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [message, setMessage] = useState('')
-  const [sending, setSending] = useState(false)
-  const [sendResult, setSendResult] = useState<{ success: boolean; message: string } | null>(null)
-  const [charCount, setCharCount] = useState(0)
-  const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null)
-  const [cooldownMinutes, setCooldownMinutes] = useState(0)
-
-  const MAX_USER_CHARS = 60
-  const MAX_ATTEMPTS = 3
-  const COOLDOWN_MS = 72 * 60 * 60 * 1000 // 72 hours
-  const SMS_FOOTER = '\nHello! This is a sample SMS from SDASMS. Try sending one now!'
-  const FOOTER_LEN = SMS_FOOTER.length
-  const TOTAL_SMS_LEN = charCount + FOOTER_LEN
-  const SMS_LIMIT = 160
-
-  // Browser fingerprint for persistence across IP/VPN changes
-  const getFingerprint = (): string => {
-    try {
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      let canvasHash = ''
-      if (ctx) {
-        ctx.textBaseline = 'top'
-        ctx.font = '14px Arial'
-        ctx.fillText('SDASMS_fp', 2, 2)
-        canvasHash = canvas.toDataURL().slice(-50)
-      }
-      const raw = [
-        navigator.userAgent,
-        screen.width,
-        screen.height,
-        screen.colorDepth,
-        new Date().getTimezoneOffset(),
-        navigator.language,
-        canvasHash,
-      ].join('|')
-      // Simple hash
-      let hash = 0
-      for (let i = 0; i < raw.length; i++) {
-        const chr = raw.charCodeAt(i)
-        hash = ((hash << 5) - hash) + chr
-        hash |= 0
-      }
-      return 'fp_' + Math.abs(hash).toString(36)
-    } catch {
-      return 'fp_default'
-    }
-  }
-
-  // Storage keys using fingerprint for persistence across IP changes
-  const getStorageKey = (fp: string): string => `sdasms_sends_${fp}`
-
-  // Also check legacy key for backwards compatibility
-  const LEGACY_KEY = 'sdasms_send_attempts'
-
-  // Check attempts on mount
-  useEffect(() => {
-    checkAttempts()
-  }, [])
-
-  const checkAttempts = () => {
-    try {
-      const fp = getFingerprint()
-      const key = getStorageKey(fp)
-      // Check both fingerprint-based and legacy storage
-      let allTimestamps: number[] = []
-
-      // Check fingerprint-based storage
-      const stored = localStorage.getItem(key)
-      if (stored) {
-        const data = JSON.parse(stored) as { timestamps: number[] }
-        allTimestamps.push(...data.timestamps)
-      }
-
-      // Also check legacy key
-      const legacyStored = localStorage.getItem(LEGACY_KEY)
-      if (legacyStored) {
-        const data = JSON.parse(legacyStored) as { timestamps: number[] }
-        allTimestamps.push(...data.timestamps)
-      }
-
-      // Also check cookie-based storage for extra persistence
-      const cookieData = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('sdasms_sends='))
-        ?.split('=')[1]
-      if (cookieData) {
-        try {
-          const decoded = JSON.parse(decodeURIComponent(cookieData)) as { timestamps: number[] }
-          allTimestamps.push(...decoded.timestamps)
-        } catch { /* ignore */ }
-      }
-
-      const now = Date.now()
-      // Filter out attempts older than 72 hours
-      const validAttempts = [...new Set(allTimestamps)].filter((t: number) => now - t < COOLDOWN_MS).sort((a, b) => a - b)
-
-      // Save back to all storage locations
-      const saveData = JSON.stringify({ timestamps: validAttempts })
-      localStorage.setItem(key, saveData)
-      localStorage.setItem(LEGACY_KEY, saveData)
-      // Also set a cookie (expires in 72 hours)
-      const expires = new Date(now + COOLDOWN_MS).toUTCString()
-      document.cookie = `sdasms_sends=${encodeURIComponent(saveData)}; expires=${expires}; path=/; SameSite=Lax`
-
-      const remaining = MAX_ATTEMPTS - validAttempts.length
-      setAttemptsLeft(remaining)
-      if (remaining <= 0 && validAttempts.length > 0) {
-        const oldestInWindow = validAttempts[0]
-        const hrsLeft = Math.ceil((COOLDOWN_MS - (now - oldestInWindow)) / (60 * 60 * 1000))
-        setCooldownMinutes(hrsLeft * 60) // store as minutes for display
-      } else {
-        setCooldownMinutes(0)
-      }
-    } catch {
-      setAttemptsLeft(MAX_ATTEMPTS)
-    }
-  }
-
-  const recordAttempt = () => {
-    try {
-      const fp = getFingerprint()
-      const key = getStorageKey(fp)
-      const now = Date.now()
-
-      // Gather existing timestamps from all sources
-      let allTimestamps: number[] = []
-
-      const stored = localStorage.getItem(key)
-      if (stored) {
-        const data = JSON.parse(stored) as { timestamps: number[] }
-        allTimestamps.push(...data.timestamps)
-      }
-
-      const legacyStored = localStorage.getItem(LEGACY_KEY)
-      if (legacyStored) {
-        const data = JSON.parse(legacyStored) as { timestamps: number[] }
-        allTimestamps.push(...data.timestamps)
-      }
-
-      // Deduplicate and filter
-      const validAttempts = [...new Set(allTimestamps)].filter((t: number) => now - t < COOLDOWN_MS).sort((a, b) => a - b)
-      validAttempts.push(now)
-
-      // Save to all storage locations
-      const saveData = JSON.stringify({ timestamps: validAttempts })
-      localStorage.setItem(key, saveData)
-      localStorage.setItem(LEGACY_KEY, saveData)
-      // Also set a cookie
-      const expires = new Date(now + COOLDOWN_MS).toUTCString()
-      document.cookie = `sdasms_sends=${encodeURIComponent(saveData)}; expires=${expires}; path=/; SameSite=Lax`
-
-      setAttemptsLeft(MAX_ATTEMPTS - validAttempts.length)
-      if (MAX_ATTEMPTS - validAttempts.length <= 0) {
-        const oldestInWindow = validAttempts[0]
-        const hrsLeft = Math.ceil((COOLDOWN_MS - (now - oldestInWindow)) / (60 * 60 * 1000))
-        setCooldownMinutes(hrsLeft * 60)
-      }
-    } catch {
-      // silent fail
-    }
-  }
-
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = e.target.value
-    if (val.length <= MAX_USER_CHARS) {
-      setMessage(val)
-      setCharCount(val.length)
-    }
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    // Only allow digits
-    if (/^\d*$/.test(val)) {
-      setPhoneNumber(val)
-    }
-  }
-
-  const formatPhoneDisplay = (raw: string) => {
-    if (!raw) return ''
-    // If starts with 255, format as +255 XXX XXX XXX
-    if (raw.startsWith('255')) {
-      const rest = raw.slice(3)
-      if (rest.length <= 3) return `+255 ${rest}`
-      if (rest.length <= 6) return `+255 ${rest.slice(0, 3)} ${rest.slice(3)}`
-      return `+255 ${rest.slice(0, 3)} ${rest.slice(3, 6)} ${rest.slice(6, 9)}`
-    }
-    return raw
-  }
-
-  const handleSend = async () => {
-    if (!phoneNumber || !message) {
-      setSendResult({ success: false, message: 'Please fill in all fields' })
-      return
-    }
-
-    // Build full international number: prepend "255" if user entered local 9-digit number
-    let fullNumber = phoneNumber
-    if (!fullNumber.startsWith('255')) {
-      fullNumber = '255' + fullNumber
-    }
-
-    // Validate: must be 255 + 9 digits = 12 digits total
-    if (!/^255\d{9}$/.test(fullNumber)) {
-      setSendResult({ success: false, message: 'Enter a valid 9-digit Tanzanian number (e.g. 712 345 678)' })
-      return
-    }
-    if (attemptsLeft !== null && attemptsLeft <= 0) {
-      const timeStr = cooldownMinutes >= 60 ? `${Math.ceil(cooldownMinutes / 60)} hours` : `${cooldownMinutes} minutes`
-      setSendResult({ success: false, message: `Limit reached. Try again in ${timeStr}.` })
-      return
-    }
-
-    setSending(true)
-    setSendResult(null)
-
-    const fullMessage = message + SMS_FOOTER
-
-    try {
-      // Call our server-side API route (handles v3 + HTTP API with proper auth)
-      const res = await fetch('/api/send-sms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          senderId: senderId,
-          phoneNumber: fullNumber,
-          message: fullMessage,
-        }),
-      })
-
-      const result = await res.json()
-
-      // Server now wraps success responses as { success: true, data: { ... } }
-      if (result.success) {
-        recordAttempt()
-        setSendResult({
-          success: true,
-          message: `SMS sent to +${fullNumber}! Delivered successfully.`,
-        })
-        setMessage('')
-        setCharCount(0)
-      } else {
-        const errorMsg = result.data?.message || result.message || 'Failed to send SMS. Please try again.'
-        setSendResult({
-          success: false,
-          message: errorMsg,
-        })
-      }
-    } catch {
-      setSendResult({ success: false, message: 'Network error. Please check your connection and try again.' })
-    } finally {
-      setSending(false)
-    }
-  }
+  // SMS inbox messages data
+  const smsMessages = [
+    {
+      sender: 'SDASMS',
+      preview: 'Join us for Sabbath worship tomorrow at 9AM. God bless you!',
+      time: '09:41',
+      replied: true,
+    },
+    {
+      sender: 'HARAMBEE',
+      preview: 'Fundraiser update: We have reached 75% of our target!',
+      time: '09:38',
+      replied: false,
+    },
+    {
+      sender: 'MCHANGO',
+      preview: 'Thank you for your contribution. May God reward you.',
+      time: '09:30',
+      replied: true,
+    },
+    {
+      sender: 'HARUSI',
+      preview: 'Wedding ceremony invitation: Dec 14 at Arusha Ch...',
+      time: '09:15',
+      replied: false,
+    },
+    {
+      sender: 'SDASMS',
+      preview: 'Daily devotional: "Trust in the Lord with all your...',
+      time: '08:00',
+      replied: false,
+    },
+  ]
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#0B0518]">
@@ -532,7 +305,7 @@ function HeroSection() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full min-h-0 sm:min-h-screen flex items-start sm:items-center pt-28 sm:pt-28 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-8 lg:gap-12 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 lg:gap-12 items-center w-full">
           {/* Left - Text Content */}
           <div className="flex flex-col items-start">
             {/* Badge */}
@@ -623,172 +396,165 @@ function HeroSection() {
                 </div>
               ))}
             </motion.div>
-
-
           </div>
 
-          {/* Right - Quick Send SMS Widget */}
+          {/* Right - Retro Mobile Phone Visual */}
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="flex justify-center lg:justify-end"
           >
             <div className="relative">
-              {/* Multi-layer glow behind widget */}
-              <div className="absolute -inset-6 bg-gradient-to-br from-[#D72444]/8 via-[#7C3AED]/5 to-[#FF8340]/8 rounded-[40px] blur-3xl" />
-              <div className="absolute -inset-2 bg-gradient-to-br from-[#D72444]/5 to-[#7C3AED]/5 rounded-[32px] blur-xl" />
+              {/* Glow behind phone */}
+              <div className="absolute -inset-8 bg-gradient-to-br from-[#D72444]/10 via-[#7C3AED]/8 to-[#FF8340]/10 rounded-[60px] blur-3xl" />
+              <div className="absolute -inset-3 bg-gradient-to-br from-[#D72444]/6 to-[#7C3AED]/6 rounded-[48px] blur-xl" />
 
-              <div className="relative bg-[#120A22]/90 backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-2xl shadow-black/30 overflow-hidden">
-                {/* Widget Header */}
-                <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.06] bg-white/[0.02]">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D72444] to-[#FF8340] flex items-center justify-center shadow-lg shadow-[#D72444]/20">
-                    <MessageSquare className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-sm">Try Sending</h3>
-                    <p className="text-white/30 text-[10px] font-medium">Send a sample text instantly</p>
-                  </div>
-                  <div className="ml-auto flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-green-400 text-[10px] font-semibold">Live</span>
-                  </div>
-                </div>
-
-                {/* Widget Body */}
-                <div className="p-4 sm:p-6 space-y-4">
-                  {/* Sender ID */}
-                  <div className="hidden sm:block">
-                    <label className="text-white/30 text-[10px] font-bold uppercase tracking-[0.12em] mb-2 block">
-                      Sender ID
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={senderId}
-                        onChange={(e) => setSenderId(e.target.value)}
-                        className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-white text-sm font-semibold focus:outline-none focus:border-[#D72444]/40 focus:ring-1 focus:ring-[#D72444]/20 transition-all duration-200 appearance-none cursor-pointer hover:bg-white/[0.05]"
-                      >
-                        <option value="SDASMS" className="bg-[#1A0A2E] text-white">SDASMS</option>
-                        <option value="HARAMBEE" className="bg-[#1A0A2E] text-white">HARAMBEE</option>
-                        <option value="MCHANGO" className="bg-[#1A0A2E] text-white">MCHANGO</option>
-                        <option value="HARUSI" className="bg-[#1A0A2E] text-white">HARUSI</option>
-                      </select>
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
-                        <span className="text-[10px] font-bold text-[#22C55E] bg-[#22C55E]/10 px-2 py-0.5 rounded-md">
-                          VERIFIED
-                        </span>
-                        <ChevronDown className="w-4 h-4 text-white/20" />
-                      </div>
+              {/* Phone Body */}
+              <div className="relative w-[280px] sm:w-[300px]">
+                {/* Phone outer shell */}
+                <div className="relative bg-gradient-to-b from-[#2A2040] via-[#1E1535] to-[#16102A] rounded-[36px] p-3 shadow-2xl shadow-black/40 border border-white/[0.08]">
+                  {/* Phone inner bezel */}
+                  <div className="relative bg-[#0A0716] rounded-[26px] overflow-hidden">
+                    {/* Earpiece / speaker grille */}
+                    <div className="flex items-center justify-center py-2.5 bg-[#0A0716]">
+                      <div className="w-16 h-1.5 bg-[#1A1230] rounded-full" />
                     </div>
-                  </div>
 
-                  {/* Phone Number */}
-                  <div>
-                    <label className="text-white/30 text-[10px] font-bold uppercase tracking-[0.12em] mb-2 block">
-                      Recipient Number
-                    </label>
-                    <div className="flex items-stretch gap-0">
-                      {/* Country code badge */}
-                      <div className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] border-r-0 rounded-l-xl px-3.5 shrink-0">
-                        <img
-                          src="https://flagcdn.com/w20/tz.png"
-                          alt="TZ"
-                          className="w-5 h-3.5 rounded-[3px] object-cover shadow-sm"
-                        />
-                        <span className="text-white/60 text-sm font-semibold tracking-wide">+255</span>
-                      </div>
-                      {/* Phone input */}
-                      <input
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={handlePhoneChange}
-                        className="flex-1 min-w-0 bg-white/[0.03] border border-white/[0.06] rounded-r-xl px-4 py-3 text-white text-sm font-mono placeholder-white/15 focus:outline-none focus:border-[#D72444]/40 focus:ring-1 focus:ring-[#D72444]/20 transition-all duration-200 tracking-widest hover:bg-white/[0.05]"
-                        placeholder="7XX XXX XXX"
-                        maxLength={9}
+                    {/* Screen area */}
+                    <div className="relative bg-[#0C1A0C] mx-1.5 rounded-lg overflow-hidden" style={{ minHeight: '380px' }}>
+                      {/* Scanline overlay for retro CRT feel */}
+                      <div
+                        className="absolute inset-0 opacity-[0.04] pointer-events-none z-10"
+                        style={{
+                          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)',
+                        }}
                       />
+
+                      {/* Screen content - green phosphor LCD style */}
+                      <div className="relative p-3 space-y-1.5 font-mono">
+                        {/* Status bar */}
+                        <div className="flex items-center justify-between text-[10px] mb-2">
+                          <span className="text-[#33FF33]/70">SDASMS</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[#33FF33]/50">📶</span>
+                            <span className="text-[#33FF33]/50">🔋</span>
+                            <span className="text-[#33FF33]/70">09:41</span>
+                          </div>
+                        </div>
+
+                        {/* Inbox header */}
+                        <div className="flex items-center justify-between bg-[#1A3A1A] px-2 py-1 rounded">
+                          <span className="text-[#33FF33] text-[11px] font-bold tracking-wider">INBOX (5)</span>
+                          <span className="text-[#33FF33]/50 text-[9px]">▌▌</span>
+                        </div>
+
+                        {/* SMS Messages */}
+                        {smsMessages.map((sms, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: 0.5 + i * 0.12 }}
+                            className={`flex items-start gap-2 px-2 py-1.5 rounded ${
+                              i === 0
+                                ? 'bg-[#1A3A1A] border border-[#33FF33]/20'
+                                : 'border border-transparent hover:border-[#33FF33]/10'
+                            } transition-colors cursor-default`}
+                          >
+                            {/* Message icon */}
+                            <div className="shrink-0 mt-0.5">
+                              {sms.replied ? (
+                                <div className="relative">
+                                  <span className="text-[#33FF33] text-[10px]">✉</span>
+                                  <span className="absolute -top-0.5 -right-1 text-[7px] text-[#FFD700]">↩</span>
+                                </div>
+                              ) : (
+                                <span className="text-[#33FF33]/60 text-[10px]">✉</span>
+                              )}
+                            </div>
+
+                            {/* Message content */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className={`text-[10px] font-bold ${i === 0 ? 'text-[#33FF33]' : 'text-[#33FF33]/80'}`}>
+                                  {sms.sender}
+                                </span>
+                                <span className="text-[8px] text-[#33FF33]/40 shrink-0">{sms.time}</span>
+                              </div>
+                              <p className="text-[8px] text-[#33FF33]/50 truncate leading-tight mt-0.5">
+                                {sms.preview}
+                              </p>
+                            </div>
+                          </motion.div>
+                        ))}
+
+                        {/* Scrollbar hint */}
+                        <div className="flex justify-end pr-1 mt-1">
+                          <div className="w-1 h-6 bg-[#33FF33]/15 rounded-full">
+                            <div className="w-1 h-2 bg-[#33FF33]/40 rounded-full" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-white/15 text-[10px] mt-1.5 ml-1">
-                      Enter 9-digit number (e.g. 712 345 678)
-                    </p>
+
+                    {/* Navigation soft keys */}
+                    <div className="flex items-center justify-between px-6 py-2 bg-[#0A0716]">
+                      <span className="text-[8px] text-[#33FF33]/30 font-mono">Options</span>
+                      <span className="text-[8px] text-[#33FF33]/30 font-mono">Open</span>
+                    </div>
                   </div>
 
-                  {/* Message */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-white/30 text-[10px] font-bold uppercase tracking-[0.12em]">
-                        Your Message
-                      </label>
-                      <span className={`text-[10px] font-bold ${charCount > 50 ? 'text-[#FF8340]' : 'text-white/15'}`}>
-                        {charCount}/{MAX_USER_CHARS}
-                      </span>
+                  {/* Physical keypad area */}
+                  <div className="bg-gradient-to-b from-[#1E1535] to-[#16102A] px-4 pb-4 pt-3">
+                    {/* D-pad / navigation key */}
+                    <div className="flex justify-center mb-3">
+                      <div className="w-12 h-12 rounded-full bg-[#2A2040] border border-white/[0.06] flex items-center justify-center shadow-inner">
+                        <div className="w-6 h-6 rounded-full bg-[#221A38] border border-white/[0.04]" />
+                      </div>
                     </div>
-                    <textarea
-                      value={message}
-                      onChange={handleMessageChange}
-                      rows={2}
-                      className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-white text-sm placeholder-white/15 focus:outline-none focus:border-[#D72444]/40 focus:ring-1 focus:ring-[#D72444]/20 transition-all duration-200 resize-none leading-relaxed hover:bg-white/[0.05]"
-                      placeholder="Type your message (max 60 chars)..."
-                    />
+
+                    {/* Keypad grid */}
+                    <div className="grid grid-cols-3 gap-1.5 max-w-[180px] mx-auto">
+                      {[
+                        { num: '1', sub: '' },
+                        { num: '2', sub: 'ABC' },
+                        { num: '3', sub: 'DEF' },
+                        { num: '4', sub: 'GHI' },
+                        { num: '5', sub: 'JKL' },
+                        { num: '6', sub: 'MNO' },
+                        { num: '7', sub: 'PQRS' },
+                        { num: '8', sub: 'TUV' },
+                        { num: '9', sub: 'WXYZ' },
+                        { num: '*', sub: '' },
+                        { num: '0', sub: '+' },
+                        { num: '#', sub: '' },
+                      ].map((key) => (
+                        <div
+                          key={key.num}
+                          className="bg-[#2A2040] border border-white/[0.04] rounded-lg py-1.5 flex flex-col items-center justify-center hover:bg-[#342850] transition-colors"
+                        >
+                          <span className="text-white/70 text-[11px] font-bold leading-none">{key.num}</span>
+                          {key.sub && <span className="text-white/20 text-[5px] mt-0.5 leading-none">{key.sub}</span>}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Call / End buttons */}
+                    <div className="flex items-center justify-center gap-6 mt-3">
+                      <div className="w-10 h-5 rounded-full bg-[#1B5E20]/40 border border-[#4CAF50]/20 flex items-center justify-center">
+                        <span className="text-[8px] text-[#4CAF50]/60">📞</span>
+                      </div>
+                      <div className="w-10 h-5 rounded-full bg-[#B71C1C]/40 border border-[#EF5350]/20 flex items-center justify-center">
+                        <span className="text-[8px] text-[#EF5350]/60">📵</span>
+                      </div>
+                    </div>
                   </div>
-
-                  {/* Result message */}
-                  <AnimatePresence>
-                    {sendResult && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -8, height: 0 }}
-                        animate={{ opacity: 1, y: 0, height: 'auto' }}
-                        exit={{ opacity: 0, y: -8, height: 0 }}
-                        className={`flex items-center gap-2 px-4 py-3 rounded-xl text-xs font-semibold ${
-                          sendResult.success
-                            ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-                            : 'bg-red-500/10 border border-red-500/20 text-red-400'
-                        }`}
-                      >
-                        {sendResult.success ? (
-                          <CheckCircle2 className="w-4 h-4 shrink-0" />
-                        ) : (
-                          <Shield className="w-4 h-4 shrink-0" />
-                        )}
-                        {sendResult.message}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Attempts counter */}
-                  {attemptsLeft !== null && (
-                    <p className={`text-[10px] text-center font-medium ${attemptsLeft <= 0 ? 'text-[#FF8340]' : 'text-white/15'}`}>
-                      {attemptsLeft > 0
-                        ? `${attemptsLeft} of ${MAX_ATTEMPTS} free sends remaining this 72hrs`
-                        : `Limit reached. Try again in ${cooldownMinutes >= 60 ? `${Math.ceil(cooldownMinutes / 60)}h` : `${cooldownMinutes}m`}.`
-                      }
-                    </p>
-                  )}
-
-                  {/* Send Button */}
-                  <button
-                    onClick={handleSend}
-                    disabled={sending || !phoneNumber || !message || (attemptsLeft !== null && attemptsLeft <= 0)}
-                    className="w-full bg-gradient-to-r from-[#D72444] to-[#FF8340] hover:from-[#E03355] hover:to-[#FF9A5C] disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold text-sm py-4 rounded-xl shadow-lg shadow-[#D72444]/20 hover:shadow-[#D72444]/40 hover:-translate-y-px active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    {sending ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (attemptsLeft !== null && attemptsLeft <= 0) ? (
-                      <>
-                        Limit reached ({cooldownMinutes >= 60 ? `${Math.ceil(cooldownMinutes / 60)}h left` : `${cooldownMinutes}m left`})
-                      </>
-                    ) : (
-                      <>
-                        SEND NOW
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
                 </div>
+
+                {/* Phone reflection/shine overlay */}
+                <div className="absolute inset-0 rounded-[36px] bg-gradient-to-br from-white/[0.03] via-transparent to-transparent pointer-events-none" />
               </div>
-
-
             </div>
           </motion.div>
         </div>
