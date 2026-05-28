@@ -1,0 +1,7 @@
+# SDASMS — cPanel Node.js App .htaccess
+# Place this file at: /home/sdasms/public_html/.htaccess
+
+PassengerEnabled on
+PassengerAppEnv production
+PassengerBaseURI /
+PassengerAppRoot /home/sdasms/sdasms
