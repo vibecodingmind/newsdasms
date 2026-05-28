@@ -1,82 +1,68 @@
-# Worklog
-
 ---
 Task ID: 1
 Agent: Main Agent
-Task: Redesign the Get Started onboard page with fewer sections
+Task: Fix header menu text visibility in light mode and mega menu text in dark mode
 
 Work Log:
-- Read existing get-started page (6-step form: Organization → Contact → Profile → Sender ID → Payment → Terms)
-- Read existing onboard API route
-- Read contact page, page hero component, and other project patterns
-- Redesigned the page from 6 steps to 4 cleaner steps:
-  - Step 1: Account Type selection (Personal or Organization) with visual card selection
-  - Step 2: Conditional info form (Personal info OR Organization info based on account type)
-  - Step 3: Representative & Details (representative info + org profile + sender IDs for org; just sender IDs for personal)
-  - Step 4: Starter Pack review (94,500 TZS) + Payment methods (Pesapal, Stripe, PayPal, Mobile Money) + Terms acceptance
-- Updated the onboard API route to handle both account types with conditional validation
-- Build verified successfully with no errors
+- Added `isTransparent` flag to Header component (homepage + not scrolled)
+- Updated Products button, nav links, Login button, and mobile menu button to use white text when header is transparent (light mode on dark hero background)
+- Fixed mega menu text visibility in dark mode: improved all text colors from `text-white/30` and `text-white/40` to `text-white/50`, `text-white/60`, and `text-white/90`
+- Fixed product labels in mega menu from `text-gray-800` to `text-gray-800 dark:text-white/90`
+- Fixed product descriptions from `text-gray-400` to `text-gray-400 dark:text-white/50`
+- Fixed stats text from `text-white/40` to `text-white/60`
+- Fixed "View all platform features" link from `text-white/50` to `text-white/60`
 
 Stage Summary:
-- `/home/z/my-project/src/app/get-started/page.tsx` - Completely redesigned with 4-step flow
-- `/home/z/my-project/src/app/api/onboard/route.ts` - Updated to support personal/organization account types
-- Key design decisions: Conditional rendering based on account type, consolidated representative+org details into one step, payment+terms combined into final step
+- Header text now properly visible in both light and dark modes
+- Mega menu text much more readable in dark mode
+- All changes in /home/z/my-project/src/components/Header.tsx
 
 ---
 Task ID: 2
 Agent: Main Agent
-Task: Payment system redesign — Manual vs Auto payment categories with TIGO PESA, AIRTEL MONEY, remove PayPal
+Task: Update free sends counter to 72hrs with fingerprint persistence
 
 Work Log:
-- Read current get-started page, payment API routes, .env files
-- Saved all payment credentials to .env.local (PesaPal, Stripe, M-PESA, TIGO PESA, AIRTEL MONEY, Bank)
-- Redesigned Step 4 payment section with two categories:
-  - **Auto Payment (Instant)**: PesaPal and Stripe — payment confirmed automatically, redirects to checkout on submit
-  - **Manual Payment (Verify After Payment)**: M-PESA (51720044), TIGO PESA (8008206), AIRTEL MONEY (997199), Bank Transfer — requires user to select, view instructions, and check "I have completed the payment" confirmation
-- Added `paymentMethod` and `paymentConfirmed` fields to FormData type
-- Removed PayPal (was already gone from previous session)
-- Removed unused `MOBILE_MONEY_INFO` constant (replaced by PAYMENT_METHODS.manual)
-- Updated step 4 validation: requires payment method selection + payment confirmation + terms acceptance
-- Updated handleSubmit to redirect to PesaPal/Stripe checkout for auto payments, submit normally for manual
-- Extracted `submitRegistration()` helper function for reuse
-- Updated onboard API route:
-  - Added payment method and payment confirmation validation
-  - Added payment method labels (e.g., "M-PESA (Manual) — 51720044")
-  - Included payment method and confirmation in email body sent to hello@sdasms.com
-  - Included payment info in console log
-- Build verified successfully
+- Changed COOLDOWN_MS from 1 hour to 72 hours in HeroSection (page.tsx)
+- Added browser fingerprint generation using canvas, screen, timezone, language, and user agent
+- Created fingerprint-based localStorage keys (`sdasms_sends_{fingerprint}`)
+- Added backward compatibility with legacy `sdasms_send_attempts` key
+- Added cookie-based storage as third layer of persistence (expires in 72 hours)
+- Merged timestamps from all three sources (localStorage by fingerprint, legacy localStorage, cookies)
+- Deduplicated and filtered timestamps for accuracy
+- Updated display text to "3 of 3 free sends remaining this 72hrs"
+- Updated cooldown display to show hours when >= 60 minutes
+- Updated server-side rate limiter from 1 hour to 72 hours in sdasms-api.ts
+- Updated send-sms API route error message to "3 SMS per 72 hours"
 
 Stage Summary:
-- Payment UI now has clear Auto vs Manual categorization
-- Manual payments require user to select provider and confirm payment
-- Auto payments (PesaPal/Stripe) redirect to checkout on form submit
-- All payment details sent to hello@sdasms.com for admin tracking
-- PayPal removed
-- Credentials stored securely in .env.local
+- Free sends now limited to 3 per 72 hours
+- Persistence across IP/VPN changes via browser fingerprint + cookie triple storage
+- Server-side rate limiter also updated to 72 hours
+- All changes in /home/z/my-project/src/app/page.tsx, /home/z/my-project/src/lib/sdasms-api.ts, /home/z/my-project/src/app/api/send-sms/route.ts
 
 ---
 Task ID: 3
 Agent: Main Agent
-Task: Expand layout, link Get Started buttons, remove "free" text, simplify payment to M-PESA + Bank only, fix blank personal Step 3
+Task: Remove TIGO PESA/AIRTEL MONEY, add PesaPal/Stripe payment options
 
 Work Log:
-- Expanded form layout: max-w-2xl container, wider padding (px-10), larger inputs (px-5 py-3.5), text-base font, wider label spacing (mb-2.5)
-- Linked ALL "Get Started" buttons (13 total across 8 pages) from href="#" to href="/get-started"
-- Removed "Get Started Free" / "Get Started for Free" text from 4 pages (homepage, why-sdasms, sms, use-cases) → changed to just "Get Started"
-- Removed PesaPal, Stripe, AIRTEL MONEY, TIGO PESA from payment options
-- Kept only M-PESA (51720044) and Bank Transfer as payment methods
-- Simplified payment UI: single list with selectable cards, expandable instructions + confirmation checkbox
-- Removed auto-payment redirect logic from handleSubmit (no more PesaPal/Stripe checkout redirects)
-- Removed unused imports (CreditCard, Shield)
-- Fixed blank Step 3 for personal accounts: added "Personal Identification" section with ID Type, ID Number, and ID Copy upload
-- Updated personal step 3 validation: requires repIdNumber and repIdCopy
-- Updated payment method type to only 'mpesa' | 'bank'
-- Updated onboard API payment labels to only include M-PESA and Bank
-- Build verified successfully
+- Removed TIGO_PESA_NUMBER and AIRTEL_MONEY_NUMBER from .env.local and .env
+- Added PesaPal and Stripe as auto payment options in get-started page
+- Categorized payment into Manual (M-PESA, Bank Transfer) and Auto (PesaPal, Stripe)
+- Manual payments show payment details and require user confirmation checkbox
+- Auto payments show redirect info and process automatically via gateway
+- Added "Manual" and "Auto" badges on payment method buttons
+- Updated StepPayment component with new categorized layout
+- Updated FormData type to include 'pesapal' | 'stripe' payment methods
+- Updated validation: auto payments don't require paymentConfirmed
+- Created /api/payment/stripe/route.ts (Stripe Checkout Session)
+- Created /api/payment/pesapal/route.ts (PesaPal v3 API integration)
+- Updated /api/onboard/route.ts to handle auto payment methods
+- Added CreditCard, Wallet, Zap icon imports to get-started page
 
 Stage Summary:
-- Payment simplified to M-PESA + Bank Transfer only (manual confirmation)
-- All "Get Started" CTAs across the site now link to /get-started
-- No more "free" language on Get Started buttons
-- Personal accounts now have ID verification in Step 3
-- Layout has more breathing room with wider spacing
+- Only M-PESA (51720044) and Bank Transfer remain as manual options
+- PesaPal and Stripe added as auto payment options
+- All payment details sent to hello@sdasms.com
+- Build verified successful

@@ -30,11 +30,11 @@ export const SDASMS_HEADERS: Record<string, string> = {
 
 /**
  * Rate limiting: track requests per IP in memory.
- * Limits to 3 requests per hour per IP for SMS sending.
+ * Limits to 3 requests per 72 hours per IP for SMS sending.
  */
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_WINDOW_MS = 72 * 60 * 60 * 1000; // 72 hours
 const RATE_LIMIT_MAX_REQUESTS = 3;
 
 export function checkRateLimit(ip: string): { allowed: boolean; remaining: number; resetAt: number } {

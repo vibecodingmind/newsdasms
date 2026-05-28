@@ -97,6 +97,7 @@ export default function Header() {
   }
 
   const isHome = pathname === '/'
+  const isTransparent = isHome && !scrolled
 
   return (
     <header
@@ -140,7 +141,9 @@ export default function Header() {
                 className={`flex items-center gap-1.5 text-sm transition-all duration-300 font-medium ${
                   megaOpen
                     ? 'text-[#FF8340]'
-                    : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
+                    : isTransparent
+                      ? 'text-white hover:text-[#FF8340]'
+                      : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
                 }`}
               >
                 Products
@@ -181,7 +184,7 @@ export default function Header() {
                         <div className="grid grid-cols-[1fr_1fr_220px] gap-0">
                           {/* Column 1 — Channels */}
                           <div className="px-5 pb-6 border-r border-gray-100 dark:border-white/10">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-300 dark:text-white/30 dark:text-white/30 mb-4 px-2">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-white/60 mb-4 px-2">
                               Channels
                             </p>
                             <div className="space-y-0.5">
@@ -204,10 +207,10 @@ export default function Header() {
                                     />
                                   </div>
                                   <div className="min-w-0">
-                                    <span className="text-sm font-semibold text-gray-800 group-hover/item:text-[#D72444] transition-colors block">
+                                    <span className="text-sm font-semibold text-gray-800 dark:text-white/90 group-hover/item:text-[#D72444] transition-colors block">
                                       {item.label}
                                     </span>
-                                    <span className="text-[11px] text-gray-400 group-hover/item:text-gray-500 transition-colors block leading-tight">
+                                    <span className="text-[11px] text-gray-400 dark:text-white/50 group-hover/item:text-gray-500 dark:group-hover/item:text-white/70 transition-colors block leading-tight">
                                       {item.desc}
                                     </span>
                                   </div>
@@ -218,7 +221,7 @@ export default function Header() {
 
                           {/* Column 2 — Business APIs */}
                           <div className="px-5 pb-6 border-r border-gray-100 dark:border-white/10">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-300 dark:text-white/30 mb-4 px-2">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-400 dark:text-white/60 mb-4 px-2">
                               Business APIs
                             </p>
                             <div className="space-y-0.5">
@@ -241,10 +244,10 @@ export default function Header() {
                                     />
                                   </div>
                                   <div className="min-w-0">
-                                    <span className="text-sm font-semibold text-gray-800 group-hover/item:text-[#D72444] transition-colors block">
+                                    <span className="text-sm font-semibold text-gray-800 dark:text-white/90 group-hover/item:text-[#D72444] transition-colors block">
                                       {item.label}
                                     </span>
-                                    <span className="text-[11px] text-gray-400 group-hover/item:text-gray-500 transition-colors block leading-tight">
+                                    <span className="text-[11px] text-gray-400 dark:text-white/50 group-hover/item:text-gray-500 dark:group-hover/item:text-white/70 transition-colors block leading-tight">
                                       {item.desc}
                                     </span>
                                   </div>
@@ -262,10 +265,10 @@ export default function Header() {
                                   <div className="w-8 h-8 rounded-lg bg-[#FF8340]/10 flex items-center justify-center mb-3">
                                     <Sparkles className="w-4 h-4 text-[#FF8340]" />
                                   </div>
-                                  <h4 className="text-gray-800 dark:text-white font-bold text-sm mb-1.5 leading-tight">
+                                  <h4 className="text-gray-800 dark:text-white/90 font-bold text-sm mb-1.5 leading-tight">
                                     Omnichannel Platform
                                   </h4>
-                                  <p className="text-gray-400 dark:text-white/40 text-[11px] leading-relaxed">
+                                  <p className="text-gray-500 dark:text-white/60 text-[11px] leading-relaxed">
                                     Unify all your messaging channels in one powerful dashboard.
                                   </p>
                                 </div>
@@ -282,11 +285,11 @@ export default function Header() {
                               <div className="mt-4 space-y-2.5">
                                 <div className="flex items-center gap-2 px-2">
                                   <Zap className="w-3 h-3 text-[#FF8340]" />
-                                  <span className="text-gray-400 dark:text-white/40 text-[10px] font-medium">99.2% delivery rate</span>
+                                  <span className="text-gray-500 dark:text-white/60 text-[10px] font-medium">99.2% delivery rate</span>
                                 </div>
                                 <div className="flex items-center gap-2 px-2">
                                   <MessageSquare className="w-3 h-3 text-[#D72444]" />
-                                  <span className="text-gray-400 dark:text-white/40 text-[10px] font-medium">10M+ messages delivered</span>
+                                  <span className="text-gray-500 dark:text-white/60 text-[10px] font-medium">10M+ messages delivered</span>
                                 </div>
                               </div>
                             </div>
@@ -297,7 +300,7 @@ export default function Header() {
                         <div className="px-7 py-4 border-t border-gray-100 dark:border-white/10 flex items-center justify-between">
                           <a
                             href="/features"
-                            className="group/link inline-flex items-center gap-2 text-gray-400 dark:text-white/50 hover:text-[#D72444] text-xs font-semibold transition-colors duration-200"
+                            className="group/link inline-flex items-center gap-2 text-gray-500 dark:text-white/60 hover:text-[#D72444] text-xs font-semibold transition-colors duration-200"
                           >
                             View all platform features
                             <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
@@ -325,7 +328,9 @@ export default function Header() {
                 className={`text-sm transition-colors font-medium ${
                   pathname === link.href
                     ? 'text-[#FF8340]'
-                    : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
+                    : isTransparent
+                      ? 'text-white hover:text-[#FF8340]'
+                      : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
                 }`}
               >
                 {link.label}
@@ -338,7 +343,11 @@ export default function Header() {
             <ThemeToggle />
             <a
               href="https://my.sdasms.com/login"
-              className="inline-flex items-center gap-1 text-sm font-medium text-[#FF8340] hover:text-[#FF9A5C] transition-colors px-5 py-2.5 rounded-full border border-[#FF8340]/30 hover:border-[#FF8340]/60"
+              className={`inline-flex items-center gap-1 text-sm font-medium transition-colors px-5 py-2.5 rounded-full border ${
+                isTransparent
+                  ? 'text-white border-white/30 hover:border-white/60 hover:text-white/80'
+                  : 'text-[#FF8340] border-[#FF8340]/30 hover:border-[#FF8340]/60 hover:text-[#FF9A5C]'
+              }`}
             >
               <ArrowRight className="w-4 h-4" />
               Login
@@ -356,7 +365,7 @@ export default function Header() {
             <ThemeToggle />
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-gray-800 dark:text-white hover:bg-black/10 dark:hover:bg-white/10 h-11 w-11">
+                <Button variant="ghost" size="icon" className={`hover:bg-black/10 dark:hover:bg-white/10 h-11 w-11 ${isTransparent ? 'text-white' : 'text-gray-800 dark:text-white'}`}>
                   <Menu className="w-6 h-6" />
                   <span className="sr-only">Open menu</span>
                 </Button>

@@ -258,11 +258,51 @@ function HeroSection() {
 
   const MAX_USER_CHARS = 60
   const MAX_ATTEMPTS = 3
-  const COOLDOWN_MS = 60 * 60 * 1000 // 1 hour
+  const COOLDOWN_MS = 72 * 60 * 60 * 1000 // 72 hours
   const SMS_FOOTER = '\nHello! This is a sample SMS from SDASMS. Try sending one now!'
   const FOOTER_LEN = SMS_FOOTER.length
   const TOTAL_SMS_LEN = charCount + FOOTER_LEN
   const SMS_LIMIT = 160
+
+  // Browser fingerprint for persistence across IP/VPN changes
+  const getFingerprint = (): string => {
+    try {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      let canvasHash = ''
+      if (ctx) {
+        ctx.textBaseline = 'top'
+        ctx.font = '14px Arial'
+        ctx.fillText('SDASMS_fp', 2, 2)
+        canvasHash = canvas.toDataURL().slice(-50)
+      }
+      const raw = [
+        navigator.userAgent,
+        screen.width,
+        screen.height,
+        screen.colorDepth,
+        new Date().getTimezoneOffset(),
+        navigator.language,
+        canvasHash,
+      ].join('|')
+      // Simple hash
+      let hash = 0
+      for (let i = 0; i < raw.length; i++) {
+        const chr = raw.charCodeAt(i)
+        hash = ((hash << 5) - hash) + chr
+        hash |= 0
+      }
+      return 'fp_' + Math.abs(hash).toString(36)
+    } catch {
+      return 'fp_default'
+    }
+  }
+
+  // Storage keys using fingerprint for persistence across IP changes
+  const getStorageKey = (fp: string): string => `sdasms_sends_${fp}`
+
+  // Also check legacy key for backwards compatibility
+  const LEGACY_KEY = 'sdasms_send_attempts'
 
   // Check attempts on mount
   useEffect(() => {
@@ -271,24 +311,57 @@ function HeroSection() {
 
   const checkAttempts = () => {
     try {
-      const stored = localStorage.getItem('sdasms_send_attempts')
+      const fp = getFingerprint()
+      const key = getStorageKey(fp)
+      // Check both fingerprint-based and legacy storage
+      let allTimestamps: number[] = []
+
+      // Check fingerprint-based storage
+      const stored = localStorage.getItem(key)
       if (stored) {
         const data = JSON.parse(stored) as { timestamps: number[] }
-        const now = Date.now()
-        // Filter out attempts older than 1 hour
-        const validAttempts = data.timestamps.filter((t: number) => now - t < COOLDOWN_MS)
-        localStorage.setItem('sdasms_send_attempts', JSON.stringify({ timestamps: validAttempts }))
-        const remaining = MAX_ATTEMPTS - validAttempts.length
-        setAttemptsLeft(remaining)
-        if (remaining <= 0 && validAttempts.length > 0) {
-          const oldestInWindow = validAttempts[0]
-          const minsLeft = Math.ceil((COOLDOWN_MS - (now - oldestInWindow)) / 60000)
-          setCooldownMinutes(minsLeft)
-        } else {
-          setCooldownMinutes(0)
-        }
+        allTimestamps.push(...data.timestamps)
+      }
+
+      // Also check legacy key
+      const legacyStored = localStorage.getItem(LEGACY_KEY)
+      if (legacyStored) {
+        const data = JSON.parse(legacyStored) as { timestamps: number[] }
+        allTimestamps.push(...data.timestamps)
+      }
+
+      // Also check cookie-based storage for extra persistence
+      const cookieData = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('sdasms_sends='))
+        ?.split('=')[1]
+      if (cookieData) {
+        try {
+          const decoded = JSON.parse(decodeURIComponent(cookieData)) as { timestamps: number[] }
+          allTimestamps.push(...decoded.timestamps)
+        } catch { /* ignore */ }
+      }
+
+      const now = Date.now()
+      // Filter out attempts older than 72 hours
+      const validAttempts = [...new Set(allTimestamps)].filter((t: number) => now - t < COOLDOWN_MS).sort((a, b) => a - b)
+
+      // Save back to all storage locations
+      const saveData = JSON.stringify({ timestamps: validAttempts })
+      localStorage.setItem(key, saveData)
+      localStorage.setItem(LEGACY_KEY, saveData)
+      // Also set a cookie (expires in 72 hours)
+      const expires = new Date(now + COOLDOWN_MS).toUTCString()
+      document.cookie = `sdasms_sends=${encodeURIComponent(saveData)}; expires=${expires}; path=/; SameSite=Lax`
+
+      const remaining = MAX_ATTEMPTS - validAttempts.length
+      setAttemptsLeft(remaining)
+      if (remaining <= 0 && validAttempts.length > 0) {
+        const oldestInWindow = validAttempts[0]
+        const hrsLeft = Math.ceil((COOLDOWN_MS - (now - oldestInWindow)) / (60 * 60 * 1000))
+        setCooldownMinutes(hrsLeft * 60) // store as minutes for display
       } else {
-        setAttemptsLeft(MAX_ATTEMPTS)
+        setCooldownMinutes(0)
       }
     } catch {
       setAttemptsLeft(MAX_ATTEMPTS)
@@ -297,19 +370,42 @@ function HeroSection() {
 
   const recordAttempt = () => {
     try {
-      const stored = localStorage.getItem('sdasms_send_attempts')
-      let timestamps: number[] = []
+      const fp = getFingerprint()
+      const key = getStorageKey(fp)
+      const now = Date.now()
+
+      // Gather existing timestamps from all sources
+      let allTimestamps: number[] = []
+
+      const stored = localStorage.getItem(key)
       if (stored) {
         const data = JSON.parse(stored) as { timestamps: number[] }
-        timestamps = data.timestamps.filter((t: number) => Date.now() - t < COOLDOWN_MS)
+        allTimestamps.push(...data.timestamps)
       }
-      timestamps.push(Date.now())
-      localStorage.setItem('sdasms_send_attempts', JSON.stringify({ timestamps }))
-      setAttemptsLeft(MAX_ATTEMPTS - timestamps.length)
-      if (MAX_ATTEMPTS - timestamps.length <= 0) {
-        const oldestInWindow = timestamps[0]
-        const minsLeft = Math.ceil((COOLDOWN_MS - (Date.now() - oldestInWindow)) / 60000)
-        setCooldownMinutes(minsLeft)
+
+      const legacyStored = localStorage.getItem(LEGACY_KEY)
+      if (legacyStored) {
+        const data = JSON.parse(legacyStored) as { timestamps: number[] }
+        allTimestamps.push(...data.timestamps)
+      }
+
+      // Deduplicate and filter
+      const validAttempts = [...new Set(allTimestamps)].filter((t: number) => now - t < COOLDOWN_MS).sort((a, b) => a - b)
+      validAttempts.push(now)
+
+      // Save to all storage locations
+      const saveData = JSON.stringify({ timestamps: validAttempts })
+      localStorage.setItem(key, saveData)
+      localStorage.setItem(LEGACY_KEY, saveData)
+      // Also set a cookie
+      const expires = new Date(now + COOLDOWN_MS).toUTCString()
+      document.cookie = `sdasms_sends=${encodeURIComponent(saveData)}; expires=${expires}; path=/; SameSite=Lax`
+
+      setAttemptsLeft(MAX_ATTEMPTS - validAttempts.length)
+      if (MAX_ATTEMPTS - validAttempts.length <= 0) {
+        const oldestInWindow = validAttempts[0]
+        const hrsLeft = Math.ceil((COOLDOWN_MS - (now - oldestInWindow)) / (60 * 60 * 1000))
+        setCooldownMinutes(hrsLeft * 60)
       }
     } catch {
       // silent fail
@@ -362,7 +458,8 @@ function HeroSection() {
       return
     }
     if (attemptsLeft !== null && attemptsLeft <= 0) {
-      setSendResult({ success: false, message: `Limit reached. Try again in ${cooldownMinutes} min.` })
+      const timeStr = cooldownMinutes >= 60 ? `${Math.ceil(cooldownMinutes / 60)} hours` : `${cooldownMinutes} minutes`
+      setSendResult({ success: false, message: `Limit reached. Try again in ${timeStr}.` })
       return
     }
 
@@ -657,8 +754,8 @@ function HeroSection() {
                   {attemptsLeft !== null && (
                     <p className={`text-[10px] text-center font-medium ${attemptsLeft <= 0 ? 'text-[#FF8340]' : 'text-white/15'}`}>
                       {attemptsLeft > 0
-                        ? `${attemptsLeft} of ${MAX_ATTEMPTS} free sends remaining this hour`
-                        : `Limit reached. Try again in ${cooldownMinutes} min.`
+                        ? `${attemptsLeft} of ${MAX_ATTEMPTS} free sends remaining this 72hrs`
+                        : `Limit reached. Try again in ${cooldownMinutes >= 60 ? `${Math.ceil(cooldownMinutes / 60)}h` : `${cooldownMinutes}m`}.`
                       }
                     </p>
                   )}
@@ -676,7 +773,7 @@ function HeroSection() {
                       </>
                     ) : (attemptsLeft !== null && attemptsLeft <= 0) ? (
                       <>
-                        Limit reached ({cooldownMinutes}m left)
+                        Limit reached ({cooldownMinutes >= 60 ? `${Math.ceil(cooldownMinutes / 60)}h left` : `${cooldownMinutes}m left`})
                       </>
                     ) : (
                       <>

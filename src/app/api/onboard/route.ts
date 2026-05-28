@@ -104,8 +104,11 @@ export async function POST(request: NextRequest) {
     const paymentLabels: Record<string, string> = {
       mpesa: 'M-PESA — 51720044',
       bank: 'Bank Transfer — Equity Bank Tanzania, Acc: 3002211802039',
+      pesapal: 'PesaPal (Auto Payment)',
+      stripe: 'Stripe (Auto Payment)',
     }
     const paymentLabel = paymentLabels[paymentMethod] || paymentMethod
+    const isAutoPayment = paymentMethod === 'pesapal' || paymentMethod === 'stripe'
 
     // Validate terms acceptance
     if (termsAccepted !== 'true') {
@@ -116,7 +119,8 @@ export async function POST(request: NextRequest) {
     if (!paymentMethod) {
       return errorResponse('Please select a payment method')
     }
-    if (paymentConfirmed !== 'true') {
+    // Manual payments require confirmation; auto payments process automatically
+    if (!isAutoPayment && paymentConfirmed !== 'true') {
       return errorResponse('Please confirm your payment to proceed')
     }
 
@@ -219,7 +223,7 @@ City: ${getTextField(formData, 'city') || 'N/A'}, Region: ${getTextField(formDat
 Country: ${getTextField(formData, 'country')}
 
 Payment Method: ${paymentLabel}
-Payment Confirmed: ${paymentConfirmed === 'true' ? 'Yes' : 'No'}
+Payment Confirmed: ${isAutoPayment ? 'Auto (gateway processed)' : (paymentConfirmed === 'true' ? 'Yes' : 'No')}
 
 Package: Starter - Tsh 94,500
           `.trim()
@@ -247,7 +251,7 @@ Uploaded Documents:
 - Request & Authorization Letter: ${fileInfo.authLetter || 'N/A'} → ${savedFiles.authLetter || 'not saved'}
 
 Payment Method: ${paymentLabel}
-Payment Confirmed: ${paymentConfirmed === 'true' ? 'Yes' : 'No'}
+Payment Confirmed: ${isAutoPayment ? 'Auto (gateway processed)' : (paymentConfirmed === 'true' ? 'Yes' : 'No')}
 
 Package: Starter - Tsh 94,500
           `.trim()

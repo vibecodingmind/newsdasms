@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     if (!rateLimitResult.allowed) {
       return errorResponse(
-        `Rate limit exceeded. Maximum 3 SMS per hour. Try again after ${new Date(rateLimitResult.resetAt).toISOString()}`,
+        `Rate limit exceeded. Maximum 3 SMS per 72 hours. Try again after ${new Date(rateLimitResult.resetAt).toISOString()}`,
         429
       );
     }
