@@ -81,7 +81,7 @@ export function errorResponse(message: string, status: number = 400): NextRespon
  */
 export function successResponse(data: unknown, status: number = 200): NextResponse {
   return withCors(
-    NextResponse.json(data, { status })
+    NextResponse.json({ success: true, data }, { status })
   );
 }
 

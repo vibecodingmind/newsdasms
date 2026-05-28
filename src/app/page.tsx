@@ -385,7 +385,8 @@ function HeroSection() {
 
       const result = await res.json()
 
-      if (result.success && result.data?.status === 'success') {
+      // Server now wraps success responses as { success: true, data: { ... } }
+      if (result.success) {
         recordAttempt()
         setSendResult({
           success: true,
@@ -651,9 +652,12 @@ function HeroSection() {
                   </AnimatePresence>
 
                   {/* Attempts counter */}
-                  {attemptsLeft !== null && attemptsLeft > 0 && (
-                    <p className="text-white/15 text-[10px] text-center font-medium">
-                      {attemptsLeft} of {MAX_ATTEMPTS} free sends remaining this hour
+                  {attemptsLeft !== null && (
+                    <p className={`text-[10px] text-center font-medium ${attemptsLeft <= 0 ? 'text-[#FF8340]' : 'text-white/15'}`}>
+                      {attemptsLeft > 0
+                        ? `${attemptsLeft} of ${MAX_ATTEMPTS} free sends remaining this hour`
+                        : `Limit reached. Try again in ${cooldownMinutes} min.`
+                      }
                     </p>
                   )}
 
