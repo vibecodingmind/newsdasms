@@ -755,7 +755,7 @@ function FeaturesSection() {
           {FEATURES.map((feature) => (
             <StaggerItem key={feature.title}>
               <div className="group bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
-                <div className="w-14 h-14 rounded-xl bg-[#D72444]/10 flex items-center justify-center mb-5 group-hover:bg-[#D72444]/20 transition-colors">
+                <div className="w-14 h-14 rounded-2xl bg-[#D72444]/10 flex items-center justify-center mb-5 group-hover:bg-[#D72444]/20 transition-colors">
                   <feature.icon className="w-7 h-7 text-[#D72444]" />
                 </div>
                 <h3 className="text-lg font-bold text-black dark:text-white mb-2">
@@ -801,7 +801,7 @@ function CoverageSection() {
             </p>
             <a
               href="#"
-              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started
               <ArrowRight className="w-5 h-5" />
@@ -818,7 +818,7 @@ function CoverageSection() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08, duration: 0.4 }}
-                    className="flex items-center justify-center bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-xl p-4 sm:p-5 border border-gray-100 dark:border-white/10 hover:border-gray-200 dark:border-white/10 hover:shadow-sm transition-all duration-300"
+                    className="flex items-center justify-center bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-xl p-4 sm:p-5 border border-gray-100 dark:border-white/10 hover:border-gray-200 dark:hover:border-white/20 hover:shadow-sm transition-all duration-300"
                   >
                     { }
                     <img
@@ -857,8 +857,8 @@ function UseCasesSection() {
           {USE_CASES.map((useCase) => (
             <StaggerItem key={useCase.title}>
               <div className="group bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
-                <div className="w-14 h-14 rounded-xl bg-[#460544]/10 flex items-center justify-center mb-5 group-hover:bg-[#460544]/20 transition-colors">
-                  <useCase.icon className="w-7 h-7 text-[#460544]" />
+                <div className="w-14 h-14 rounded-2xl bg-[#D72444]/10 flex items-center justify-center mb-5 group-hover:bg-[#D72444]/20 transition-colors">
+                  <useCase.icon className="w-7 h-7 text-[#D72444]" />
                 </div>
                 <h3 className="text-lg font-bold text-black dark:text-white mb-2">
                   {useCase.title}
@@ -966,7 +966,7 @@ function PricingSection() {
                       </div>
                       <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time setup</span>
                     </div>
-                    <div className="w-px h-12 bg-gray-200 hidden sm:block" />
+                    <div className="w-px h-12 bg-gray-200 dark:bg-white/10 hidden sm:block" />
                     <div className="hidden sm:flex flex-col items-start gap-2">
                       <div className="flex items-center gap-2">
                         <div className="w-5 h-5 flex items-center justify-center shrink-0">
@@ -1044,7 +1044,7 @@ function PricingSection() {
                   {RECHARGE_TIERS.map((tier, i) => (
                     <div
                       key={i}
-                      className="group/card relative bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-lg hover:border-gray-200 dark:border-white/10 transition-all duration-300 cursor-pointer"
+                      className="group/card relative bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 hover:border-gray-200 dark:hover:border-white/20 transition-all duration-300 cursor-pointer"
                     >
                       <div className="flex items-center gap-4 mb-4">
                         {/* Icon */}
@@ -1116,7 +1116,7 @@ function PowerfulGatewaySection() {
             </p>
             <a
               href="#"
-              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-xl transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started
               <ArrowRight className="w-5 h-5" />
@@ -1153,7 +1153,7 @@ function DigitalDiscipleshipSection() {
             </p>
             <a
               href="#"
-              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-[#F6F6F6] font-semibold px-6 py-3 rounded-xl transition-all duration-300"
+              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started
               <ArrowRight className="w-5 h-5" />

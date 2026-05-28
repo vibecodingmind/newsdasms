@@ -105,7 +105,7 @@ export default function Footer() {
                 <li key={link}>
                   <Link
                     href={link === 'Coverage' ? '/coverage' : link === 'Features' ? '/features' : link === 'Pricing' ? '/pricing' : link === 'API Docs' ? '/api-docs' : '#'}
-                    className="text-gray-400 text-sm hover:text-[#FF8340] transition-colors font-medium"
+                    className="text-gray-400 text-sm hover:text-[#FF8340] transition-colors font-medium block py-1.5"
                   >
                     {link}
                   </Link>

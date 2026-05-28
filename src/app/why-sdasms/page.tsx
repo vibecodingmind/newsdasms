@@ -316,8 +316,8 @@ export default function WhySDASMSPage() {
               {PLATFORM_FEATURES.map((item) => (
                 <StaggerItem key={item.title}>
                   <div className="group bg-[#F6F6F6] dark:bg-[#1A0A2E] border border-gray-100 dark:border-white/10 rounded-2xl p-6 sm:p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
-                    <div className="w-12 h-12 rounded-xl bg-[#D72444]/10 flex items-center justify-center mb-5 group-hover:bg-[#D72444]/20 transition-colors">
-                      <item.icon className="w-6 h-6 text-[#D72444]" />
+                    <div className="w-14 h-14 rounded-2xl bg-[#D72444]/10 flex items-center justify-center mb-5 group-hover:bg-[#D72444]/20 transition-colors">
+                      <item.icon className="w-7 h-7 text-[#D72444]" />
                     </div>
                     <h3 className="text-lg font-bold text-black dark:text-white mb-3">
                       {item.title}
@@ -352,9 +352,9 @@ export default function WhySDASMSPage() {
                 { icon: TrendingUp, title: 'Volume Discounts', desc: 'As your ministry grows, your per-SMS cost decreases. Our tiered pricing rewards growth — the more you send, the less you pay per message.' },
               ].map((item) => (
                 <StaggerItem key={item.title}>
-                  <div className="flex items-start gap-4 bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 h-full">
-                    <div className="w-11 h-11 rounded-xl bg-[#FF8340]/10 flex items-center justify-center shrink-0">
-                      <item.icon className="w-5 h-5 text-[#FF8340]" />
+                  <div className="flex items-start gap-4 bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FF8340]/10 flex items-center justify-center shrink-0">
+                      <item.icon className="w-6 h-6 text-[#FF8340]" />
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-black dark:text-white mb-1.5">{item.title}</h3>

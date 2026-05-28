@@ -171,10 +171,10 @@ export default function AboutPage() {
         />
 
         {/* Mission & Vision */}
-        <section className="py-16 sm:py-20 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
+        <section className="py-20 sm:py-24 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInWhenVisible className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
                 Mission &{' '}
                 <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                   Vision
@@ -289,7 +289,7 @@ export default function AboutPage() {
               </FadeInWhenVisible>
 
               <FadeInWhenVisible direction="right">
-                <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-6">
                   Our{' '}
                   <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                     Story
@@ -333,7 +333,7 @@ export default function AboutPage() {
                 <PenLine className="w-3.5 h-3.5" />
                 A Word from Our Founder
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white">
                 Founder&apos;s{' '}
                 <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                   Note
@@ -418,7 +418,7 @@ export default function AboutPage() {
         <section className="py-20 sm:py-28 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInWhenVisible className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
                 Core{' '}
                 <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                   Values
@@ -456,7 +456,7 @@ export default function AboutPage() {
         <section className="py-20 sm:py-28 bg-white dark:bg-[#0D0B1A]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInWhenVisible className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
                 Meet Our{' '}
                 <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                   Leadership
@@ -509,7 +509,7 @@ export default function AboutPage() {
         <section className="py-20 sm:py-28 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInWhenVisible className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
                 SDASMS by the{' '}
                 <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                   Numbers
@@ -553,7 +553,7 @@ export default function AboutPage() {
         <section className="py-20 sm:py-28 bg-white dark:bg-[#0D0B1A]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <FadeInWhenVisible className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-black dark:text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4">
                 Why Choose{' '}
                 <span className="bg-gradient-to-r from-[#D72444] to-[#FF8340] bg-clip-text text-transparent">
                   SDASMS?

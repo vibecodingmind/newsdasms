@@ -102,7 +102,7 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || !isHome
-          ? 'dark:bg-[#460544]/95 bg-white/95 backdrop-blur-md shadow-lg'
+          ? 'dark:bg-[#1A0A2E]/95 bg-white/95 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -345,7 +345,7 @@ export default function Header() {
             </a>
             <a
               href="#"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-[#F6F6F6] bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-[30px] shadow-lg"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-white bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-full shadow-lg shadow-[#D72444]/25"
             >
               Get Started
             </a>
@@ -493,7 +493,7 @@ export default function Header() {
                   </a>
                   <a
                     href="#"
-                    className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-[#F6F6F6] bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-[30px]"
+                    className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-white bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-full shadow-lg shadow-[#D72444]/25"
                   >
                     Get Started
                   </a>

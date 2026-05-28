@@ -252,12 +252,12 @@ export default function ContactPage() {
                       src="https://www.openstreetmap.org/export/embed.html?bbox=36.6800%2C-3.3800%2C36.7000%2C-3.3600&layer=mapnik&marker=-3.3702%2C36.6880"
                       width="100%"
                       height="100%"
-                      style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) brightness(0.95) contrast(0.9)' }}
+                      style={{ border: 0 }}
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       title="SDASMS Office - PAPU Tower, Arusha"
-                      className="dark:filter-none"
+                      className="dark:invert dark:hue-rotate-180 dark:brightness-95 dark:contrast-90"
                     />
                     {/* Overlay with address info */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">

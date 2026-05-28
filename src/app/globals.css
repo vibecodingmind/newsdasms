@@ -291,3 +291,36 @@
     animation-duration: 20s;
   }
 }
+
+/* Global focus-visible styles for accessibility & polish */
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #D72444;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Footer links use accent orange for focus */
+footer a:focus-visible {
+  outline-color: #FF8340;
+}
+
+/* Remove default focus styles (use focus-visible instead) */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Smooth scroll for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better text selection color */
+::selection {
+  background-color: rgba(215, 36, 68, 0.15);
+  color: inherit;
+}
