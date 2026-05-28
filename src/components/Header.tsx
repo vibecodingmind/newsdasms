@@ -52,7 +52,7 @@ const NAV_LINKS = [
   { label: 'Features', href: '/features' },
   { label: 'Coverage', href: '/coverage' },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'Use Cases', href: '/use-cases' },
+  { label: 'Use Cases', href: '/#use-cases' },
   { label: 'API Docs', href: '/api-docs' },
 ]
 
@@ -333,21 +333,51 @@ export default function Header() {
             </div>
 
             {/* Regular nav links */}
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-sm transition-colors font-medium ${
-                  pathname === link.href
-                    ? 'text-[#FF8340]'
-                    : isTransparent
-                      ? 'text-white hover:text-[#FF8340]'
-                      : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isHashLink = link.href.includes('#')
+              const isActive = isHashLink
+                ? pathname === '/'
+                : pathname === link.href
+              if (isHashLink) {
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={(e) => {
+                      if (pathname === '/') {
+                        e.preventDefault()
+                        const hash = link.href.substring(link.href.indexOf('#'))
+                        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' })
+                      }
+                    }}
+                    className={`text-sm transition-colors font-medium ${
+                      isActive
+                        ? 'text-[#FF8340]'
+                        : isTransparent
+                          ? 'text-white hover:text-[#FF8340]'
+                          : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                )
+              }
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={`text-sm transition-colors font-medium ${
+                    isActive
+                      ? 'text-[#FF8340]'
+                      : isTransparent
+                        ? 'text-white hover:text-[#FF8340]'
+                        : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Desktop Buttons */}
@@ -467,20 +497,45 @@ export default function Header() {
                   </div>
 
                   {/* Regular nav links */}
-                  {NAV_LINKS.map((link) => (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
-                        pathname === link.href
-                          ? 'text-[#FF8340]'
-                          : 'text-white hover:text-sda-accent'
-                      }`}
-                      onClick={() => setOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
+                  {NAV_LINKS.map((link) => {
+                    const isHashLink = link.href.includes('#')
+                    const isActive = isHashLink ? pathname === '/' : pathname === link.href
+                    if (isHashLink) {
+                      return (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
+                            isActive ? 'text-[#FF8340]' : 'text-white hover:text-sda-accent'
+                          }`}
+                          onClick={(e) => {
+                            setOpen(false)
+                            if (pathname === '/') {
+                              e.preventDefault()
+                              const hash = link.href.substring(link.href.indexOf('#'))
+                              document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' })
+                            }
+                          }}
+                        >
+                          {link.label}
+                        </a>
+                      )
+                    }
+                    return (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
+                          isActive
+                            ? 'text-[#FF8340]'
+                            : 'text-white hover:text-sda-accent'
+                        }`}
+                        onClick={() => setOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    )
+                  })}
                   <Link
                     href="/about"
                     className={`transition-colors font-medium px-3 py-3 rounded-lg hover:bg-white/5 ${
