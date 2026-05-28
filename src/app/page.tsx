@@ -236,6 +236,7 @@ const ADVANCED_FEATURES_TABS = [
 
 const TRUSTED_LOGOS = [
   { src: '/logo-awr.png', alt: 'AWR 360' },
+  { src: '/logo-awr-center.png', alt: 'AWR Center for Digital Evangelism' },
   { src: '/logo-bb.png', alt: 'Soma Biblia' },
   { src: '/logo-adra.png', alt: 'ADRA' },
   { src: '/logo-onevoice27.png', alt: 'OneVoice27', large: true },
@@ -783,6 +784,7 @@ const NETWORK_LOGOS = [
   { src: '/logo-9x.png', alt: 'Network Partner 5' },
   { src: '/logo-10x.png', alt: 'Network Partner 6' },
   { src: '/logo-13x.png', alt: 'Network Partner 7' },
+  { src: '/logo-asi.png', alt: 'ASI' },
 ]
 
 function CoverageSection() {

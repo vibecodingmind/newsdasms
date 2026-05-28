@@ -53,10 +53,9 @@ export default function ContactPage() {
     setSubmitting(true)
 
     try {
-      // Formspree or similar endpoint - replace with actual endpoint
-      const response = await fetch('https://formspree.io/f/placeholder', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -65,7 +64,9 @@ export default function ContactPage() {
         }),
       })
 
-      if (response.ok) {
+      const result = await response.json()
+
+      if (result.success) {
         setSubmitted(true)
         setFormData({ name: '', email: '', subject: '', message: '' })
         setTimeout(() => setSubmitted(false), 5000)
@@ -288,7 +289,7 @@ export default function ContactPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="#"
+                  href="/get-started"
                   className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#D72444]/25 transition-all duration-300"
                 >
                   Get Started

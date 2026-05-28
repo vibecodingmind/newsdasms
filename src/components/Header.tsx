@@ -303,7 +303,7 @@ export default function Header() {
                             <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
                           </a>
                           <a
-                            href="#"
+                            href="/get-started"
                             className="inline-flex items-center gap-1.5 bg-[#D72444] hover:bg-[#E03355] text-white text-xs font-semibold px-4 py-2 rounded-full transition-colors duration-200"
                           >
                             Get Started
@@ -344,7 +344,7 @@ export default function Header() {
               Login
             </a>
             <a
-              href="#"
+              href="/get-started"
               className="inline-flex items-center gap-1 text-sm font-semibold text-white bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-full shadow-lg shadow-[#D72444]/25"
             >
               Get Started
@@ -492,7 +492,7 @@ export default function Header() {
                     Login
                   </a>
                   <a
-                    href="#"
+                    href="/get-started"
                     className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-white bg-[#D72444] hover:bg-[#E03355] transition-colors px-5 py-2.5 rounded-full shadow-lg shadow-[#D72444]/25"
                   >
                     Get Started
