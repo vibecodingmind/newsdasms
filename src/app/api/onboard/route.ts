@@ -61,62 +61,47 @@ function buildUserConfirmationHtml(data: {
 }): string {
   const { accountType, subjectName, paymentMethod, paymentLabel } = data
 
-  // Payment instructions based on method
-  const paymentInstructions = paymentMethod === 'mpesa'
-    ? `
-      <div style="background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 16px; margin: 16px 0;">
-        <h4 style="margin: 0 0 8px; color: #92400e; font-size: 14px;">M-PESA Payment Instructions</h4>
-        <p style="margin: 4px 0; color: #78350f; font-size: 14px;"><strong>Lipa Number:</strong> 51720044</p>
-        <p style="margin: 4px 0; color: #78350f; font-size: 13px;">Go to M-PESA > Lipa na M-PESA > Enter Lipa Number > 51720044 > Enter Amount: 94,500 > Enter PIN > Confirm</p>
-      </div>`
-    : `
-      <div style="background: #dbeafe; border: 1px solid #93c5fd; border-radius: 8px; padding: 16px; margin: 16px 0;">
-        <h4 style="margin: 0 0 8px; color: #1e40af; font-size: 14px;">Bank Transfer Instructions</h4>
-        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Bank:</strong> EQUITY BANK TANZANIA</p>
-        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Account Name:</strong> SDASMS MARKETING AGENCY</p>
-        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Account Number:</strong> 3002211802039</p>
-        <p style="margin: 4px 0; color: #1e3a5f; font-size: 14px;"><strong>Amount:</strong> 94,500 TZS</p>
-      </div>`
-
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
       <!-- Header -->
       <div style="background: linear-gradient(135deg, #D72444, #7C3AED); padding: 32px; text-align: center;">
-        <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700;">Welcome to SDASMS!</h1>
-        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 15px;">Your registration has been received</p>
+        <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700;">Thank You for Registering!</h1>
+        <p style="margin: 8px 0 0; color: rgba(255,255,255,0.85); font-size: 15px;">Your submission is under review</p>
       </div>
 
       <!-- Body -->
       <div style="padding: 28px 32px;">
         <p style="margin: 0 0 16px; color: #374151; font-size: 15px; line-height: 1.6;">Dear <strong>${subjectName}</strong>,</p>
-        <p style="margin: 0 0 16px; color: #374151; font-size: 15px; line-height: 1.6;">Thank you for registering with SDASMS — Africa's leading Digital Evangelism Messaging Platform! We're excited to have you on board.</p>
+        <p style="margin: 0 0 16px; color: #374151; font-size: 15px; line-height: 1.6;">Thank you for registering with SDASMS — Africa's leading Digital Evangelism Messaging Platform! We have received your registration details and payment information.</p>
 
         <!-- Registration Summary -->
         <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 16px 0;">
-          <h3 style="margin: 0 0 12px; color: #374151; font-size: 15px;">Registration Summary</h3>
+          <h3 style="margin: 0 0 12px; color: #374151; font-size: 15px;">Your Registration Summary</h3>
           <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Account Type:</strong> ${accountType}</p>
           <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Package:</strong> Starter Pack</p>
           <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Amount:</strong> 94,500 TZS</p>
           <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Payment Method:</strong> ${paymentLabel}</p>
         </div>
 
-        <!-- Payment Instructions -->
-        <h3 style="color: #374151; font-size: 16px; margin: 24px 0 8px;">Complete Your Payment</h3>
-        <p style="margin: 0 0 8px; color: #6b7280; font-size: 14px; line-height: 1.5;">To activate your account, please complete the payment of <strong>94,500 TZS</strong> using the details below:</p>
-        ${paymentInstructions}
-
-        <!-- What's Next -->
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
-          <h4 style="margin: 0 0 8px; color: #166534; font-size: 14px;">What Happens Next?</h4>
+        <!-- Under Review Notice -->
+        <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 16px; margin: 20px 0;">
+          <h4 style="margin: 0 0 8px; color: #9a3412; font-size: 14px;">Your Submission Is Under Review</h4>
+          <p style="margin: 0 0 8px; color: #7c2d12; font-size: 14px; line-height: 1.5;">Since all payments are processed manually, our team needs to verify your payment proof before activating your account. Here is what happens next:</p>
           <ol style="margin: 0; padding-left: 20px; color: #374151; font-size: 13px; line-height: 1.8;">
-            <li>Our team will verify your registration and payment</li>
-            <li>Your account will be activated within 24 hours after payment confirmation</li>
-            <li>You'll receive login credentials via email once your account is ready</li>
-            <li>Start sending messages and spreading the Gospel!</li>
+            <li>Our team will review your registration details and payment proof</li>
+            <li>We will verify your payment with our financial records</li>
+            <li>Once approved, your account will be activated and you will receive login credentials via email</li>
+            <li>If there are any issues, we will contact you directly</li>
           </ol>
         </div>
 
-        <p style="margin: 16px 0 0; color: #6b7280; font-size: 14px; line-height: 1.5;">If you have any questions, feel free to reach out to us at <a href="mailto:hello@sdasms.com" style="color: #D72444; text-decoration: none;">hello@sdasms.com</a> or call <strong>+255 658 600 302</strong>.</p>
+        <!-- Timeline -->
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
+          <h4 style="margin: 0 0 8px; color: #166534; font-size: 14px;">Expected Timeline</h4>
+          <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6;">Account activation typically takes <strong>24-48 hours</strong> after payment verification. We appreciate your patience as we ensure everything is properly verified.</p>
+        </div>
+
+        <p style="margin: 16px 0 0; color: #6b7280; font-size: 14px; line-height: 1.5;">If you have any questions or need to follow up on your registration, feel free to reach out to us at <a href="mailto:hello@sdasms.com" style="color: #D72444; text-decoration: none;">hello@sdasms.com</a> or call <strong>+255 658 600 302</strong>.</p>
       </div>
 
       <!-- Footer -->
@@ -466,7 +451,7 @@ export async function POST(request: NextRequest) {
           await transporter.sendMail({
             from: `"SDASMS" <${process.env.SMTP_USER}>`,
             to: userEmail,
-            subject: `Welcome to SDASMS — Your ${accountType === 'personal' ? 'Personal' : 'Organization'} Registration is Received`,
+            subject: `SDASMS Registration Received — We Will Review Your Details & Get In Touch`,
             html: userConfirmationHtml,
           })
 
@@ -480,7 +465,7 @@ export async function POST(request: NextRequest) {
     }
 
     return successResponse({
-      message: 'Registration submitted successfully',
+      message: 'Your registration has been received. We will review your details and payment proof, then get in touch with you shortly.',
       emailSent,
     })
   } catch {

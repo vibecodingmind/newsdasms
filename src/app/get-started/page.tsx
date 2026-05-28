@@ -1382,10 +1382,10 @@ export default function GetStartedPage() {
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-black dark:text-white mb-3">
-                    Registration Submitted!
+                    Registration Received!
                   </h3>
                   <p className="text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed max-w-md mx-auto mb-6">
-                    Thank you for registering with SDASMS. Our team will review your application and activate your account within 24 hours after payment confirmation.
+                    Thank you for registering with SDASMS. We will review your details and payment proof, then get in touch with you shortly. Account activation typically takes 24-48 hours after verification.
                   </p>
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a
