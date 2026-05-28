@@ -22,6 +22,11 @@ export async function OPTIONS() {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    // Guard: reject if API token is not configured on the server
+    if (!SDASMS_API_TOKEN) {
+      return errorResponse("Service not configured. Please contact support.", 503);
+    }
+
     const { groupId, uid } = await params;
 
     if (!groupId) {

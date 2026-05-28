@@ -1,9 +1,11 @@
+import "server-only"; // Prevents client-side import — throws at build time if accidentally imported in a client component
 import { NextResponse } from "next/server";
 
 /**
  * SDASMS API Configuration
  * The API token is read EXCLUSIVELY from the SDASMS_API_TOKEN environment variable.
  * Never hardcode tokens — even server-side bundles can be inspected.
+ * The "server-only" import above ensures this module can NEVER be bundled into client code.
  */
 const _token = process.env.SDASMS_API_TOKEN;
 if (!_token) {
