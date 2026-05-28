@@ -1,0 +1,5 @@
+PassengerEnabled on
+PassengerAppType node
+PassengerStartupFile app.js
+PassengerNodePath /usr/local/bin/node
+PassengerAppEnv production
