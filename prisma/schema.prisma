@@ -30,3 +30,13 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model FreeSend {
+  id          String   @id @default(cuid())
+  ip          String   // Client IP address
+  fingerprint String?  // Browser device fingerprint
+  createdAt   DateTime @default(now())
+
+  @@index([ip, createdAt])
+  @@index([fingerprint, createdAt])
+}
