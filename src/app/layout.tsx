@@ -82,14 +82,23 @@ export default function RootLayout({
               })();
               // Suppress Next.js 16 Turbopack "true" console noise
               (function(){
+                var _origLog = console.log;
                 var _origWarn = console.warn;
                 var _origError = console.error;
+                function suppressTrue(){
+                  for(var i=0;i<arguments.length;i++){if(arguments[i]===true)return true;}
+                  return false;
+                }
+                console.log = function(){
+                  if(suppressTrue.apply(null,arguments))return;
+                  return _origLog.apply(console, arguments);
+                };
                 console.warn = function(){
-                  if (arguments[0] === true) return;
+                  if(suppressTrue.apply(null,arguments))return;
                   return _origWarn.apply(console, arguments);
                 };
                 console.error = function(){
-                  if (arguments[0] === true) return;
+                  if(suppressTrue.apply(null,arguments))return;
                   return _origError.apply(console, arguments);
                 };
               })();
@@ -122,7 +131,13 @@ export default function RootLayout({
                 "streetAddress": "PAPU Tower 6th Floor, Moshi Rd",
                 "addressCountry": "TZ"
               },
-              "sameAs": []
+              "sameAs": [
+                "https://www.facebook.com/sdasmsafrica",
+                "https://twitter.com/sdasmsafrica",
+                "https://www.instagram.com/sdasms/",
+                "https://www.linkedin.com/company/sdasmsafrica",
+                "https://pinterest.com/sdasmsafrica"
+              ]
             }),
           }}
         />
