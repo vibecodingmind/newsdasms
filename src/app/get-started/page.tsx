@@ -17,9 +17,7 @@ import {
   MapPin,
   Shield,
   Sparkles,
-  Zap,
   Users,
-  MessageSquare,
   Landmark,
   UserCheck,
 } from 'lucide-react'
@@ -35,12 +33,7 @@ const INPUT_CLASS =
 
 const LABEL_CLASS = 'block text-sm font-semibold text-black dark:text-white mb-2'
 
-const STEPS = [
-  { id: 1, label: 'Account Type', icon: Users },
-  { id: 2, label: 'Your Info', icon: User },
-  { id: 3, label: 'Details', icon: Briefcase },
-  { id: 4, label: 'Payment', icon: CreditCard },
-]
+const TOTAL_STEPS = 4
 
 const INDUSTRIES = [
   'Church / Ministry',
@@ -975,68 +968,6 @@ export default function GetStartedPage() {
                         animate={{ width: `${progressPercent}%` }}
                         transition={{ duration: 0.4, ease: 'easeOut' }}
                       />
-                    </div>
-                  </div>
-
-                  {/* Step Indicators */}
-                  <div className="px-6 sm:px-8 py-4">
-                    <div className="flex items-center justify-between">
-                      {STEPS.map((step) => (
-                        <button
-                          key={step.id}
-                          type="button"
-                          onClick={() => {
-                            if (step.id <= currentStep) {
-                              setCurrentStep(step.id)
-                            }
-                          }}
-                          className="flex flex-col items-center gap-1.5 group"
-                          disabled={step.id > currentStep}
-                        >
-                          <div
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                              step.id === currentStep
-                                ? 'bg-[#D72444] text-white shadow-lg shadow-[#D72444]/25'
-                                : step.id < currentStep
-                                ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                                : 'bg-gray-100 dark:bg-white/10 text-gray-300 dark:text-white/20'
-                            }`}
-                          >
-                            {step.id < currentStep ? (
-                              <CheckCircle2 className="w-5 h-5" />
-                            ) : (
-                              <step.icon className="w-5 h-5" />
-                            )}
-                          </div>
-                          <span
-                            className={`text-[10px] sm:text-xs font-semibold ${
-                              step.id === currentStep
-                                ? 'text-[#D72444]'
-                                : step.id < currentStep
-                                ? 'text-green-600 dark:text-green-400'
-                                : 'text-gray-300 dark:text-white/20'
-                            }`}
-                          >
-                            {step.label}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Connector lines */}
-                    <div className="relative mt-[-36px] mb-6 mx-auto" style={{ width: '70%' }}>
-                      <div className="flex items-center justify-between">
-                        {[1, 2, 3].map((i) => (
-                          <div
-                            key={i}
-                            className={`h-0.5 flex-1 mx-2 rounded-full ${
-                              i < currentStep
-                                ? 'bg-green-300 dark:bg-green-700'
-                                : 'bg-gray-200 dark:bg-white/10'
-                            }`}
-                          />
-                        ))}
-                      </div>
                     </div>
                   </div>
 
