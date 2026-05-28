@@ -2,19 +2,13 @@
   "name": "sdasms-production",
   "version": "1.0.0",
   "private": true,
-  "description": "SDASMS — Digital Evangelism & Communication Platform",
+  "description": "SDASMS Digital Evangelism Platform",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "start:server": "node server.js"
+    "start": "node app.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "dependencies": {
-    "next": "16.1.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "sharp": "^0.34.3"
-  }
+  "dependencies": {}
 }

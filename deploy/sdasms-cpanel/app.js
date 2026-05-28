@@ -1,15 +1,16 @@
 /**
  * SDASMS — cPanel Node.js Entry Point
  *
- * This file is the entry point for cPanel's Phusion Passenger / Node.js App.
- * It simply starts the Next.js standalone server.
+ * This is the startup file for cPanel's "Setup Node.js App" feature.
+ * It launches the Next.js standalone server which handles all routing.
  *
- * The standalone server.js (built by `next build` with output: "standalone")
- * is the production-ready server that handles all requests efficiently.
+ * cPanel/Passenger automatically sets the PORT environment variable.
+ * The standalone server.js reads PORT and binds to it.
  */
 
-// Start the standalone Next.js server
-// The standalone server.js handles everything — routing, SSR, static files, API routes
-process.env.HOSTNAME = process.env.HOSTNAME || "0.0.0.0";
+// Set production mode
+process.env.NODE_ENV = 'production';
+process.env.HOSTNAME = '0.0.0.0';
 
-require("./server.js");
+// Start the Next.js standalone server
+require('./server.js');
