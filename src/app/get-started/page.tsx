@@ -57,13 +57,30 @@ const BANK_INFO = {
   accountNumber: '3002211802039',
 }
 
-const STARTER_PACK_FEATURES = [
-  'Sender ID Registration',
+const PRICING = {
+  personal: { amount: 99500, display: '99,500', label: 'Personal Starter Pack' },
+  organization: { amount: 249500, display: '249,500', label: 'Business Starter Pack' },
+} as const
+
+const PERSONAL_PACK_FEATURES = [
+  '2,500 SMS Credits',
+  '1 Sender ID',
   'Account Setup & Activation',
   'Dashboard Access',
   'API Credentials',
   'Contact List Upload (up to 10K)',
   'Priority Support',
+]
+
+const BUSINESS_PACK_FEATURES = [
+  '5,000 SMS Credits',
+  '2 Sender IDs',
+  'Account Setup & Activation',
+  'Dashboard Access',
+  'API Credentials',
+  'Contact List Upload (up to 50K)',
+  'Priority Support',
+  'Dedicated Account Manager',
 ]
 
 const MAX_LEGAL_DOCS = 5
@@ -1066,19 +1083,19 @@ function StepPayment({
             <div>
               <div className="inline-flex items-center gap-1.5 bg-white/15 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-3">
                 <Sparkles className="w-3 h-3" />
-                STARTER PACK
+                {data.accountType === 'organization' ? 'BUSINESS PACK' : 'STARTER PACK'}
               </div>
-              <h4 className="text-2xl sm:text-3xl font-extrabold">Get Started with SDASMS</h4>
-              <p className="text-white/70 text-sm mt-1">Everything you need to begin your digital evangelism journey</p>
+              <h4 className="text-2xl sm:text-3xl font-extrabold">{data.accountType === 'organization' ? 'Business Starter Pack' : 'Personal Starter Pack'}</h4>
+              <p className="text-white/70 text-sm mt-1">{data.accountType === 'organization' ? 'Powerful tools for organizations and ministries' : 'Everything you need to begin your digital evangelism journey'}</p>
             </div>
             <div className="text-right shrink-0 ml-4">
-              <p className="text-4xl sm:text-5xl font-extrabold">94,500</p>
+              <p className="text-4xl sm:text-5xl font-extrabold">{data.accountType === 'organization' ? PRICING.organization.display : PRICING.personal.display}</p>
               <p className="text-white/70 text-sm font-semibold">TZS</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {STARTER_PACK_FEATURES.map((feature) => (
+            {(data.accountType === 'organization' ? BUSINESS_PACK_FEATURES : PERSONAL_PACK_FEATURES).map((feature) => (
               <div key={feature} className="flex items-center gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-white/80 shrink-0" />
                 <span className="text-sm font-medium text-white/90">{feature}</span>
@@ -1180,7 +1197,7 @@ function StepPayment({
 
               <div className="mt-5 pt-4 border-t border-gray-200 dark:border-white/10">
                 <p className="text-sm text-[#7F7F7F] dark:text-white/50 leading-relaxed mb-4">
-                  Send <strong className="text-black dark:text-white">94,500 TZS</strong> via {data.paymentMethod === 'bank' ? 'Bank Transfer' : 'M-PESA'} and include &ldquo;SDASMS&rdquo; as reference.
+                  Send <strong className="text-black dark:text-white">{data.accountType === 'organization' ? PRICING.organization.display : PRICING.personal.display} TZS</strong> via {data.paymentMethod === 'bank' ? 'Bank Transfer' : 'M-PESA'} and include &ldquo;SDASMS&rdquo; as reference.
                   After payment, confirm below.
                 </p>
 
@@ -1192,7 +1209,7 @@ function StepPayment({
                     className="w-5 h-5 mt-0.5 accent-[#D72444] rounded shrink-0"
                   />
                   <span className="text-sm text-black dark:text-white leading-relaxed">
-                    I have completed the payment of <strong>94,500 TZS</strong> via {data.paymentMethod === 'bank' ? 'Bank Transfer' : 'M-PESA'}
+                    I have completed the payment of <strong>{data.accountType === 'organization' ? PRICING.organization.display : PRICING.personal.display} TZS</strong> via {data.paymentMethod === 'bank' ? 'Bank Transfer' : 'M-PESA'}
                     {data.paymentMethod === 'bank' ? ` to ${BANK_INFO.accountNumber}` : ' to 51720044'}
                   </span>
                 </label>

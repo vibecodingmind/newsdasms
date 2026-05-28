@@ -30,6 +30,9 @@ import {
   Flame,
   Globe2,
   Sparkles,
+  User,
+  Building2,
+  Briefcase,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import Header from '@/components/Header'
@@ -1039,76 +1042,98 @@ function PricingSection() {
           </p>
         </FadeInWhenVisible>
 
-        {/* Starter Pack - Wide Card */}
+        {/* Starter Packs - Personal & Business */}
         <FadeInWhenVisible delay={0.1} className="mb-10 sm:mb-14">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Personal Starter Pack */}
             <div className="relative rounded-2xl overflow-hidden border-2 border-[#FF8340]/30 bg-gradient-to-r from-[#FF8340]/5 via-[#D72444]/3 to-[#FF8340]/5">
-              <div className="p-6 sm:p-8 lg:p-10">
-                <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10">
-                  {/* Left - Icon + Badge + Title */}
-                  <div className="flex items-center gap-5 shrink-0">
-                    <div className="w-16 h-16 rounded-2xl bg-[#FF8340]/15 border border-[#FF8340]/20 flex items-center justify-center">
-                      <Rocket className="w-8 h-8 text-[#FF8340]" />
-                    </div>
-                    <div>
-                      <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#FF8340] to-[#D72444] text-white text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">
-                        <Flame className="w-2.5 h-2.5" />
-                        Best Value
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-extrabold text-black dark:text-white">Starter Pack</h3>
-                    </div>
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 rounded-2xl bg-[#FF8340]/15 border border-[#FF8340]/20 flex items-center justify-center">
+                    <User className="w-7 h-7 text-[#FF8340]" />
                   </div>
-
-                  {/* Middle - Key details */}
-                  <div className="flex items-center gap-6 sm:gap-10">
-                    <div className="text-center">
-                      <div className="flex items-baseline gap-1 justify-center">
-                        <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-wider">Tsh</span>
-                        <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">94,500</span>
-                      </div>
-                      <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time setup</span>
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#FF8340] to-[#D72444] text-white text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-1">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      For Individuals
                     </div>
-                    <div className="w-px h-12 bg-gray-200 dark:bg-white/10 hidden sm:block" />
-                    <div className="hidden sm:flex flex-col items-start gap-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                          <MessageSquare className="w-4 h-4 text-[#FF8340]" />
-                        </div>
-                        <span className="text-black dark:text-white font-bold text-sm">2,500 SMS</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                          <Shield className="w-4 h-4 text-[#FF8340]" />
-                        </div>
-                        <span className="text-black dark:text-white font-bold text-sm">1 Sender ID</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right - CTA */}
-                  <a
-                    href="/get-started"
-                    className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300 text-sm shrink-0"
-                  >
-                    Get Started
-                    <ArrowRight className="w-4 h-4" />
-                  </a>
-                </div>
-                {/* Mobile-only details */}
-                <div className="flex sm:hidden items-center justify-center gap-6 mt-5 pt-5 border-t border-gray-200 dark:border-white/10">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <MessageSquare className="w-4 h-4 text-[#FF8340]" />
-                    </div>
-                    <span className="text-black dark:text-white font-bold text-sm">2,500 SMS</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                      <Shield className="w-4 h-4 text-[#FF8340]" />
-                    </div>
-                    <span className="text-black dark:text-white font-bold text-sm">1 Sender ID</span>
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-black dark:text-white">Personal Starter Pack</h3>
                   </div>
                 </div>
+
+                <div className="flex items-baseline gap-1 mb-2">
+                  <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-wider">Tsh</span>
+                  <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">99,500</span>
+                </div>
+                <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mb-5">One-time setup</span>
+
+                <div className="space-y-2.5 mb-6">
+                  <div className="flex items-center gap-2.5">
+                    <MessageSquare className="w-4 h-4 text-[#FF8340] shrink-0" />
+                    <span className="text-black dark:text-white font-medium text-sm">2,500 SMS Credits</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <Shield className="w-4 h-4 text-[#FF8340] shrink-0" />
+                    <span className="text-black dark:text-white font-medium text-sm">1 Sender ID</span>
+                  </div>
+                </div>
+
+                <a
+                  href="/get-started"
+                  className="inline-flex items-center justify-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300 text-sm w-full"
+                >
+                  Get Started
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+
+            {/* Business Starter Pack */}
+            <div className="relative rounded-2xl overflow-hidden border-2 border-[#7C3AED]/40 bg-gradient-to-r from-[#7C3AED]/5 via-[#D72444]/3 to-[#7C3AED]/5">
+              <div className="absolute top-4 right-4">
+                <div className="inline-flex items-center gap-1 bg-gradient-to-r from-[#7C3AED] to-[#D72444] text-white text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                  <Flame className="w-2.5 h-2.5" />
+                  Best Value
+                </div>
+              </div>
+              <div className="p-6 sm:p-8">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 rounded-2xl bg-[#7C3AED]/15 border border-[#7C3AED]/20 flex items-center justify-center">
+                    <Building2 className="w-7 h-7 text-[#7C3AED]" />
+                  </div>
+                  <div>
+                    <div className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#7C3AED] to-[#D72444] text-white text-[9px] font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-1">
+                      <Briefcase className="w-2.5 h-2.5" />
+                      For Organizations
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-extrabold text-black dark:text-white">Business Starter Pack</h3>
+                  </div>
+                </div>
+
+                <div className="flex items-baseline gap-1 mb-2">
+                  <span className="text-[#7C3AED] text-xs font-semibold uppercase tracking-wider">Tsh</span>
+                  <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">249,500</span>
+                </div>
+                <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mb-5">One-time setup</span>
+
+                <div className="space-y-2.5 mb-6">
+                  <div className="flex items-center gap-2.5">
+                    <MessageSquare className="w-4 h-4 text-[#7C3AED] shrink-0" />
+                    <span className="text-black dark:text-white font-medium text-sm">5,000 SMS Credits</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <Shield className="w-4 h-4 text-[#7C3AED] shrink-0" />
+                    <span className="text-black dark:text-white font-medium text-sm">2 Sender IDs</span>
+                  </div>
+                </div>
+
+                <a
+                  href="/get-started"
+                  className="inline-flex items-center justify-center gap-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-[#7C3AED]/25 transition-all duration-300 text-sm w-full"
+                >
+                  Get Started
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               </div>
             </div>
           </div>

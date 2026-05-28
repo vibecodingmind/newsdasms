@@ -49,7 +49,7 @@ const CORE_REASONS = [
     icon: DollarSign,
     title: 'Lowest Pricing in Africa',
     description:
-      'No SMS service provider in the text messaging industry competes with our pricing. We believe that cost should never be a barrier to spreading the Gospel, so we have structured our pricing to be the most affordable on the continent. From our Starter Pack at just Tsh 94,500 to our volume discounts that bring per-SMS costs down to Sh 11, every ministry — regardless of size — can access professional messaging tools without straining their budget.',
+      'No SMS service provider in the text messaging industry competes with our pricing. We believe that cost should never be a barrier to spreading the Gospel, so we have structured our pricing to be the most affordable on the continent. From our Personal Starter Pack at just Tsh 99,500 to our Business Starter Pack at Tsh 249,500, and our volume discounts that bring per-SMS costs down to Sh 11, every ministry — regardless of size — can access professional messaging tools without straining their budget.',
     color: '#7C3AED',
   },
   {
@@ -384,7 +384,7 @@ export default function WhySDASMSPage() {
               </h2>
               <p className="text-white/50 text-base sm:text-lg leading-relaxed mb-10 max-w-2xl mx-auto font-medium">
                 Join thousands of churches and ministries across Africa that trust SDASMS
-                to deliver their message. Start with our Starter Pack — 2,500 SMS and 1 Sender ID for just Tsh 94,500.
+                to deliver their message. Start with our Personal Starter Pack — 2,500 SMS and 1 Sender ID for just Tsh 99,500, or our Business Starter Pack — 5,000 SMS and 2 Sender IDs for Tsh 249,500.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a

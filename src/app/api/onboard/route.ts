@@ -5,6 +5,12 @@ import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import nodemailer from 'nodemailer'
 
+// Pricing constants
+const PRICING = {
+  personal: { amount: 99500, display: '99,500 TZS', label: 'Personal Starter Pack', sms: '2,500 SMS Credits', senderIds: '1 Sender ID' },
+  organization: { amount: 249500, display: '249,500 TZS', label: 'Business Starter Pack', sms: '5,000 SMS Credits', senderIds: '2 Sender IDs' },
+} as const
+
 // Helper to get a text field from FormData
 function getTextField(formData: FormData, key: string): string {
   return (formData.get(key) as string) || ''
@@ -58,8 +64,10 @@ function buildUserConfirmationHtml(data: {
   subjectName: string
   paymentMethod: string
   paymentLabel: string
+  priceDisplay: string
+  packLabel: string
 }): string {
-  const { accountType, subjectName, paymentMethod, paymentLabel } = data
+  const { accountType, subjectName, paymentMethod, paymentLabel, priceDisplay, packLabel } = data
 
   return `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
@@ -78,8 +86,8 @@ function buildUserConfirmationHtml(data: {
         <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <h3 style="margin: 0 0 12px; color: #374151; font-size: 15px;">Your Registration Summary</h3>
           <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Account Type:</strong> ${accountType}</p>
-          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Package:</strong> Starter Pack</p>
-          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Amount:</strong> 94,500 TZS</p>
+          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Package:</strong> ${packLabel}</p>
+          <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Amount:</strong> ${priceDisplay}</p>
           <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>Payment Method:</strong> ${paymentLabel}</p>
         </div>
 
@@ -121,8 +129,10 @@ function buildEmailHtml(data: {
   paymentLabel: string
   paymentConfirmed: boolean
   fileInfo?: Record<string, string>
+  priceDisplay: string
+  packLabel: string
 }): string {
-  const { accountType, fields, paymentMethod, paymentLabel, paymentConfirmed, fileInfo } = data
+  const { accountType, fields, paymentMethod, paymentLabel, paymentConfirmed, fileInfo, priceDisplay, packLabel } = data
 
   const rows = Object.entries(fields)
     .map(([key, value]) => `
@@ -178,7 +188,7 @@ function buildEmailHtml(data: {
         <!-- Payment Info -->
         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-top: 16px;">
           <h3 style="margin: 0 0 8px; color: #166534; font-size: 15px;">Payment Details</h3>
-          <p style="margin: 4px 0; color: #374151; font-size: 14px;"><strong>Package:</strong> Starter Pack - 94,500 TZS</p>
+          <p style="margin: 4px 0; color: #374151; font-size: 14px;"><strong>Package:</strong> ${packLabel} - ${priceDisplay}</p>
           <p style="margin: 4px 0; color: #374151; font-size: 14px;"><strong>Method:</strong> ${paymentLabel}</p>
           <p style="margin: 4px 0; color: #374151; font-size: 14px;"><strong>Confirmed:</strong> ${paymentConfirmed ? 'Yes' : 'No'}</p>
         </div>
@@ -362,11 +372,14 @@ export async function POST(request: NextRequest) {
       ? getTextField(formData, 'fullName')
       : getTextField(formData, 'orgName')
 
+    // Resolve pricing based on account type
+    const pricing = accountType === 'personal' ? PRICING.personal : PRICING.organization
+
     // Log the registration submission
     console.log('[onboard] New registration submitted:', {
       accountType,
       subjectName,
-      package: 'Starter - Tsh 94,500',
+      package: `${pricing.label} - Tsh ${pricing.display}`,
       paymentMethod: paymentLabel,
       paymentConfirmed: paymentConfirmed === 'true',
       submittedAt: new Date().toISOString(),
@@ -385,6 +398,8 @@ export async function POST(request: NextRequest) {
           paymentLabel,
           paymentConfirmed: paymentConfirmed === 'true',
           fileInfo: accountType === 'organization' ? fileInfo : undefined,
+          priceDisplay: pricing.display,
+          packLabel: pricing.label,
         })
 
         // Attach uploaded files for organization registrations
@@ -446,6 +461,8 @@ export async function POST(request: NextRequest) {
             subjectName,
             paymentMethod,
             paymentLabel,
+            priceDisplay: pricing.display,
+            packLabel: pricing.label,
           })
 
           await transporter.sendMail({
