@@ -1,10 +1,32 @@
 import 'server-only'
 import { NextRequest } from 'next/server'
 import { successResponse, errorResponse, SDASMS_API_TOKEN } from '@/lib/sdasms-api'
+import { writeFile, mkdir } from 'fs/promises'
+import path from 'path'
 
 // Helper to get a text field from FormData
 function getTextField(formData: FormData, key: string): string {
   return (formData.get(key) as string) || ''
+}
+
+// Save uploaded file to disk and return the stored path
+async function saveUploadedFile(file: File, prefix: string): Promise<string> {
+  const bytes = await file.arrayBuffer()
+  const buffer = Buffer.from(bytes)
+
+  // Create uploads directory if it doesn't exist
+  const uploadDir = path.join(process.cwd(), 'uploads', 'onboard')
+  await mkdir(uploadDir, { recursive: true })
+
+  // Generate unique filename
+  const ext = path.extname(file.name) || '.pdf'
+  const timestamp = Date.now()
+  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').slice(0, 30)
+  const filename = `${prefix}_${timestamp}_${safeName}`
+  const filepath = path.join(uploadDir, filename)
+
+  await writeFile(filepath, buffer)
+  return filepath
 }
 
 export async function POST(request: NextRequest) {
@@ -51,10 +73,10 @@ export async function POST(request: NextRequest) {
         return errorResponse('Missing representative fields: repName, repEmail, repPhone, repIdNumber')
       }
 
-      // Validate sector for organization
-      const sector = getTextField(formData, 'sector')
-      if (!sector || (sector !== 'Private' && sector !== 'Government')) {
-        return errorResponse('Please select a valid sector (Private or Government)')
+      // Validate org type
+      const orgType = getTextField(formData, 'orgType')
+      if (!orgType) {
+        return errorResponse('Please select an organization type')
       }
 
       // Validate file uploads for organization
@@ -68,7 +90,7 @@ export async function POST(request: NextRequest) {
         return errorResponse('Organization registration document is required')
       }
       if (!authLetter || !(authLetter instanceof File)) {
-        return errorResponse('Authorization letter is required')
+        return errorResponse('Request & authorization letter is required')
       }
     }
 
@@ -77,15 +99,35 @@ export async function POST(request: NextRequest) {
       return errorResponse('You must accept the Terms & Conditions to proceed')
     }
 
-    // Build file info for logging
+    // Save uploaded files to disk (organization only)
+    const savedFiles: Record<string, string> = {}
     const fileInfo: Record<string, string> = {}
+
     if (accountType === 'organization') {
-      const repIdCopy = formData.get('repIdCopy')
-      const orgRegDoc = formData.get('orgRegDoc')
-      const authLetter = formData.get('authLetter')
-      if (repIdCopy instanceof File) fileInfo.repIdCopy = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB)`
-      if (orgRegDoc instanceof File) fileInfo.orgRegDoc = `${orgRegDoc.name} (${(orgRegDoc.size / 1024).toFixed(1)}KB)`
-      if (authLetter instanceof File) fileInfo.authLetter = `${authLetter.name} (${(authLetter.size / 1024).toFixed(1)}KB)`
+      const orgName = getTextField(formData, 'orgName').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20)
+
+      try {
+        const repIdCopy = formData.get('repIdCopy')
+        if (repIdCopy instanceof File) {
+          savedFiles.repIdCopy = await saveUploadedFile(repIdCopy, `${orgName}_idcopy`)
+          fileInfo.repIdCopy = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB)`
+        }
+
+        const orgRegDoc = formData.get('orgRegDoc')
+        if (orgRegDoc instanceof File) {
+          savedFiles.orgRegDoc = await saveUploadedFile(orgRegDoc, `${orgName}_regdoc`)
+          fileInfo.orgRegDoc = `${orgRegDoc.name} (${(orgRegDoc.size / 1024).toFixed(1)}KB)`
+        }
+
+        const authLetter = formData.get('authLetter')
+        if (authLetter instanceof File) {
+          savedFiles.authLetter = await saveUploadedFile(authLetter, `${orgName}_authletter`)
+          fileInfo.authLetter = `${authLetter.name} (${(authLetter.size / 1024).toFixed(1)}KB)`
+        }
+      } catch (fileErr) {
+        console.error('[onboard] Error saving files:', fileErr)
+        // Continue even if file saving fails - files are logged but not blocking
+      }
     }
 
     // Build registration summary
@@ -114,10 +156,10 @@ export async function POST(request: NextRequest) {
           repIdType: getTextField(formData, 'repIdType'),
           repIdNumber: getTextField(formData, 'repIdNumber'),
           repDesignation: getTextField(formData, 'repDesignation') || 'N/A',
-          sector: getTextField(formData, 'sector'),
-          industries: (() => { try { return JSON.parse(getTextField(formData, 'industries')) } catch { return [] } })(),
-          otherIndustry: getTextField(formData, 'otherIndustry') || 'N/A',
+          orgType: getTextField(formData, 'orgType'),
+          orgTypeOther: getTextField(formData, 'orgTypeOther') || 'N/A',
           uploadedFiles: fileInfo,
+          savedFilePaths: savedFiles,
         }
 
     // Log the registration submission
@@ -158,14 +200,12 @@ Rep Phone: ${getTextField(formData, 'repPhone')}
 ID Type: ${getTextField(formData, 'repIdType')} - ${getTextField(formData, 'repIdNumber')}
 Designation: ${getTextField(formData, 'repDesignation') || 'N/A'}
 
-Sector: ${getTextField(formData, 'sector')}
-Industries: ${(() => { try { return JSON.parse(getTextField(formData, 'industries')).join(', ') } catch { return 'N/A' } })()}
-Other Industry: ${getTextField(formData, 'otherIndustry') || 'N/A'}
+Organization Type: ${getTextField(formData, 'orgType')}${getTextField(formData, 'orgTypeOther') ? ` (${getTextField(formData, 'orgTypeOther')})` : ''}
 
 Uploaded Documents:
-- ID Copy: ${fileInfo.repIdCopy || 'N/A'}
-- Registration Doc: ${fileInfo.orgRegDoc || 'N/A'}
-- Authorization Letter: ${fileInfo.authLetter || 'N/A'}
+- ID Copy: ${fileInfo.repIdCopy || 'N/A'} → ${savedFiles.repIdCopy || 'not saved'}
+- Registration Doc: ${fileInfo.orgRegDoc || 'N/A'} → ${savedFiles.orgRegDoc || 'not saved'}
+- Request & Authorization Letter: ${fileInfo.authLetter || 'N/A'} → ${savedFiles.authLetter || 'not saved'}
 
 Package: Starter - Tsh 94,500
           `.trim()

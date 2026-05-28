@@ -38,24 +38,16 @@ const LABEL_CLASS = 'block text-sm font-semibold text-black dark:text-white mb-2
 
 const TOTAL_STEPS = 4
 
-const INDUSTRIES = [
-  'Church / Ministry',
-  'Education',
-  'Charities & Non-Profit',
-  'Health Insurance',
-  'eCommerce',
-  'Food Industry',
-  'General Trading',
-  'Manufacturing',
-  'Banking & Finance',
-  'Building & Construction',
-  'Electronic',
-  'Motor Vehicle Industry',
-  'Retailing',
-  'Telecommunications',
-  'Tourism & Hospitality',
-  'Transport & Taxi',
-  'Others',
+const ORG_TYPES = [
+  { value: 'church', label: 'Church / Ministry' },
+  { value: 'school', label: 'School / Education' },
+  { value: 'hospital', label: 'Hospital / Health Center' },
+  { value: 'company', label: 'Company / Business' },
+  { value: 'ngo', label: 'NGO / Non-Profit' },
+  { value: 'government', label: 'Government Agency' },
+  { value: 'media', label: 'Media / Broadcasting' },
+  { value: 'conference', label: 'Conference / Union' },
+  { value: 'other', label: 'Other' },
 ]
 
 const MOBILE_MONEY_INFO = [
@@ -100,9 +92,8 @@ interface FormData {
   repIdType: 'NIDA' | 'Passport'
   repIdNumber: string
   repDesignation: string
-  sector: 'Private' | 'Government' | ''
-  industries: string[]
-  otherIndustry: string
+  orgType: string
+  orgTypeOther: string
   // File uploads (organization only)
   repIdCopy: File | null
   orgRegDoc: File | null
@@ -132,9 +123,8 @@ const INITIAL_FORM: FormData = {
   repIdType: 'NIDA',
   repIdNumber: '',
   repDesignation: '',
-  sector: '',
-  industries: [],
-  otherIndustry: '',
+  orgType: '',
+  orgTypeOther: '',
   repIdCopy: null,
   orgRegDoc: null,
   authLetter: null,
@@ -561,12 +551,10 @@ function StepInfo({
 function StepDetails({
   data,
   onChange,
-  onToggleIndustry,
   onFileChange,
 }: {
   data: FormData
   onChange: (field: keyof FormData, value: string) => void
-  onToggleIndustry: (industry: string) => void
   onFileChange: (field: keyof FormData, file: File | null) => void
 }) {
   const isOrg = data.accountType === 'organization'
@@ -694,64 +682,38 @@ function StepDetails({
 
           <div>
             <label className={LABEL_CLASS}>
-              Sector<span className="text-[#D72444] ml-1">*</span>
+              Organization Type<span className="text-[#D72444] ml-1">*</span>
             </label>
-            <div className="flex gap-4">
-              {(['Private', 'Government'] as const).map((option) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              {ORG_TYPES.map((type) => (
                 <label
-                  key={option}
-                  className={`flex items-center gap-3 px-5 py-3 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                    data.sector === option
+                  key={type.value}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                    data.orgType === type.value
                       ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10'
                       : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
                   }`}
                 >
                   <input
                     type="radio"
-                    name="sector"
-                    value={option}
-                    checked={data.sector === option}
-                    onChange={(e) => onChange('sector', e.target.value)}
+                    name="orgType"
+                    value={type.value}
+                    checked={data.orgType === type.value}
+                    onChange={(e) => onChange('orgType', e.target.value)}
                     className="w-4 h-4 accent-[#D72444]"
                   />
-                  <span className="text-sm font-semibold text-black dark:text-white">{option}</span>
+                  <span className="text-sm font-medium text-black dark:text-white">{type.label}</span>
                 </label>
               ))}
             </div>
-          </div>
-
-          <div>
-            <label className={LABEL_CLASS}>
-              Industry<span className="text-[#7F7F7F] dark:text-white/40 ml-2 text-xs font-normal">(select all that apply)</span>
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {INDUSTRIES.map((industry) => (
-                <label
-                  key={industry}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all duration-300 ${
-                    data.industries.includes(industry)
-                      ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10'
-                      : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={data.industries.includes(industry)}
-                    onChange={() => onToggleIndustry(industry)}
-                    className="w-4 h-4 accent-[#D72444] rounded"
-                  />
-                  <span className="text-sm font-medium text-black dark:text-white">{industry}</span>
-                </label>
-              ))}
-            </div>
-            {data.industries.includes('Others') && (
+            {data.orgType === 'other' && (
               <div className="mt-3">
                 <input
                   type="text"
-                  value={data.otherIndustry}
-                  onChange={(e) => onChange('otherIndustry', e.target.value)}
+                  value={data.orgTypeOther}
+                  onChange={(e) => onChange('orgTypeOther', e.target.value)}
                   className={INPUT_CLASS}
-                  placeholder="Please specify your industry"
+                  placeholder="Please specify your organization type"
                 />
               </div>
             )}
@@ -772,12 +734,12 @@ function StepDetails({
           />
 
           <FileUpload
-            label="Authorization Letter"
+            label="Request & Authorization Letter"
             id="authLetter"
             required
             file={data.authLetter}
             onFileChange={(f) => onFileChange('authLetter', f)}
-            helpText="Upload signed authorization letter on organization letterhead (PDF, JPG, PNG max 5MB)"
+            helpText="Upload signed request & authorization letter on organization letterhead (PDF, JPG, PNG max 5MB)"
           />
         </div>
       )}
@@ -966,15 +928,6 @@ export default function GetStartedPage() {
     setFormData((prev) => ({ ...prev, [field]: file }))
   }
 
-  const handleToggleIndustry = (industry: string) => {
-    setFormData((prev) => {
-      const industries = prev.industries.includes(industry)
-        ? prev.industries.filter((i) => i !== industry)
-        : [...prev.industries, industry]
-      return { ...prev, industries }
-    })
-  }
-
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
@@ -986,7 +939,7 @@ export default function GetStartedPage() {
         return !!(formData.fullName && formData.email && formData.phone)
       case 3:
         if (formData.accountType === 'organization') {
-          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.sector && formData.repIdCopy && formData.orgRegDoc && formData.authLetter)
+          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.orgType && formData.repIdCopy && formData.orgRegDoc && formData.authLetter)
         }
         return true
       case 4:
@@ -1040,9 +993,8 @@ export default function GetStartedPage() {
         fd.append('repIdType', formData.repIdType)
         fd.append('repIdNumber', formData.repIdNumber)
         fd.append('repDesignation', formData.repDesignation)
-        fd.append('sector', formData.sector)
-        fd.append('industries', JSON.stringify(formData.industries))
-        fd.append('otherIndustry', formData.otherIndustry)
+        fd.append('orgType', formData.orgType)
+        fd.append('orgTypeOther', formData.orgTypeOther)
         if (formData.repIdCopy) fd.append('repIdCopy', formData.repIdCopy)
         if (formData.orgRegDoc) fd.append('orgRegDoc', formData.orgRegDoc)
         if (formData.authLetter) fd.append('authLetter', formData.authLetter)
@@ -1166,7 +1118,6 @@ export default function GetStartedPage() {
                           <StepDetails
                             data={formData}
                             onChange={handleChange}
-                            onToggleIndustry={handleToggleIndustry}
                             onFileChange={handleFileChange}
                           />
                         )}
