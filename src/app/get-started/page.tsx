@@ -9,13 +9,11 @@ import {
   Building2,
   User,
   Briefcase,
-  CreditCard,
   CheckCircle2,
   Globe,
   Phone,
   Mail,
   MapPin,
-  Shield,
   Sparkles,
   Users,
   Landmark,
@@ -34,9 +32,9 @@ import { FadeInWhenVisible } from '@/components/AnimationHelpers'
 /* ─── Constants ──────────────────────────────────────────── */
 
 const INPUT_CLASS =
-  'w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-[#F6F6F6] dark:bg-[#1A0A2E] text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#D72444]/30 focus:border-[#D72444] transition-all duration-300'
+  'w-full px-5 py-3.5 rounded-xl border border-gray-200 dark:border-white/10 bg-[#F6F6F6] dark:bg-[#1A0A2E] text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#D72444]/30 focus:border-[#D72444] transition-all duration-300 text-base'
 
-const LABEL_CLASS = 'block text-sm font-semibold text-black dark:text-white mb-2'
+const LABEL_CLASS = 'block text-sm font-semibold text-black dark:text-white mb-2.5'
 
 const TOTAL_STEPS = 4
 
@@ -135,7 +133,7 @@ interface FormData {
   legalDocs: File[]
   authLetter: File | null
   // Step 4 - Payment
-  paymentMethod: '' | 'pesapal' | 'stripe' | 'mpesa' | 'tigo' | 'airtel' | 'bank'
+  paymentMethod: '' | 'mpesa' | 'bank'
   paymentConfirmed: boolean
   termsAccepted: boolean
 }
@@ -776,13 +774,57 @@ function StepDetails({
         </div>
         <div>
           <h3 className="text-xl font-bold text-black dark:text-white">
-            {isOrg ? 'Representative & Organization Details' : 'Account Details'}
+            {isOrg ? 'Representative & Organization Details' : 'Your Details'}
           </h3>
           <p className="text-[#7F7F7F] dark:text-white/50 text-sm">
-            {isOrg ? 'Provide authorized person and organization profile' : 'Confirm your details and preferences'}
+            {isOrg ? 'Provide authorized person and organization profile' : 'Provide your ID and additional details'}
           </p>
         </div>
       </div>
+
+      {/* For Personal Accounts - ID & Details */}
+      {!isOrg && (
+        <div className="space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-white/10">
+            <UserCheck className="w-5 h-5 text-[#D72444]" />
+            <h4 className="text-base font-bold text-black dark:text-white">Personal Identification</h4>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FormField label="ID Type" id="repIdType" required>
+              <select
+                id="repIdType"
+                value={data.repIdType}
+                onChange={(e) => onChange('repIdType', e.target.value)}
+                className={INPUT_CLASS}
+              >
+                <option value="NIDA">NIDA</option>
+                <option value="Passport">Passport</option>
+              </select>
+            </FormField>
+            <FormField label="ID Number" id="repIdNumber" required>
+              <input
+                id="repIdNumber"
+                type="text"
+                required
+                value={data.repIdNumber}
+                onChange={(e) => onChange('repIdNumber', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="Enter your ID number"
+              />
+            </FormField>
+          </div>
+
+          <FileUpload
+            label="ID Copy"
+            id="repIdCopy"
+            required
+            file={data.repIdCopy}
+            onFileChange={(f) => onFileChange('repIdCopy', f)}
+            helpText="Upload a clear copy of your NIDA or Passport (PDF, JPG, PNG max 5MB)"
+          />
+        </div>
+      )}
 
       {/* Representative Section - Only for Organization */}
       {isOrg && (
@@ -959,62 +1001,24 @@ function StepDetails({
 
 /* ─── Step 4: Starter Pack & Payment ────────────────────── */
 
-const PAYMENT_METHODS = {
-  auto: [
-    {
-      id: 'pesapal' as const,
-      icon: Shield,
-      title: 'Pay with Pesapal',
-      description: 'Mobile money & bank cards (East Africa)',
-      color: '#1A9C48',
-      bgColor: 'bg-green-500/10',
-      hoverBorder: 'hover:border-[#1A9C48]/40',
-      hoverBg: 'hover:bg-[#1A9C48]/5 dark:hover:bg-[#1A9C48]/10',
-      iconColor: 'text-green-600 dark:text-green-400',
-    },
-    {
-      id: 'stripe' as const,
-      icon: CreditCard,
-      title: 'Pay with Card (Stripe)',
-      description: 'International debit & credit cards',
-      color: '#6366F1',
-      bgColor: 'bg-indigo-500/10',
-      hoverBorder: 'hover:border-indigo-500/40',
-      hoverBg: 'hover:bg-indigo-500/5 dark:hover:bg-indigo-500/10',
-      iconColor: 'text-indigo-600 dark:text-indigo-400',
-    },
-  ],
-  manual: [
-    {
-      id: 'mpesa' as const,
-      title: 'M-PESA',
-      detail: '51720044',
-      color: '#E4202E',
-      icon: Phone,
-    },
-    {
-      id: 'tigo' as const,
-      title: 'TIGO PESA',
-      detail: '8008206',
-      color: '#1A9C48',
-      icon: Phone,
-    },
-    {
-      id: 'airtel' as const,
-      title: 'AIRTEL MONEY',
-      detail: '997199',
-      color: '#FF0000',
-      icon: Phone,
-    },
-    {
-      id: 'bank' as const,
-      title: 'Bank Transfer',
-      detail: BANK_INFO.bank,
-      color: '#7C3AED',
-      icon: Landmark,
-    },
-  ],
-}
+const PAYMENT_METHODS = [
+  {
+    id: 'mpesa' as const,
+    title: 'M-PESA',
+    detail: '51720044',
+    color: '#E4202E',
+    icon: Phone,
+    description: 'Send via M-PESA Lipa Number',
+  },
+  {
+    id: 'bank' as const,
+    title: 'Bank Transfer',
+    detail: BANK_INFO.bank,
+    color: '#7C3AED',
+    icon: Landmark,
+    description: 'Transfer directly to our bank account',
+  },
+]
 
 function StepPayment({
   data,
@@ -1023,8 +1027,7 @@ function StepPayment({
   data: FormData
   onChange: (field: keyof FormData, value: string | boolean) => void
 }) {
-  const isManual = ['mpesa', 'tigo', 'airtel', 'bank'].includes(data.paymentMethod)
-  const selectedManual = PAYMENT_METHODS.manual.find((m) => m.id === data.paymentMethod)
+  const selectedMethod = PAYMENT_METHODS.find((m) => m.id === data.paymentMethod)
 
   return (
     <div className="space-y-8">
@@ -1071,71 +1074,23 @@ function StepPayment({
         </div>
       </div>
 
-      {/* Auto Payment - Instant Confirmation */}
+      {/* Payment Method Selection */}
       <div>
-        <div className="flex items-center gap-2 mb-3">
-          <Shield className="w-4 h-4 text-green-600 dark:text-green-400" />
-          <h4 className="text-base font-bold text-black dark:text-white">Auto Payment (Instant)</h4>
-        </div>
-        <p className="text-sm text-[#7F7F7F] dark:text-white/50 mb-4">
-          Payment is processed and confirmed automatically online.
-        </p>
-        <div className="space-y-3">
-          {PAYMENT_METHODS.auto.map((method) => (
-            <button
-              key={method.id}
-              type="button"
-              onClick={() => {
-                onChange('paymentMethod', method.id)
-                onChange('paymentConfirmed', true) // auto payments are confirmed instantly
-              }}
-              className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all duration-300 group cursor-pointer ${
-                data.paymentMethod === method.id
-                  ? 'border-green-500 bg-green-500/5 dark:bg-green-500/10 shadow-md'
-                  : `border-gray-200 dark:border-white/10 ${method.hoverBorder} ${method.hoverBg}`
-              }`}
-            >
-              <div className={`w-12 h-12 rounded-xl ${method.bgColor} flex items-center justify-center shrink-0`}>
-                <method.icon className={`w-6 h-6 ${method.iconColor}`} />
-              </div>
-              <div className="flex-1 text-left">
-                <p className={`font-bold transition-colors ${
-                  data.paymentMethod === method.id
-                    ? method.iconColor
-                    : 'text-black dark:text-white'
-                }`}>
-                  {method.title}
-                </p>
-                <p className="text-sm text-[#7F7F7F] dark:text-white/50">{method.description}</p>
-              </div>
-              {data.paymentMethod === method.id && (
-                <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 shrink-0" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Manual Payment - Requires Confirmation */}
-      <div>
-        <div className="flex items-center gap-2 mb-3">
-          <Phone className="w-4 h-4 text-[#D72444]" />
-          <h4 className="text-base font-bold text-black dark:text-white">Manual Payment (Verify After Payment)</h4>
-        </div>
-        <p className="text-sm text-[#7F7F7F] dark:text-white/50 mb-4">
+        <h4 className="text-base font-bold text-black dark:text-white mb-2">Choose Payment Method</h4>
+        <p className="text-sm text-[#7F7F7F] dark:text-white/50 mb-5">
           Send payment directly, then confirm below. Admin will verify your payment at{' '}
           <a href="mailto:hello@sdasms.com" className="text-[#D72444] font-semibold hover:underline">hello@sdasms.com</a>.
         </p>
-        <div className="grid grid-cols-2 gap-3">
-          {PAYMENT_METHODS.manual.map((method) => (
+        <div className="space-y-3">
+          {PAYMENT_METHODS.map((method) => (
             <button
               key={method.id}
               type="button"
               onClick={() => {
                 onChange('paymentMethod', method.id)
-                onChange('paymentConfirmed', false) // reset confirmation when changing method
+                onChange('paymentConfirmed', false)
               }}
-              className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer text-center ${
+              className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer text-left ${
                 data.paymentMethod === method.id
                   ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10 shadow-md'
                   : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 hover:shadow-sm'
@@ -1145,88 +1100,87 @@ function StepPayment({
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#D72444] flex items-center justify-center"
+                  className="shrink-0"
                 >
-                  <CheckCircle2 className="w-3 h-3 text-white" />
+                  <CheckCircle2 className="w-5 h-5 text-[#D72444]" />
                 </motion.div>
               )}
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${method.color}15` }}>
-                <method.icon className="w-5 h-5" style={{ color: method.color }} />
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${method.color}15` }}>
+                <method.icon className="w-6 h-6" style={{ color: method.color }} />
               </div>
-              <span className="text-sm font-bold text-black dark:text-white">{method.title}</span>
-              <span className="text-xs font-mono font-semibold" style={{ color: method.color }}>{method.detail}</span>
+              <div className="flex-1">
+                <p className="font-bold text-black dark:text-white">{method.title}</p>
+                <p className="text-sm text-[#7F7F7F] dark:text-white/50">{method.description}</p>
+              </div>
             </button>
           ))}
         </div>
 
-        {/* Manual Payment Details - shown when a manual method is selected */}
-        {isManual && selectedManual && (
+        {/* Payment Details - shown when a method is selected */}
+        {selectedMethod && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-4"
+            className="mt-5"
           >
-            <div className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-2xl p-5 border border-gray-200 dark:border-white/10">
-              <h5 className="text-sm font-bold text-black dark:text-white mb-3">
-                Payment Instructions — {selectedManual.title}
+            <div className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-2xl p-6 border border-gray-200 dark:border-white/10">
+              <h5 className="text-sm font-bold text-black dark:text-white mb-4">
+                Payment Instructions — {selectedMethod.title}
               </h5>
 
               {data.paymentMethod === 'bank' ? (
-                /* Bank Transfer Details */
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between py-2.5 px-3 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">Bank</span>
-                    <span className="text-xs font-semibold text-black dark:text-white">{BANK_INFO.bank}</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Bank</span>
+                    <span className="text-sm font-semibold text-black dark:text-white">{BANK_INFO.bank}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2.5 px-3 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">Account Name</span>
-                    <span className="text-xs font-semibold text-black dark:text-white">{BANK_INFO.accountName}</span>
+                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Account Name</span>
+                    <span className="text-sm font-semibold text-black dark:text-white">{BANK_INFO.accountName}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2.5 px-3 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">Account Number</span>
-                    <span className="text-sm font-mono font-bold text-[#D72444]">{BANK_INFO.accountNumber}</span>
+                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Account Number</span>
+                    <span className="text-base font-mono font-bold text-[#D72444]">{BANK_INFO.accountNumber}</span>
                   </div>
                 </div>
               ) : (
-                /* Mobile Money Details */
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between py-2.5 px-3 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">Provider</span>
-                    <span className="text-xs font-semibold text-black dark:text-white">{selectedManual.title}</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Provider</span>
+                    <span className="text-sm font-semibold text-black dark:text-white">{selectedMethod.title}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2.5 px-3 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">Lipa Number</span>
-                    <span className="text-sm font-mono font-bold" style={{ color: selectedManual.color }}>{selectedManual.detail}</span>
+                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Lipa Number</span>
+                    <span className="text-base font-mono font-bold" style={{ color: selectedMethod.color }}>{selectedMethod.detail}</span>
                   </div>
-                  <div className="flex items-center justify-between py-2.5 px-3 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">Merchant Name</span>
-                    <span className="text-xs font-bold text-[#D72444]">SDASMS</span>
+                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
+                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Merchant Name</span>
+                    <span className="text-sm font-bold text-[#D72444]">SDASMS</span>
                   </div>
                 </div>
               )}
 
-              <div className="mt-4 pt-3 border-t border-gray-200 dark:border-white/10">
-                <p className="text-xs text-[#7F7F7F] dark:text-white/50 leading-relaxed">
-                  Send <strong className="text-black dark:text-white">94,500 TZS</strong> via {selectedManual.title} and include &ldquo;SDASMS&rdquo; as reference.
+              <div className="mt-5 pt-4 border-t border-gray-200 dark:border-white/10">
+                <p className="text-sm text-[#7F7F7F] dark:text-white/50 leading-relaxed mb-4">
+                  Send <strong className="text-black dark:text-white">94,500 TZS</strong> via {selectedMethod.title} and include &ldquo;SDASMS&rdquo; as reference.
                   After payment, check the confirmation box below.
                 </p>
-              </div>
 
-              {/* Payment Confirmation */}
-              <label className="flex items-start gap-3 mt-4 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={data.paymentConfirmed}
-                  onChange={(e) => onChange('paymentConfirmed', e.target.checked)}
-                  className="w-5 h-5 mt-0.5 accent-[#D72444] rounded shrink-0"
-                />
-                <span className="text-sm text-black dark:text-white leading-relaxed">
-                  I have completed the payment of <strong>94,500 TZS</strong> via {selectedManual.title}
-                  {data.paymentMethod === 'bank' ? ` to ${BANK_INFO.accountNumber}` : ` to ${selectedManual.detail}`}
-                </span>
-              </label>
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={data.paymentConfirmed}
+                    onChange={(e) => onChange('paymentConfirmed', e.target.checked)}
+                    className="w-5 h-5 mt-0.5 accent-[#D72444] rounded shrink-0"
+                  />
+                  <span className="text-sm text-black dark:text-white leading-relaxed">
+                    I have completed the payment of <strong>94,500 TZS</strong> via {selectedMethod.title}
+                    {data.paymentMethod === 'bank' ? ` to ${BANK_INFO.accountNumber}` : ` to ${selectedMethod.detail}`}
+                  </span>
+                </label>
+              </div>
             </div>
           </motion.div>
         )}
@@ -1291,7 +1245,8 @@ export default function GetStartedPage() {
         if (formData.accountType === 'organization') {
           return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.orgType && formData.repIdCopy && formData.legalDocs.length >= 1 && formData.authLetter)
         }
-        return true
+        // Personal: requires ID number and ID copy
+        return !!(formData.repIdNumber && formData.repIdCopy)
       case 4:
         if (!formData.paymentMethod) return false
         if (!formData.paymentConfirmed) return false
@@ -1318,54 +1273,7 @@ export default function GetStartedPage() {
     setSubmitting(true)
     setError('')
 
-    // For auto payment methods, redirect to checkout
-    if (formData.paymentMethod === 'pesapal') {
-      try {
-        const res = await fetch('/api/pesapal/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accountType: formData.accountType }),
-        })
-        const data = await res.json()
-        if (data.success && data.url) {
-          // First submit the registration, then redirect
-          await submitRegistration()
-          window.location.href = data.url
-        } else {
-          setError(data.message || 'Failed to initiate PesaPal payment. Please try another method.')
-        }
-      } catch {
-        setError('Failed to connect to PesaPal. Please try again or use another payment method.')
-      } finally {
-        setSubmitting(false)
-      }
-      return
-    }
-
-    if (formData.paymentMethod === 'stripe') {
-      try {
-        const res = await fetch('/api/stripe/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accountType: formData.accountType }),
-        })
-        const data = await res.json()
-        if (data.success && data.url) {
-          // First submit the registration, then redirect
-          await submitRegistration()
-          window.location.href = data.url
-        } else {
-          setError(data.message || 'Failed to initiate Stripe payment. Please try another method.')
-        }
-      } catch {
-        setError('Failed to connect to Stripe. Please try again or use another payment method.')
-      } finally {
-        setSubmitting(false)
-      }
-      return
-    }
-
-    // For manual payment methods, just submit the registration
+    // Submit registration with payment details
     try {
       await submitRegistration()
       setSubmitted(true)
@@ -1444,7 +1352,7 @@ export default function GetStartedPage() {
 
         {/* Form Section */}
         <section className="py-16 sm:py-20 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             {submitted ? (
               <FadeInWhenVisible>
                 <motion.div
@@ -1483,7 +1391,7 @@ export default function GetStartedPage() {
               <FadeInWhenVisible>
                 <div className="bg-white dark:bg-[#0D0B1A] border border-gray-100 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden">
                   {/* Progress Bar */}
-                  <div className="px-6 sm:px-8 pt-8 pb-2">
+                  <div className="px-6 sm:px-10 pt-8 pb-2">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-semibold text-black dark:text-white">
                         Step {currentStep} of 4
@@ -1503,7 +1411,7 @@ export default function GetStartedPage() {
                   </div>
 
                   {/* Form Content */}
-                  <div className="px-6 sm:px-8 py-6">
+                  <div className="px-6 sm:px-10 py-8">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentStep}

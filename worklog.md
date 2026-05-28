@@ -53,3 +53,30 @@ Stage Summary:
 - All payment details sent to hello@sdasms.com for admin tracking
 - PayPal removed
 - Credentials stored securely in .env.local
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Expand layout, link Get Started buttons, remove "free" text, simplify payment to M-PESA + Bank only, fix blank personal Step 3
+
+Work Log:
+- Expanded form layout: max-w-2xl container, wider padding (px-10), larger inputs (px-5 py-3.5), text-base font, wider label spacing (mb-2.5)
+- Linked ALL "Get Started" buttons (13 total across 8 pages) from href="#" to href="/get-started"
+- Removed "Get Started Free" / "Get Started for Free" text from 4 pages (homepage, why-sdasms, sms, use-cases) → changed to just "Get Started"
+- Removed PesaPal, Stripe, AIRTEL MONEY, TIGO PESA from payment options
+- Kept only M-PESA (51720044) and Bank Transfer as payment methods
+- Simplified payment UI: single list with selectable cards, expandable instructions + confirmation checkbox
+- Removed auto-payment redirect logic from handleSubmit (no more PesaPal/Stripe checkout redirects)
+- Removed unused imports (CreditCard, Shield)
+- Fixed blank Step 3 for personal accounts: added "Personal Identification" section with ID Type, ID Number, and ID Copy upload
+- Updated personal step 3 validation: requires repIdNumber and repIdCopy
+- Updated payment method type to only 'mpesa' | 'bank'
+- Updated onboard API payment labels to only include M-PESA and Bank
+- Build verified successfully
+
+Stage Summary:
+- Payment simplified to M-PESA + Bank Transfer only (manual confirmation)
+- All "Get Started" CTAs across the site now link to /get-started
+- No more "free" language on Get Started buttons
+- Personal accounts now have ID verification in Step 3
+- Layout has more breathing room with wider spacing

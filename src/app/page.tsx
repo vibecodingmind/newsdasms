@@ -485,10 +485,10 @@ function HeroSection() {
               className="flex flex-col sm:flex-row items-start gap-4 mb-12"
             >
               <a
-                href="#"
+                href="/get-started"
                 className="group inline-flex items-center gap-2.5 bg-[#D72444] hover:bg-[#E03355] text-white font-bold text-base px-8 py-4 rounded-full shadow-2xl shadow-[#D72444]/25 transition-all duration-300 hover:shadow-[0_0_50px_rgba(215,36,68,0.4)] hover:-translate-y-0.5"
               >
-                Get Started Free
+                Get Started
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
               </a>
               <a
@@ -802,7 +802,7 @@ function CoverageSection() {
               reliability, allowing you to reach your audience with confidence.
             </p>
             <a
-              href="#"
+              href="/get-started"
               className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started
@@ -987,7 +987,7 @@ function PricingSection() {
 
                   {/* Right - CTA */}
                   <a
-                    href="#"
+                    href="/get-started"
                     className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-bold px-8 py-4 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300 text-sm shrink-0"
                   >
                     Get Started
@@ -1117,7 +1117,7 @@ function PowerfulGatewaySection() {
               in under three seconds.
             </p>
             <a
-              href="#"
+              href="/get-started"
               className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started
@@ -1154,7 +1154,7 @@ function DigitalDiscipleshipSection() {
               through digital connections.
             </p>
             <a
-              href="#"
+              href="/get-started"
               className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold px-6 py-3 rounded-full shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started
@@ -1445,7 +1445,7 @@ function CTASection() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="#"
+              href="/get-started"
               className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#D72444]/25 transition-all duration-300"
             >
               Get Started

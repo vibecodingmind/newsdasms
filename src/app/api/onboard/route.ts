@@ -102,12 +102,8 @@ export async function POST(request: NextRequest) {
 
     // Payment method label map
     const paymentLabels: Record<string, string> = {
-      pesapal: 'PesaPal (Auto)',
-      stripe: 'Stripe Card (Auto)',
-      mpesa: 'M-PESA (Manual) — 51720044',
-      tigo: 'TIGO PESA (Manual) — 8008206',
-      airtel: 'AIRTEL MONEY (Manual) — 997199',
-      bank: 'Bank Transfer (Manual) — Equity Bank Tanzania, Acc: 3002211802039',
+      mpesa: 'M-PESA — 51720044',
+      bank: 'Bank Transfer — Equity Bank Tanzania, Acc: 3002211802039',
     }
     const paymentLabel = paymentLabels[paymentMethod] || paymentMethod
 
