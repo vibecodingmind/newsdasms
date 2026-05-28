@@ -9,16 +9,21 @@ import {
   Building2,
   User,
   Briefcase,
-  Radio,
   CreditCard,
-  FileCheck,
   CheckCircle2,
   Globe,
   Phone,
   Mail,
   MapPin,
-  Calendar,
   Shield,
+  Radio,
+  Sparkles,
+  Zap,
+  Users,
+  MessageSquare,
+  Church,
+  Landmark,
+  UserCheck,
 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -33,24 +38,23 @@ const INPUT_CLASS =
 const LABEL_CLASS = 'block text-sm font-semibold text-black dark:text-white mb-2'
 
 const STEPS = [
-  { id: 1, label: 'Organization', icon: Building2 },
-  { id: 2, label: 'Contact', icon: User },
-  { id: 3, label: 'Profile', icon: Briefcase },
-  { id: 4, label: 'Sender ID', icon: Radio },
-  { id: 5, label: 'Payment', icon: CreditCard },
-  { id: 6, label: 'Terms', icon: FileCheck },
+  { id: 1, label: 'Account Type', icon: Users },
+  { id: 2, label: 'Your Info', icon: User },
+  { id: 3, label: 'Details', icon: Briefcase },
+  { id: 4, label: 'Payment', icon: CreditCard },
 ]
 
 const INDUSTRIES = [
+  'Church / Ministry',
+  'Education',
+  'Charities & Non-Profit',
+  'Health Insurance',
   'eCommerce',
   'Food Industry',
   'General Trading',
-  'Health Insurance',
   'Manufacturing',
   'Banking & Finance',
   'Building & Construction',
-  'Charities & Non-Profit Organizations',
-  'Education',
   'Electronic',
   'Motor Vehicle Industry',
   'Retailing',
@@ -66,72 +70,78 @@ const MOBILE_MONEY_INFO = [
   { provider: 'AIRTEL MONEY', number: '997199', color: '#FF0000' },
 ]
 
+const STARTER_PACK_FEATURES = [
+  'Sender ID Registration',
+  'Account Setup & Activation',
+  'Dashboard Access',
+  'API Credentials',
+  'Contact List Upload (up to 10K)',
+  'Priority Support',
+]
+
 /* ─── Form State Type ────────────────────────────────────── */
 
 interface FormData {
-  // Section A - Organization
+  // Step 1 - Account Type
+  accountType: 'personal' | 'organization' | ''
+  // Step 2 - Personal / Org Basic Info
+  fullName: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  region: string
+  // Organization-specific
   orgName: string
+  orgEmail: string
+  orgPhone: string
   orgAddress: string
   orgCity: string
   orgRegion: string
-  orgEmail: string
-  orgPhone: string
   orgWebsite: string
-  // Section B - Contact
-  contactName: string
-  contactAddress: string
-  contactCity: string
-  contactRegion: string
-  contactEmail: string
-  contactPhone: string
-  contactWebsite: string
-  contactIdType: 'NIDA' | 'Passport'
-  contactIdNumber: string
-  // Section C - Profile
+  // Step 3 - Representative & Org Details
+  repName: string
+  repEmail: string
+  repPhone: string
+  repIdType: 'NIDA' | 'Passport'
+  repIdNumber: string
+  repDesignation: string
   sector: 'Private' | 'Government' | ''
   industries: string[]
   otherIndustry: string
-  // Section D - Sender ID
   senderIds: string[]
   sampleMessages: string[]
-  // Section E - Package
-  packageChoice: string
-  // Section G - Terms
+  // Step 4 - Payment
   termsAccepted: boolean
-  signatory: string
-  signatoryName: string
-  designation: string
-  signDate: string
 }
 
 const INITIAL_FORM: FormData = {
+  accountType: '',
+  fullName: '',
+  email: '',
+  phone: '',
+  address: '',
+  city: '',
+  region: '',
   orgName: '',
+  orgEmail: '',
+  orgPhone: '',
   orgAddress: '',
   orgCity: '',
   orgRegion: '',
-  orgEmail: '',
-  orgPhone: '',
   orgWebsite: '',
-  contactName: '',
-  contactAddress: '',
-  contactCity: '',
-  contactRegion: '',
-  contactEmail: '',
-  contactPhone: '',
-  contactWebsite: '',
-  contactIdType: 'NIDA',
-  contactIdNumber: '',
+  repName: '',
+  repEmail: '',
+  repPhone: '',
+  repIdType: 'NIDA',
+  repIdNumber: '',
+  repDesignation: '',
   sector: '',
   industries: [],
   otherIndustry: '',
   senderIds: ['', '', ''],
   sampleMessages: ['', '', ''],
-  packageChoice: 'Starter - Tsh 94,500',
   termsAccepted: false,
-  signatory: '',
-  signatoryName: '',
-  designation: '',
-  signDate: '',
 }
 
 /* ─── Reusable Field Component ───────────────────────────── */
@@ -158,258 +168,310 @@ function FormField({
   )
 }
 
-/* ─── Step Components ────────────────────────────────────── */
+/* ─── Step 1: Account Type ──────────────────────────────── */
 
-function StepOrganization({
-  data,
+function StepAccountType({
+  value,
   onChange,
 }: {
-  data: FormData
-  onChange: (field: keyof FormData, value: string) => void
+  value: FormData['accountType']
+  onChange: (val: FormData['accountType']) => void
 }) {
+  const options = [
+    {
+      id: 'personal' as const,
+      icon: User,
+      title: 'Personal Account',
+      description: 'For individuals, pastors, evangelists, and independent ministers who want to use SDASMS for personal outreach.',
+      features: ['Quick setup', 'Individual Sender ID', 'Personal dashboard'],
+    },
+    {
+      id: 'organization' as const,
+      icon: Building2,
+      title: 'Organization Account',
+      description: 'For churches, ministries, NGOs, and businesses that need team access and organizational messaging.',
+      features: ['Team management', 'Multiple Sender IDs', 'Organization dashboard'],
+    },
+  ]
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-12 h-12 rounded-2xl bg-[#D72444]/10 flex items-center justify-center">
-          <Building2 className="w-6 h-6 text-[#D72444]" />
+          <Users className="w-6 h-6 text-[#D72444]" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-black dark:text-white">Organization Details</h3>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Tell us about your organization</p>
+          <h3 className="text-xl font-bold text-black dark:text-white">Choose Account Type</h3>
+          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Select the type that best describes you</p>
         </div>
       </div>
-
-      <FormField label="Organization Name" id="orgName" required>
-        <input
-          id="orgName"
-          type="text"
-          required
-          value={data.orgName}
-          onChange={(e) => onChange('orgName', e.target.value)}
-          className={INPUT_CLASS}
-          placeholder="Your organization name"
-        />
-      </FormField>
-
-      <FormField label="Address" id="orgAddress">
-        <input
-          id="orgAddress"
-          type="text"
-          value={data.orgAddress}
-          onChange={(e) => onChange('orgAddress', e.target.value)}
-          className={INPUT_CLASS}
-          placeholder="Street address"
-        />
-      </FormField>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <FormField label="City" id="orgCity">
-          <input
-            id="orgCity"
-            type="text"
-            value={data.orgCity}
-            onChange={(e) => onChange('orgCity', e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="City"
-          />
-        </FormField>
-        <FormField label="Region" id="orgRegion">
-          <input
-            id="orgRegion"
-            type="text"
-            value={data.orgRegion}
-            onChange={(e) => onChange('orgRegion', e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="Region"
-          />
-        </FormField>
-      </div>
-
-      <FormField label="Email" id="orgEmail" required>
-        <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            id="orgEmail"
-            type="email"
-            required
-            value={data.orgEmail}
-            onChange={(e) => onChange('orgEmail', e.target.value)}
-            className={`${INPUT_CLASS} pl-11`}
-            placeholder="org@example.com"
-          />
-        </div>
-      </FormField>
-
-      <FormField label="Phone" id="orgPhone" required>
-        <div className="relative">
-          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            id="orgPhone"
-            type="tel"
-            required
-            value={data.orgPhone}
-            onChange={(e) => onChange('orgPhone', e.target.value)}
-            className={`${INPUT_CLASS} pl-11`}
-            placeholder="+255 XXX XXX XXX"
-          />
-        </div>
-      </FormField>
-
-      <FormField label="Website" id="orgWebsite">
-        <div className="relative">
-          <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            id="orgWebsite"
-            type="url"
-            value={data.orgWebsite}
-            onChange={(e) => onChange('orgWebsite', e.target.value)}
-            className={`${INPUT_CLASS} pl-11`}
-            placeholder="https://example.com"
-          />
-        </div>
-      </FormField>
-    </div>
-  )
-}
-
-function StepContact({
-  data,
-  onChange,
-}: {
-  data: FormData
-  onChange: (field: keyof FormData, value: string) => void
-}) {
-  return (
-    <div className="space-y-5">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-[#D72444]/10 flex items-center justify-center">
-          <User className="w-6 h-6 text-[#D72444]" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-black dark:text-white">Contact Details</h3>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Admin / Authorized Person information</p>
-        </div>
-      </div>
-
-      <FormField label="Full Name" id="contactName" required>
-        <input
-          id="contactName"
-          type="text"
-          required
-          value={data.contactName}
-          onChange={(e) => onChange('contactName', e.target.value)}
-          className={INPUT_CLASS}
-          placeholder="Full legal name"
-        />
-      </FormField>
-
-      <FormField label="Address" id="contactAddress">
-        <input
-          id="contactAddress"
-          type="text"
-          value={data.contactAddress}
-          onChange={(e) => onChange('contactAddress', e.target.value)}
-          className={INPUT_CLASS}
-          placeholder="Street address"
-        />
-      </FormField>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <FormField label="City" id="contactCity">
-          <input
-            id="contactCity"
-            type="text"
-            value={data.contactCity}
-            onChange={(e) => onChange('contactCity', e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="City"
-          />
-        </FormField>
-        <FormField label="Region" id="contactRegion">
-          <input
-            id="contactRegion"
-            type="text"
-            value={data.contactRegion}
-            onChange={(e) => onChange('contactRegion', e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="Region"
-          />
-        </FormField>
-      </div>
-
-      <FormField label="Email" id="contactEmail" required>
-        <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            id="contactEmail"
-            type="email"
-            required
-            value={data.contactEmail}
-            onChange={(e) => onChange('contactEmail', e.target.value)}
-            className={`${INPUT_CLASS} pl-11`}
-            placeholder="contact@example.com"
-          />
-        </div>
-      </FormField>
-
-      <FormField label="Phone" id="contactPhone" required>
-        <div className="relative">
-          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            id="contactPhone"
-            type="tel"
-            required
-            value={data.contactPhone}
-            onChange={(e) => onChange('contactPhone', e.target.value)}
-            className={`${INPUT_CLASS} pl-11`}
-            placeholder="+255 XXX XXX XXX"
-          />
-        </div>
-      </FormField>
-
-      <FormField label="Website" id="contactWebsite">
-        <div className="relative">
-          <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-          <input
-            id="contactWebsite"
-            type="url"
-            value={data.contactWebsite}
-            onChange={(e) => onChange('contactWebsite', e.target.value)}
-            className={`${INPUT_CLASS} pl-11`}
-            placeholder="https://example.com"
-          />
-        </div>
-      </FormField>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <FormField label="ID Type" id="contactIdType" required>
-          <select
-            id="contactIdType"
-            value={data.contactIdType}
-            onChange={(e) => onChange('contactIdType', e.target.value)}
-            className={INPUT_CLASS}
+        {options.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            onClick={() => onChange(option.id)}
+            className={`relative text-left p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 group ${
+              value === option.id
+                ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10 shadow-lg shadow-[#D72444]/10'
+                : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 hover:shadow-md'
+            }`}
           >
-            <option value="NIDA">NIDA</option>
-            <option value="Passport">Passport</option>
-          </select>
-        </FormField>
-        <FormField label="ID Number" id="contactIdNumber" required>
-          <input
-            id="contactIdNumber"
-            type="text"
-            required
-            value={data.contactIdNumber}
-            onChange={(e) => onChange('contactIdNumber', e.target.value)}
-            className={INPUT_CLASS}
-            placeholder="Enter your ID number"
-          />
-        </FormField>
+            {/* Check indicator */}
+            {value === option.id && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute top-4 right-4 w-6 h-6 rounded-full bg-[#D72444] flex items-center justify-center"
+              >
+                <CheckCircle2 className="w-4 h-4 text-white" />
+              </motion.div>
+            )}
+
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-colors ${
+              value === option.id
+                ? 'bg-[#D72444]/15'
+                : 'bg-gray-100 dark:bg-white/5'
+            }`}>
+              <option.icon className={`w-7 h-7 transition-colors ${
+                value === option.id ? 'text-[#D72444]' : 'text-gray-400 dark:text-white/30'
+              }`} />
+            </div>
+
+            <h4 className="text-lg font-bold text-black dark:text-white mb-2">{option.title}</h4>
+            <p className="text-sm text-[#7F7F7F] dark:text-white/50 leading-relaxed mb-4">{option.description}</p>
+
+            <div className="space-y-1.5">
+              {option.features.map((feature) => (
+                <div key={feature} className="flex items-center gap-2">
+                  <CheckCircle2 className={`w-3.5 h-3.5 ${
+                    value === option.id ? 'text-[#D72444]' : 'text-gray-300 dark:text-white/20'
+                  }`} />
+                  <span className="text-xs font-medium text-[#7F7F7F] dark:text-white/50">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   )
 }
 
-function StepProfile({
+/* ─── Step 2: Personal / Org Info ────────────────────────── */
+
+function StepInfo({
+  data,
+  onChange,
+}: {
+  data: FormData
+  onChange: (field: keyof FormData, value: string) => void
+}) {
+  const isOrg = data.accountType === 'organization'
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-2xl bg-[#D72444]/10 flex items-center justify-center">
+          {isOrg ? <Building2 className="w-6 h-6 text-[#D72444]" /> : <User className="w-6 h-6 text-[#D72444]" />}
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-black dark:text-white">
+            {isOrg ? 'Organization Information' : 'Personal Information'}
+          </h3>
+          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">
+            {isOrg ? 'Tell us about your organization' : 'Tell us about yourself'}
+          </p>
+        </div>
+      </div>
+
+      {isOrg ? (
+        /* Organization Info */
+        <>
+          <FormField label="Organization Name" id="orgName" required>
+            <input
+              id="orgName"
+              type="text"
+              required
+              value={data.orgName}
+              onChange={(e) => onChange('orgName', e.target.value)}
+              className={INPUT_CLASS}
+              placeholder="Your organization name"
+            />
+          </FormField>
+
+          <FormField label="Organization Email" id="orgEmail" required>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="orgEmail"
+                type="email"
+                required
+                value={data.orgEmail}
+                onChange={(e) => onChange('orgEmail', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="org@example.com"
+              />
+            </div>
+          </FormField>
+
+          <FormField label="Organization Phone" id="orgPhone" required>
+            <div className="relative">
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="orgPhone"
+                type="tel"
+                required
+                value={data.orgPhone}
+                onChange={(e) => onChange('orgPhone', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="+255 XXX XXX XXX"
+              />
+            </div>
+          </FormField>
+
+          <FormField label="Address" id="orgAddress">
+            <div className="relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="orgAddress"
+                type="text"
+                value={data.orgAddress}
+                onChange={(e) => onChange('orgAddress', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="Street address"
+              />
+            </div>
+          </FormField>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FormField label="City" id="orgCity">
+              <input
+                id="orgCity"
+                type="text"
+                value={data.orgCity}
+                onChange={(e) => onChange('orgCity', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="City"
+              />
+            </FormField>
+            <FormField label="Region" id="orgRegion">
+              <input
+                id="orgRegion"
+                type="text"
+                value={data.orgRegion}
+                onChange={(e) => onChange('orgRegion', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="Region"
+              />
+            </FormField>
+          </div>
+
+          <FormField label="Website" id="orgWebsite">
+            <div className="relative">
+              <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="orgWebsite"
+                type="url"
+                value={data.orgWebsite}
+                onChange={(e) => onChange('orgWebsite', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="https://example.com"
+              />
+            </div>
+          </FormField>
+        </>
+      ) : (
+        /* Personal Info */
+        <>
+          <FormField label="Full Name" id="fullName" required>
+            <input
+              id="fullName"
+              type="text"
+              required
+              value={data.fullName}
+              onChange={(e) => onChange('fullName', e.target.value)}
+              className={INPUT_CLASS}
+              placeholder="Your full name"
+            />
+          </FormField>
+
+          <FormField label="Email" id="email" required>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="email"
+                type="email"
+                required
+                value={data.email}
+                onChange={(e) => onChange('email', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="your@email.com"
+              />
+            </div>
+          </FormField>
+
+          <FormField label="Phone Number" id="phone" required>
+            <div className="relative">
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="phone"
+                type="tel"
+                required
+                value={data.phone}
+                onChange={(e) => onChange('phone', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="+255 XXX XXX XXX"
+              />
+            </div>
+          </FormField>
+
+          <FormField label="Address" id="address">
+            <div className="relative">
+              <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+              <input
+                id="address"
+                type="text"
+                value={data.address}
+                onChange={(e) => onChange('address', e.target.value)}
+                className={`${INPUT_CLASS} pl-11`}
+                placeholder="Street address"
+              />
+            </div>
+          </FormField>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FormField label="City" id="city">
+              <input
+                id="city"
+                type="text"
+                value={data.city}
+                onChange={(e) => onChange('city', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="City"
+              />
+            </FormField>
+            <FormField label="Region" id="region">
+              <input
+                id="region"
+                type="text"
+                value={data.region}
+                onChange={(e) => onChange('region', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="Region"
+              />
+            </FormField>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+/* ─── Step 3: Representative & Organization Details ──────── */
+
+function StepDetails({
   data,
   onChange,
   onToggleIndustry,
@@ -418,93 +480,8 @@ function StepProfile({
   onChange: (field: keyof FormData, value: string) => void
   onToggleIndustry: (industry: string) => void
 }) {
-  return (
-    <div className="space-y-5">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-[#D72444]/10 flex items-center justify-center">
-          <Briefcase className="w-6 h-6 text-[#D72444]" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-black dark:text-white">Organization Profile</h3>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Tell us about your sector and industry</p>
-        </div>
-      </div>
+  const isOrg = data.accountType === 'organization'
 
-      <div>
-        <label className={LABEL_CLASS}>
-          Sector<span className="text-[#D72444] ml-1">*</span>
-        </label>
-        <div className="flex gap-4">
-          {(['Private', 'Government'] as const).map((option) => (
-            <label
-              key={option}
-              className={`flex items-center gap-3 px-5 py-3 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                data.sector === option
-                  ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10'
-                  : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
-              }`}
-            >
-              <input
-                type="radio"
-                name="sector"
-                value={option}
-                checked={data.sector === option}
-                onChange={(e) => onChange('sector', e.target.value)}
-                className="w-4 h-4 accent-[#D72444]"
-              />
-              <span className="text-sm font-semibold text-black dark:text-white">{option}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <label className={LABEL_CLASS}>
-          Industry<span className="text-[#7F7F7F] dark:text-white/40 ml-2 text-xs font-normal">(select all that apply)</span>
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {INDUSTRIES.map((industry) => (
-            <label
-              key={industry}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all duration-300 ${
-                data.industries.includes(industry)
-                  ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10'
-                  : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={data.industries.includes(industry)}
-                onChange={() => onToggleIndustry(industry)}
-                className="w-4 h-4 accent-[#D72444] rounded"
-              />
-              <span className="text-sm font-medium text-black dark:text-white">{industry}</span>
-            </label>
-          ))}
-        </div>
-        {data.industries.includes('Others') && (
-          <div className="mt-3">
-            <input
-              type="text"
-              value={data.otherIndustry}
-              onChange={(e) => onChange('otherIndustry', e.target.value)}
-              className={INPUT_CLASS}
-              placeholder="Please specify your industry"
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function StepSenderId({
-  data,
-  onChange,
-}: {
-  data: FormData
-  onChange: (field: keyof FormData, value: string) => void
-}) {
   const updateSenderId = (index: number, value: string) => {
     const newVal = value.slice(0, 11)
     const updated = [...data.senderIds]
@@ -522,55 +499,228 @@ function StepSenderId({
     <div className="space-y-8">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-12 h-12 rounded-2xl bg-[#D72444]/10 flex items-center justify-center">
-          <Radio className="w-6 h-6 text-[#D72444]" />
+          <Briefcase className="w-6 h-6 text-[#D72444]" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-black dark:text-white">Sender ID Request</h3>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Provide up to 3 Sender IDs and sample messages</p>
+          <h3 className="text-xl font-bold text-black dark:text-white">
+            {isOrg ? 'Representative & Organization Details' : 'Account Details'}
+          </h3>
+          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">
+            {isOrg ? 'Provide authorized person and organization profile' : 'Set up your sender ID and preferences'}
+          </p>
         </div>
       </div>
 
-      <div>
-        <h4 className="text-base font-bold text-black dark:text-white mb-4">Sender IDs</h4>
-        <div className="space-y-4">
-          {[0, 1, 2].map((i) => (
-            <div key={`sender-${i}`}>
-              <label className="block text-sm font-medium text-[#7F7F7F] dark:text-white/50 mb-1.5">
-                Sender ID {i + 1}
-                {i === 0 && <span className="text-[#D72444] ml-1">*</span>}
-              </label>
-              <input
-                type="text"
-                maxLength={11}
-                value={data.senderIds[i] || ''}
-                onChange={(e) => updateSenderId(i, e.target.value)}
+      {/* Representative Section - Only for Organization */}
+      {isOrg && (
+        <div className="space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-white/10">
+            <UserCheck className="w-5 h-5 text-[#D72444]" />
+            <h4 className="text-base font-bold text-black dark:text-white">Authorized Representative</h4>
+          </div>
+
+          <FormField label="Representative Full Name" id="repName" required>
+            <input
+              id="repName"
+              type="text"
+              required
+              value={data.repName}
+              onChange={(e) => onChange('repName', e.target.value)}
+              className={INPUT_CLASS}
+              placeholder="Full legal name of authorized person"
+            />
+          </FormField>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <FormField label="Representative Email" id="repEmail" required>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+                <input
+                  id="repEmail"
+                  type="email"
+                  required
+                  value={data.repEmail}
+                  onChange={(e) => onChange('repEmail', e.target.value)}
+                  className={`${INPUT_CLASS} pl-11`}
+                  placeholder="rep@example.com"
+                />
+              </div>
+            </FormField>
+            <FormField label="Representative Phone" id="repPhone" required>
+              <div className="relative">
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
+                <input
+                  id="repPhone"
+                  type="tel"
+                  required
+                  value={data.repPhone}
+                  onChange={(e) => onChange('repPhone', e.target.value)}
+                  className={`${INPUT_CLASS} pl-11`}
+                  placeholder="+255 XXX XXX XXX"
+                />
+              </div>
+            </FormField>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <FormField label="ID Type" id="repIdType" required>
+              <select
+                id="repIdType"
+                value={data.repIdType}
+                onChange={(e) => onChange('repIdType', e.target.value)}
                 className={INPUT_CLASS}
-                placeholder={`Max 11 characters (e.g. MYCHURCH)`}
+              >
+                <option value="NIDA">NIDA</option>
+                <option value="Passport">Passport</option>
+              </select>
+            </FormField>
+            <FormField label="ID Number" id="repIdNumber" required>
+              <input
+                id="repIdNumber"
+                type="text"
+                required
+                value={data.repIdNumber}
+                onChange={(e) => onChange('repIdNumber', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="Enter your ID number"
               />
-              <p className="text-xs text-[#7F7F7F] dark:text-white/30 mt-1">
-                {(data.senderIds[i] || '').length}/11 characters
-              </p>
-            </div>
-          ))}
+            </FormField>
+            <FormField label="Designation" id="repDesignation">
+              <input
+                id="repDesignation"
+                type="text"
+                value={data.repDesignation}
+                onChange={(e) => onChange('repDesignation', e.target.value)}
+                className={INPUT_CLASS}
+                placeholder="Job title / Role"
+              />
+            </FormField>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div>
-        <h4 className="text-base font-bold text-black dark:text-white mb-4">Sample Messages</h4>
+      {/* Organization Profile - Only for Organization */}
+      {isOrg && (
+        <div className="space-y-5">
+          <div className="flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-white/10">
+            <Landmark className="w-5 h-5 text-[#D72444]" />
+            <h4 className="text-base font-bold text-black dark:text-white">Organization Profile</h4>
+          </div>
+
+          <div>
+            <label className={LABEL_CLASS}>
+              Sector<span className="text-[#D72444] ml-1">*</span>
+            </label>
+            <div className="flex gap-4">
+              {(['Private', 'Government'] as const).map((option) => (
+                <label
+                  key={option}
+                  className={`flex items-center gap-3 px-5 py-3 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                    data.sector === option
+                      ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10'
+                      : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="sector"
+                    value={option}
+                    checked={data.sector === option}
+                    onChange={(e) => onChange('sector', e.target.value)}
+                    className="w-4 h-4 accent-[#D72444]"
+                  />
+                  <span className="text-sm font-semibold text-black dark:text-white">{option}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className={LABEL_CLASS}>
+              Industry<span className="text-[#7F7F7F] dark:text-white/40 ml-2 text-xs font-normal">(select all that apply)</span>
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {INDUSTRIES.map((industry) => (
+                <label
+                  key={industry}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all duration-300 ${
+                    data.industries.includes(industry)
+                      ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10'
+                      : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={data.industries.includes(industry)}
+                    onChange={() => onToggleIndustry(industry)}
+                    className="w-4 h-4 accent-[#D72444] rounded"
+                  />
+                  <span className="text-sm font-medium text-black dark:text-white">{industry}</span>
+                </label>
+              ))}
+            </div>
+            {data.industries.includes('Others') && (
+              <div className="mt-3">
+                <input
+                  type="text"
+                  value={data.otherIndustry}
+                  onChange={(e) => onChange('otherIndustry', e.target.value)}
+                  className={INPUT_CLASS}
+                  placeholder="Please specify your industry"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Sender ID Section - Both account types */}
+      <div className="space-y-5">
+        <div className="flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-white/10">
+          <Radio className="w-5 h-5 text-[#D72444]" />
+          <h4 className="text-base font-bold text-black dark:text-white">Sender ID Request</h4>
+        </div>
+
+        <p className="text-sm text-[#7F7F7F] dark:text-white/50">
+          A Sender ID is the name that appears on recipients&apos; phones when they receive your SMS (e.g., MYCHURCH). Provide up to 3 Sender IDs and a sample message for each.
+        </p>
+
         <div className="space-y-4">
           {[0, 1, 2].map((i) => (
-            <div key={`message-${i}`}>
-              <label className="block text-sm font-medium text-[#7F7F7F] dark:text-white/50 mb-1.5">
-                Sample Message {i + 1}
-                {i === 0 && <span className="text-[#D72444] ml-1">*</span>}
-              </label>
-              <textarea
-                rows={3}
-                value={data.sampleMessages[i] || ''}
-                onChange={(e) => updateSampleMessage(i, e.target.value)}
-                className={`${INPUT_CLASS} resize-none`}
-                placeholder="Type a sample message you plan to send..."
-              />
+            <div key={`sender-${i}`} className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-xl p-4 border border-gray-100 dark:border-white/10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-lg bg-[#D72444]/10 flex items-center justify-center">
+                  <span className="text-xs font-bold text-[#D72444]">{i + 1}</span>
+                </div>
+                <span className="text-sm font-semibold text-black dark:text-white">
+                  Sender ID {i + 1}
+                  {i === 0 && <span className="text-[#D72444] ml-1">*</span>}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <input
+                    type="text"
+                    maxLength={11}
+                    value={data.senderIds[i] || ''}
+                    onChange={(e) => updateSenderId(i, e.target.value)}
+                    className={INPUT_CLASS}
+                    placeholder={`e.g. MYCHURCH`}
+                  />
+                  <p className="text-xs text-[#7F7F7F] dark:text-white/30 mt-1">
+                    {(data.senderIds[i] || '').length}/11 characters
+                  </p>
+                </div>
+                <div>
+                  <textarea
+                    rows={2}
+                    value={data.sampleMessages[i] || ''}
+                    onChange={(e) => updateSampleMessage(i, e.target.value)}
+                    className={`${INPUT_CLASS} resize-none`}
+                    placeholder="Sample message you plan to send..."
+                  />
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -579,7 +729,15 @@ function StepSenderId({
   )
 }
 
-function StepPayment() {
+/* ─── Step 4: Starter Pack & Payment ────────────────────── */
+
+function StepPayment({
+  data,
+  onChange,
+}: {
+  data: FormData
+  onChange: (field: keyof FormData, value: boolean) => void
+}) {
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-3 mb-6">
@@ -587,76 +745,93 @@ function StepPayment() {
           <CreditCard className="w-6 h-6 text-[#D72444]" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-black dark:text-white">Payment</h3>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Choose your payment method</p>
+          <h3 className="text-xl font-bold text-black dark:text-white">Starter Pack & Payment</h3>
+          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Review your package and choose a payment method</p>
         </div>
       </div>
 
-      {/* Package Display */}
-      <div className="bg-gradient-to-br from-[#D72444]/5 via-[#FF8340]/5 to-[#7C3AED]/5 dark:from-[#D72444]/10 dark:via-[#FF8340]/10 dark:to-[#7C3AED]/10 rounded-2xl p-6 border border-[#D72444]/20">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h4 className="text-lg font-bold text-black dark:text-white">Starter Package</h4>
-            <p className="text-sm text-[#7F7F7F] dark:text-white/50">Perfect for getting started with SDASMS</p>
+      {/* Starter Pack Card */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#D72444] via-[#D72444]/90 to-[#7C3AED] rounded-2xl p-6 sm:p-8 text-white">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+
+        <div className="relative z-10">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <div className="inline-flex items-center gap-1.5 bg-white/15 text-white text-xs font-bold px-3 py-1.5 rounded-full mb-3">
+                <Sparkles className="w-3 h-3" />
+                STARTER PACK
+              </div>
+              <h4 className="text-2xl sm:text-3xl font-extrabold">Get Started with SDASMS</h4>
+              <p className="text-white/70 text-sm mt-1">Everything you need to begin your digital evangelism journey</p>
+            </div>
+            <div className="text-right shrink-0 ml-4">
+              <p className="text-4xl sm:text-5xl font-extrabold">94,500</p>
+              <p className="text-white/70 text-sm font-semibold">TZS</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-3xl font-extrabold text-[#D72444]">94,500</p>
-            <p className="text-sm text-[#7F7F7F] dark:text-white/50">Tsh</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {STARTER_PACK_FEATURES.map((feature) => (
+              <div key={feature} className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-white/80 shrink-0" />
+                <span className="text-sm font-medium text-white/90">{feature}</span>
+              </div>
+            ))}
           </div>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 font-medium">
-          <CheckCircle2 className="w-4 h-4" />
-          <span>Includes Sender ID registration and setup</span>
         </div>
       </div>
 
       {/* Payment Methods */}
       <div>
-        <h4 className="text-base font-bold text-black dark:text-white mb-4">Pay Online</h4>
+        <h4 className="text-base font-bold text-black dark:text-white mb-4">Choose Payment Method</h4>
         <div className="space-y-3">
           {/* Pesapal */}
           <a
-            href="#"
-            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#D72444]/40 hover:bg-[#D72444]/5 dark:hover:bg-[#D72444]/10 transition-all duration-300 group"
+            href="https://pay.pesapal.com/sdasms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#1A9C48]/40 hover:bg-[#1A9C48]/5 dark:hover:bg-[#1A9C48]/10 transition-all duration-300 group"
           >
             <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
               <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
             </div>
             <div className="flex-1">
-              <p className="font-bold text-black dark:text-white group-hover:text-[#D72444] transition-colors">Pay with Pesapal</p>
-              <p className="text-sm text-[#7F7F7F] dark:text-white/50">Popular in East Africa (Tanzania)</p>
+              <p className="font-bold text-black dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Pay with Pesapal</p>
+              <p className="text-sm text-[#7F7F7F] dark:text-white/50">Mobile money & bank cards (East Africa)</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-[#D72444] transition-colors" />
+            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors" />
           </a>
 
           {/* Stripe */}
           <a
             href="#"
-            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#D72444]/40 hover:bg-[#D72444]/5 dark:hover:bg-[#D72444]/10 transition-all duration-300 group"
+            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-indigo-500/40 hover:bg-indigo-500/5 dark:hover:bg-indigo-500/10 transition-all duration-300 group"
           >
             <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center shrink-0">
               <CreditCard className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
             </div>
             <div className="flex-1">
-              <p className="font-bold text-black dark:text-white group-hover:text-[#D72444] transition-colors">Pay with Card (Stripe)</p>
+              <p className="font-bold text-black dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Pay with Card (Stripe)</p>
               <p className="text-sm text-[#7F7F7F] dark:text-white/50">International debit & credit cards</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-[#D72444] transition-colors" />
+            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
           </a>
 
           {/* PayPal */}
           <a
             href="#"
-            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-[#D72444]/40 hover:bg-[#D72444]/5 dark:hover:bg-[#D72444]/10 transition-all duration-300 group"
+            className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-white/10 hover:border-blue-500/40 hover:bg-blue-500/5 dark:hover:bg-blue-500/10 transition-all duration-300 group"
           >
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
               <Globe className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div className="flex-1">
-              <p className="font-bold text-black dark:text-white group-hover:text-[#D72444] transition-colors">Pay with PayPal</p>
+              <p className="font-bold text-black dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Pay with PayPal</p>
               <p className="text-sm text-[#7F7F7F] dark:text-white/50">International payments</p>
             </div>
-            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-[#D72444] transition-colors" />
+            <ArrowRight className="w-5 h-5 text-gray-300 dark:text-white/20 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
           </a>
         </div>
       </div>
@@ -687,108 +862,31 @@ function StepPayment() {
           </div>
         </div>
       </div>
-    </div>
-  )
-}
 
-function StepTerms({
-  data,
-  onChange,
-}: {
-  data: FormData
-  onChange: (field: keyof FormData, value: string | boolean) => void
-}) {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-[#D72444]/10 flex items-center justify-center">
-          <FileCheck className="w-6 h-6 text-[#D72444]" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-black dark:text-white">Terms & Conditions</h3>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm">Review and accept our terms</p>
-        </div>
-      </div>
-
+      {/* Terms */}
       <div className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-2xl p-6 border border-gray-200 dark:border-white/10">
-        <p className="text-sm text-[#7F7F7F] dark:text-white/50 leading-relaxed">
-          By proceeding with this registration, you agree to comply with the SDASMS Code of Conduct and Code of Practice,
-          which govern the use of our messaging platform. These codes ensure responsible, ethical, and lawful use of
-          bulk messaging services, protecting both senders and recipients.
-        </p>
-        <a
-          href="/policies/terms-of-service"
-          className="inline-flex items-center gap-1 text-[#D72444] text-sm font-semibold mt-3 hover:gap-2 transition-all duration-300"
-        >
-          Read Full Terms & Conditions
-          <ArrowRight className="w-3.5 h-3.5" />
-        </a>
-      </div>
-
-      <label className="flex items-start gap-3 cursor-pointer group">
-        <input
-          type="checkbox"
-          checked={data.termsAccepted}
-          onChange={(e) => onChange('termsAccepted', e.target.checked)}
-          className="w-5 h-5 mt-0.5 accent-[#D72444] rounded shrink-0"
-        />
-        <span className="text-sm text-black dark:text-white leading-relaxed">
-          I confirm reading, understanding and accepting the{' '}
+        <p className="text-sm text-[#7F7F7F] dark:text-white/50 leading-relaxed mb-4">
+          By proceeding with this registration and payment, you agree to comply with the SDASMS{' '}
           <a href="/policies/terms-of-service" className="text-[#D72444] font-semibold hover:underline">
             Terms & Conditions
           </a>{' '}
-          of the Code of Conduct and Code of Practice.
-        </span>
-      </label>
-
-      <div className="border-t border-gray-200 dark:border-white/10 pt-6 mt-6">
-        <h4 className="text-base font-bold text-black dark:text-white mb-4">Authorized Signatory</h4>
-        <div className="space-y-5">
-          <FormField label="Authorized Signatory" id="signatory">
-            <input
-              id="signatory"
-              type="text"
-              value={data.signatory}
-              onChange={(e) => onChange('signatory', e.target.value)}
-              className={INPUT_CLASS}
-              placeholder="Signatory title or name"
-            />
-          </FormField>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <FormField label="Name" id="signatoryName">
-              <input
-                id="signatoryName"
-                type="text"
-                value={data.signatoryName}
-                onChange={(e) => onChange('signatoryName', e.target.value)}
-                className={INPUT_CLASS}
-                placeholder="Full name"
-              />
-            </FormField>
-            <FormField label="Designation" id="designation">
-              <input
-                id="designation"
-                type="text"
-                value={data.designation}
-                onChange={(e) => onChange('designation', e.target.value)}
-                className={INPUT_CLASS}
-                placeholder="Job title / Role"
-              />
-            </FormField>
-          </div>
-          <FormField label="Date" id="signDate">
-            <div className="relative">
-              <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
-              <input
-                id="signDate"
-                type="date"
-                value={data.signDate}
-                onChange={(e) => onChange('signDate', e.target.value)}
-                className={`${INPUT_CLASS} pl-11`}
-              />
-            </div>
-          </FormField>
-        </div>
+          and Code of Conduct, which govern the use of our messaging platform.
+        </p>
+        <label className="flex items-start gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={data.termsAccepted}
+            onChange={(e) => onChange('termsAccepted', e.target.checked)}
+            className="w-5 h-5 mt-0.5 accent-[#D72444] rounded shrink-0"
+          />
+          <span className="text-sm text-black dark:text-white leading-relaxed">
+            I confirm reading, understanding and accepting the{' '}
+            <a href="/policies/terms-of-service" className="text-[#D72444] font-semibold hover:underline">
+              Terms & Conditions
+            </a>{' '}
+            of the Code of Conduct and Code of Practice.
+          </span>
+        </label>
       </div>
     </div>
   )
@@ -819,16 +917,18 @@ export default function GetStartedPage() {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
-        return !!(formData.orgName && formData.orgEmail && formData.orgPhone)
+        return formData.accountType !== ''
       case 2:
-        return !!(formData.contactName && formData.contactEmail && formData.contactPhone && formData.contactIdNumber)
+        if (formData.accountType === 'organization') {
+          return !!(formData.orgName && formData.orgEmail && formData.orgPhone)
+        }
+        return !!(formData.fullName && formData.email && formData.phone)
       case 3:
-        return !!formData.sector
-      case 4:
+        if (formData.accountType === 'organization') {
+          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.sector && formData.senderIds[0] && formData.sampleMessages[0])
+        }
         return !!(formData.senderIds[0] && formData.sampleMessages[0])
-      case 5:
-        return true
-      case 6:
+      case 4:
         return formData.termsAccepted
       default:
         return false
@@ -836,7 +936,7 @@ export default function GetStartedPage() {
   }
 
   const nextStep = () => {
-    if (validateStep(currentStep) && currentStep < 6) {
+    if (validateStep(currentStep) && currentStep < 4) {
       setCurrentStep((prev) => prev + 1)
     }
   }
@@ -848,7 +948,7 @@ export default function GetStartedPage() {
   }
 
   const handleSubmit = async () => {
-    if (!validateStep(6)) return
+    if (!validateStep(4)) return
     setSubmitting(true)
     setError('')
 
@@ -873,7 +973,7 @@ export default function GetStartedPage() {
     }
   }
 
-  const progressPercent = (currentStep / 6) * 100
+  const progressPercent = (currentStep / 4) * 100
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -884,7 +984,7 @@ export default function GetStartedPage() {
           badge={{ icon: <Rocket className="w-3.5 h-3.5 text-[#FF8340]" />, text: 'Start Your Journey' }}
           title="Get"
           titleAccent="Started"
-          subtitle="Begin your digital evangelism journey with SDASMS. Fill out the registration form below and we'll get you set up."
+          subtitle="Begin your digital evangelism journey with SDASMS. Complete the registration below and make payment to activate your account."
           nextSectionBg="light"
         />
 
@@ -905,7 +1005,7 @@ export default function GetStartedPage() {
                     Registration Submitted!
                   </h3>
                   <p className="text-[#7F7F7F] dark:text-white/50 text-base sm:text-lg leading-relaxed max-w-md mx-auto mb-6">
-                    Thank you for registering with SDASMS. Our team will review your application and get back to you within 24 hours.
+                    Thank you for registering with SDASMS. Our team will review your application and activate your account within 24 hours after payment confirmation.
                   </p>
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a
@@ -932,7 +1032,7 @@ export default function GetStartedPage() {
                   <div className="px-6 sm:px-8 pt-8 pb-2">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-semibold text-black dark:text-white">
-                        Step {currentStep} of 6
+                        Step {currentStep} of 4
                       </span>
                       <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">
                         {Math.round(progressPercent)}% Complete
@@ -951,11 +1051,11 @@ export default function GetStartedPage() {
                   {/* Step Indicators */}
                   <div className="px-6 sm:px-8 py-4">
                     <div className="flex items-center justify-between">
-                      {STEPS.map((step, index) => (
+                      {STEPS.map((step) => (
                         <button
                           key={step.id}
+                          type="button"
                           onClick={() => {
-                            // Can only navigate to completed steps or current
                             if (step.id <= currentStep) {
                               setCurrentStep(step.id)
                             }
@@ -964,7 +1064,7 @@ export default function GetStartedPage() {
                           disabled={step.id > currentStep}
                         >
                           <div
-                            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
                               step.id === currentStep
                                 ? 'bg-[#D72444] text-white shadow-lg shadow-[#D72444]/25'
                                 : step.id < currentStep
@@ -973,13 +1073,13 @@ export default function GetStartedPage() {
                             }`}
                           >
                             {step.id < currentStep ? (
-                              <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                              <CheckCircle2 className="w-5 h-5" />
                             ) : (
-                              <step.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                              <step.icon className="w-5 h-5" />
                             )}
                           </div>
                           <span
-                            className={`text-[10px] sm:text-xs font-semibold hidden sm:block ${
+                            className={`text-[10px] sm:text-xs font-semibold ${
                               step.id === currentStep
                                 ? 'text-[#D72444]'
                                 : step.id < currentStep
@@ -989,17 +1089,24 @@ export default function GetStartedPage() {
                           >
                             {step.label}
                           </span>
-                          {index < STEPS.length - 1 && (
-                            <div
-                              className={`hidden lg:block absolute top-1/2 -translate-y-1/2 h-px w-[calc(100%/5-40px)] ${
-                                step.id < currentStep
-                                  ? 'bg-green-300 dark:bg-green-700'
-                                  : 'bg-gray-200 dark:bg-white/10'
-                              }`}
-                            />
-                          )}
                         </button>
                       ))}
+                    </div>
+
+                    {/* Connector lines */}
+                    <div className="relative mt-[-36px] mb-6 mx-auto" style={{ width: '70%' }}>
+                      <div className="flex items-center justify-between">
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className={`h-0.5 flex-1 mx-2 rounded-full ${
+                              i < currentStep
+                                ? 'bg-green-300 dark:bg-green-700'
+                                : 'bg-gray-200 dark:bg-white/10'
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -1014,24 +1121,23 @@ export default function GetStartedPage() {
                         transition={{ duration: 0.3 }}
                       >
                         {currentStep === 1 && (
-                          <StepOrganization data={formData} onChange={handleChange} />
+                          <StepAccountType
+                            value={formData.accountType}
+                            onChange={(val) => handleChange('accountType', val)}
+                          />
                         )}
                         {currentStep === 2 && (
-                          <StepContact data={formData} onChange={handleChange} />
+                          <StepInfo data={formData} onChange={handleChange} />
                         )}
                         {currentStep === 3 && (
-                          <StepProfile
+                          <StepDetails
                             data={formData}
                             onChange={handleChange}
                             onToggleIndustry={handleToggleIndustry}
                           />
                         )}
                         {currentStep === 4 && (
-                          <StepSenderId data={formData} onChange={handleChange} />
-                        )}
-                        {currentStep === 5 && <StepPayment />}
-                        {currentStep === 6 && (
-                          <StepTerms data={formData} onChange={handleChange} />
+                          <StepPayment data={formData} onChange={handleChange} />
                         )}
                       </motion.div>
                     </AnimatePresence>
@@ -1052,19 +1158,22 @@ export default function GetStartedPage() {
                       <button
                         type="button"
                         onClick={prevStep}
-                        disabled={currentStep === 1}
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-[#7F7F7F] dark:text-white/50 hover:text-black dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300"
+                        className={`inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-xl transition-all duration-300 ${
+                          currentStep === 1
+                            ? 'opacity-0 pointer-events-none'
+                            : 'text-[#7F7F7F] dark:text-white/50 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
+                        }`}
                       >
                         <ArrowLeft className="w-4 h-4" />
                         Back
                       </button>
 
-                      {currentStep < 6 ? (
+                      {currentStep < 4 ? (
                         <button
                           type="button"
                           onClick={nextStep}
                           disabled={!validateStep(currentStep)}
-                          className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-full px-8 py-3.5 shadow-lg shadow-[#D72444]/25 transition-all duration-300"
+                          className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold text-sm px-8 py-3.5 rounded-xl shadow-lg shadow-[#D72444]/20 hover:shadow-[#D72444]/40 transition-all duration-300"
                         >
                           Continue
                           <ArrowRight className="w-4 h-4" />
@@ -1073,8 +1182,8 @@ export default function GetStartedPage() {
                         <button
                           type="button"
                           onClick={handleSubmit}
-                          disabled={submitting || !validateStep(6)}
-                          className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-full px-8 py-4 shadow-lg shadow-[#D72444]/25 transition-all duration-300"
+                          disabled={submitting || !validateStep(4)}
+                          className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D72444] to-[#FF8340] hover:from-[#E03355] hover:to-[#FF9A5C] disabled:opacity-30 disabled:cursor-not-allowed text-white font-bold text-sm px-8 py-3.5 rounded-xl shadow-lg shadow-[#D72444]/20 hover:shadow-[#D72444]/40 transition-all duration-300"
                         >
                           {submitting ? (
                             <>
@@ -1084,7 +1193,7 @@ export default function GetStartedPage() {
                           ) : (
                             <>
                               Submit Registration
-                              <CheckCircle2 className="w-5 h-5" />
+                              <ArrowRight className="w-4 h-4" />
                             </>
                           )}
                         </button>
@@ -1094,36 +1203,6 @@ export default function GetStartedPage() {
                 </div>
               </FadeInWhenVisible>
             )}
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 sm:py-28 bg-[#1A0A2E]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <FadeInWhenVisible>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                Need help with registration?
-              </h2>
-              <p className="text-white/60 text-base sm:text-lg leading-relaxed mb-10 max-w-2xl mx-auto font-medium">
-                Our team is available to guide you through the registration process. Reach out to us and we&apos;ll assist you every step of the way.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a
-                  href="/contact"
-                  className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#D72444]/25 transition-all duration-300"
-                >
-                  <MapPin className="w-5 h-5" />
-                  Contact Us
-                </a>
-                <a
-                  href="mailto:hello@sdasms.com"
-                  className="inline-flex items-center gap-2 border border-white/20 text-white hover:bg-white/10 rounded-full px-8 py-4 h-auto text-base font-semibold transition-all duration-300"
-                >
-                  <Mail className="w-5 h-5" />
-                  Email Us
-                </a>
-              </div>
-            </FadeInWhenVisible>
           </div>
         </section>
       </main>
