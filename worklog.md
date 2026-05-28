@@ -20,3 +20,27 @@ Stage Summary:
 - Onboard form: All fields now have `required` attribute, validation enforces all fields
 - Payment: Only Bank Transfer + M-PESA remain, no online payment options
 - Removed: /api/stripe/checkout, /api/pesapal/checkout, /api/payment/stripe, /api/payment/pesapal
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Link Use Cases to homepage section, fix onboard email sending, push to GitHub
+
+Work Log:
+- Changed "Use Cases" nav link from `/use-cases` to `/#use-cases` in Header.tsx
+- Added smooth scroll handling for hash links (both desktop and mobile nav menus)
+- When on homepage, clicking "Use Cases" scrolls to #use-cases section smoothly
+- When on other pages, clicking "Use Cases" navigates to homepage/#use-cases
+- Replaced broken `sdk.sendEmail` (doesn't exist in z-ai-web-dev-sdk) with nodemailer
+- Built professional HTML email template with registration details, payment info, and attachments
+- Email is sent to hello@sdasms.com with all registration details + uploaded files as attachments
+- Removed Stripe/PesaPal payment labels from onboard route
+- Cleaned .env.local: removed PesaPal/Stripe keys, added SMTP config vars
+- Installed nodemailer + @types/nodemailer packages
+- Committed changes locally (872e9af)
+- Could not push to GitHub: no SSH client or GitHub credentials available in the environment
+
+Stage Summary:
+- Use Cases nav link now points to /#use-cases (homepage section) with smooth scroll
+- Onboard email now uses nodemailer with SMTP (needs SMTP_HOST, SMTP_USER, SMTP_PASS configured)
+- Git commit ready locally, user needs to push manually: `git push origin main`
