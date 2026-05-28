@@ -241,6 +241,7 @@ const TRUSTED_LOGOS = [
   { src: '/logo-adra.png', alt: 'ADRA' },
   { src: '/logo-onevoice27.png', alt: 'OneVoice27', large: true },
   { src: '/logo-sdas-church.png', alt: 'SDAS Church' },
+  { src: '/logo-asi.png', alt: 'ASI' },
 ]
 
 /* ─── Hero Section with Quick Send Widget ──────────────────── */
@@ -784,7 +785,6 @@ const NETWORK_LOGOS = [
   { src: '/logo-9x.png', alt: 'Network Partner 5' },
   { src: '/logo-10x.png', alt: 'Network Partner 6' },
   { src: '/logo-13x.png', alt: 'Network Partner 7' },
-  { src: '/logo-asi.png', alt: 'ASI' },
 ]
 
 function CoverageSection() {
