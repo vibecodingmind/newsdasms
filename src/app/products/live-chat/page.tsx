@@ -481,7 +481,7 @@ export default function LiveChatPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="#"
+                  href="/contact"
                   className="inline-flex items-center gap-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#06B6D4]/25 transition-all duration-300"
                 >
                   Start Free Trial

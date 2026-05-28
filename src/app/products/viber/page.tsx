@@ -480,7 +480,7 @@ export default function ViberPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="#"
+                  href="/contact"
                   className="inline-flex items-center gap-2 bg-[#7360F2] hover:bg-[#6347E0] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#7360F2]/25 transition-all duration-300"
                 >
                   Get API Access

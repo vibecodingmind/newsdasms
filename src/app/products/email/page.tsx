@@ -480,7 +480,7 @@ export default function EmailPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="#"
+                  href="/contact"
                   className="inline-flex items-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#F59E0B]/25 transition-all duration-300"
                 >
                   Start Free Trial

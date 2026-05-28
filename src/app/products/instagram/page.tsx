@@ -480,7 +480,7 @@ export default function InstagramPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="#"
+                  href="/contact"
                   className="inline-flex items-center gap-2 bg-[#E4405F] hover:bg-[#C13584] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#E4405F]/25 transition-all duration-300"
                 >
                   Get API Access

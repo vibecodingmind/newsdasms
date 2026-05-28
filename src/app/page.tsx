@@ -1333,30 +1333,44 @@ function FAQSection() {
 
 function CTASection() {
   return (
-    <section className="py-16 sm:py-28 bg-gradient-to-br from-white via-[#FFF5F5]/30 dark:via-[#1A0A2E]/50 to-white dark:to-[#0D0B1A]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section className="relative py-20 sm:py-32 overflow-hidden">
+      {/* Dark background with glow effects */}
+      <div className="absolute inset-0 bg-[#0B0518]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#D72444]/8 via-transparent to-[#7C3AED]/8" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#D72444]/6 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[300px] bg-[#7C3AED]/6 rounded-full blur-[100px]" />
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <FadeInWhenVisible>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-6 leading-tight">
+          {/* Decorative icon */}
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#D72444]/15 border border-[#D72444]/20 mb-8">
+            <Rocket className="w-7 h-7 text-[#FF8340]" />
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight tracking-tight">
             Ready to get started?
-            <br />
-            <span className="text-[#D72444]">Create your account now</span>
           </h2>
-          <p className="text-[#7F7F7F] dark:text-white/50 text-sm sm:text-lg leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto font-medium">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6">
+            <span className="bg-gradient-to-r from-[#FF8340] via-[#D72444] to-[#7C3AED] bg-clip-text text-transparent">
+              Create your account now
+            </span>
+          </h3>
+          <p className="text-white/60 text-base sm:text-lg md:text-xl leading-relaxed mb-10 sm:mb-12 max-w-2xl mx-auto">
             Ready to transform digital evangelism and reach more souls with
             every message? Join SDASMS and start sharing the Gospel
             effortlessly.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
             <a
               href="/get-started"
-              className="inline-flex items-center gap-2 bg-[#D72444] hover:bg-[#E03355] text-white font-semibold rounded-full px-5 py-2.5 sm:px-8 sm:py-4 h-auto text-sm sm:text-base shadow-lg shadow-[#D72444]/25 transition-all duration-300 w-full sm:w-auto justify-center"
+              className="group inline-flex items-center gap-2.5 bg-[#D72444] hover:bg-[#E03355] text-white font-bold rounded-full px-8 py-4 h-auto text-base shadow-2xl shadow-[#D72444]/30 transition-all duration-300 hover:shadow-[0_0_50px_rgba(215,36,68,0.4)] hover:-translate-y-0.5 w-full sm:w-auto justify-center"
             >
               Get Started
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </a>
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 border border-gray-200 dark:border-white/10 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 rounded-full px-5 py-2.5 sm:px-8 sm:py-4 h-auto text-sm sm:text-base font-semibold transition-all duration-300 w-full sm:w-auto justify-center"
+              className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/[0.12] text-white hover:bg-white/[0.1] hover:border-white/[0.2] rounded-full px-8 py-4 h-auto text-base font-semibold transition-all duration-300 w-full sm:w-auto justify-center"
             >
               Contact Us
             </a>

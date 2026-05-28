@@ -481,7 +481,7 @@ export default function MessengerPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="#"
+                  href="/contact"
                   className="inline-flex items-center gap-2 bg-[#0084FF] hover:bg-[#0066CC] text-white font-semibold rounded-full px-8 py-4 h-auto text-base shadow-lg shadow-[#0084FF]/25 transition-all duration-300"
                 >
                   Get API Access
