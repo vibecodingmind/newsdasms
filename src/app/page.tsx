@@ -246,43 +246,9 @@ const TRUSTED_LOGOS = [
   { src: '/logo-asi.png', alt: 'ASI' },
 ]
 
-/* ─── Hero Section with Retro Phone Visual ──────────────────── */
+/* ─── Hero Section with Phone Mockup ──────────────────────── */
 
 function HeroSection() {
-  // SMS inbox messages data
-  const smsMessages = [
-    {
-      sender: 'SDASMS',
-      preview: 'Join us for Sabbath worship tomorrow at 9AM. God bless you!',
-      time: '09:41',
-      replied: true,
-    },
-    {
-      sender: 'HARAMBEE',
-      preview: 'Fundraiser update: We have reached 75% of our target!',
-      time: '09:38',
-      replied: false,
-    },
-    {
-      sender: 'MCHANGO',
-      preview: 'Thank you for your contribution. May God reward you.',
-      time: '09:30',
-      replied: true,
-    },
-    {
-      sender: 'HARUSI',
-      preview: 'Wedding ceremony invitation: Dec 14 at Arusha Ch...',
-      time: '09:15',
-      replied: false,
-    },
-    {
-      sender: 'SDASMS',
-      preview: 'Daily devotional: "Trust in the Lord with all your...',
-      time: '08:00',
-      replied: false,
-    },
-  ]
-
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#0B0518]">
       {/* Background layers */}
@@ -305,7 +271,7 @@ function HeroSection() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full min-h-0 sm:min-h-screen flex items-start sm:items-center pt-28 sm:pt-28 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 lg:gap-12 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 lg:gap-12 items-center w-full">
           {/* Left - Text Content */}
           <div className="flex flex-col items-start">
             {/* Badge */}
@@ -398,7 +364,7 @@ function HeroSection() {
             </motion.div>
           </div>
 
-          {/* Right - Retro Mobile Phone Visual */}
+          {/* Right - Modern Smartphone Mockup */}
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -407,153 +373,139 @@ function HeroSection() {
           >
             <div className="relative">
               {/* Glow behind phone */}
-              <div className="absolute -inset-8 bg-gradient-to-br from-[#D72444]/10 via-[#7C3AED]/8 to-[#FF8340]/10 rounded-[60px] blur-3xl" />
-              <div className="absolute -inset-3 bg-gradient-to-br from-[#D72444]/6 to-[#7C3AED]/6 rounded-[48px] blur-xl" />
+              <div className="absolute -inset-10 bg-gradient-to-br from-[#D72444]/12 via-[#7C3AED]/8 to-[#FF8340]/10 rounded-[60px] blur-3xl" />
+              <div className="absolute -inset-4 bg-gradient-to-br from-[#D72444]/6 to-[#7C3AED]/6 rounded-[48px] blur-xl" />
 
-              {/* Phone Body */}
-              <div className="relative w-[280px] sm:w-[300px]">
-                {/* Phone outer shell */}
-                <div className="relative bg-gradient-to-b from-[#2A2040] via-[#1E1535] to-[#16102A] rounded-[36px] p-3 shadow-2xl shadow-black/40 border border-white/[0.08]">
-                  {/* Phone inner bezel */}
-                  <div className="relative bg-[#0A0716] rounded-[26px] overflow-hidden">
-                    {/* Earpiece / speaker grille */}
-                    <div className="flex items-center justify-center py-2.5 bg-[#0A0716]">
-                      <div className="w-16 h-1.5 bg-[#1A1230] rounded-full" />
-                    </div>
+              {/* Phone Body - Modern Smartphone */}
+              <div className="relative w-[270px] sm:w-[290px]">
+                <div className="relative bg-[#1A1A2E] rounded-[40px] p-[6px] shadow-2xl shadow-black/50 border border-white/[0.1]">
+                  {/* Side button - volume */}
+                  <div className="absolute -left-[2px] top-[100px] w-[3px] h-[30px] bg-[#2A2A3E] rounded-l-sm" />
+                  <div className="absolute -left-[2px] top-[140px] w-[3px] h-[30px] bg-[#2A2A3E] rounded-l-sm" />
+                  {/* Side button - power */}
+                  <div className="absolute -right-[2px] top-[120px] w-[3px] h-[40px] bg-[#2A2A3E] rounded-r-sm" />
 
-                    {/* Screen area */}
-                    <div className="relative bg-[#0C1A0C] mx-1.5 rounded-lg overflow-hidden" style={{ minHeight: '380px' }}>
-                      {/* Scanline overlay for retro CRT feel */}
-                      <div
-                        className="absolute inset-0 opacity-[0.04] pointer-events-none z-10"
-                        style={{
-                          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)',
-                        }}
-                      />
+                  {/* Inner screen bezel */}
+                  <div className="relative bg-black rounded-[34px] overflow-hidden">
+                    {/* Status bar */}
+                    <div className="relative bg-[#F2F2F7] px-6 pt-3 pb-1">
+                      {/* Dynamic Island / Notch */}
+                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[90px] h-[28px] bg-black rounded-full z-20" />
 
-                      {/* Screen content - green phosphor LCD style */}
-                      <div className="relative p-3 space-y-1.5 font-mono">
-                        {/* Status bar */}
-                        <div className="flex items-center justify-between text-[10px] mb-2">
-                          <span className="text-[#33FF33]/70">SDASMS</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[#33FF33]/50">📶</span>
-                            <span className="text-[#33FF33]/50">🔋</span>
-                            <span className="text-[#33FF33]/70">09:41</span>
+                      {/* Time & icons */}
+                      <div className="flex items-center justify-between text-[12px] font-semibold text-black pt-6">
+                        <span>9:41</span>
+                        <div className="flex items-center gap-1">
+                          <div className="flex items-end gap-[2px]">
+                            <div className="w-[3px] h-[4px] bg-black rounded-[1px]" />
+                            <div className="w-[3px] h-[6px] bg-black rounded-[1px]" />
+                            <div className="w-[3px] h-[8px] bg-black rounded-[1px]" />
+                            <div className="w-[3px] h-[10px] bg-black rounded-[1px]" />
                           </div>
-                        </div>
-
-                        {/* Inbox header */}
-                        <div className="flex items-center justify-between bg-[#1A3A1A] px-2 py-1 rounded">
-                          <span className="text-[#33FF33] text-[11px] font-bold tracking-wider">INBOX (5)</span>
-                          <span className="text-[#33FF33]/50 text-[9px]">▌▌</span>
-                        </div>
-
-                        {/* SMS Messages */}
-                        {smsMessages.map((sms, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.3, delay: 0.5 + i * 0.12 }}
-                            className={`flex items-start gap-2 px-2 py-1.5 rounded ${
-                              i === 0
-                                ? 'bg-[#1A3A1A] border border-[#33FF33]/20'
-                                : 'border border-transparent hover:border-[#33FF33]/10'
-                            } transition-colors cursor-default`}
-                          >
-                            {/* Message icon */}
-                            <div className="shrink-0 mt-0.5">
-                              {sms.replied ? (
-                                <div className="relative">
-                                  <span className="text-[#33FF33] text-[10px]">✉</span>
-                                  <span className="absolute -top-0.5 -right-1 text-[7px] text-[#FFD700]">↩</span>
-                                </div>
-                              ) : (
-                                <span className="text-[#33FF33]/60 text-[10px]">✉</span>
-                              )}
-                            </div>
-
-                            {/* Message content */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between gap-1">
-                                <span className={`text-[10px] font-bold ${i === 0 ? 'text-[#33FF33]' : 'text-[#33FF33]/80'}`}>
-                                  {sms.sender}
-                                </span>
-                                <span className="text-[8px] text-[#33FF33]/40 shrink-0">{sms.time}</span>
-                              </div>
-                              <p className="text-[8px] text-[#33FF33]/50 truncate leading-tight mt-0.5">
-                                {sms.preview}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-
-                        {/* Scrollbar hint */}
-                        <div className="flex justify-end pr-1 mt-1">
-                          <div className="w-1 h-6 bg-[#33FF33]/15 rounded-full">
-                            <div className="w-1 h-2 bg-[#33FF33]/40 rounded-full" />
+                          <span className="text-[10px] ml-0.5">5G</span>
+                          <div className="w-[22px] h-[10px] border border-black rounded-[2px] ml-1 relative">
+                            <div className="absolute inset-[1.5px] right-[3px] bg-black rounded-[1px]" />
+                            <div className="absolute right-[-3px] top-[2px] w-[2px] h-[4px] bg-black rounded-r-sm" />
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Navigation soft keys */}
-                    <div className="flex items-center justify-between px-6 py-2 bg-[#0A0716]">
-                      <span className="text-[8px] text-[#33FF33]/30 font-mono">Options</span>
-                      <span className="text-[8px] text-[#33FF33]/30 font-mono">Open</span>
-                    </div>
-                  </div>
-
-                  {/* Physical keypad area */}
-                  <div className="bg-gradient-to-b from-[#1E1535] to-[#16102A] px-4 pb-4 pt-3">
-                    {/* D-pad / navigation key */}
-                    <div className="flex justify-center mb-3">
-                      <div className="w-12 h-12 rounded-full bg-[#2A2040] border border-white/[0.06] flex items-center justify-center shadow-inner">
-                        <div className="w-6 h-6 rounded-full bg-[#221A38] border border-white/[0.04]" />
-                      </div>
-                    </div>
-
-                    {/* Keypad grid */}
-                    <div className="grid grid-cols-3 gap-1.5 max-w-[180px] mx-auto">
-                      {[
-                        { num: '1', sub: '' },
-                        { num: '2', sub: 'ABC' },
-                        { num: '3', sub: 'DEF' },
-                        { num: '4', sub: 'GHI' },
-                        { num: '5', sub: 'JKL' },
-                        { num: '6', sub: 'MNO' },
-                        { num: '7', sub: 'PQRS' },
-                        { num: '8', sub: 'TUV' },
-                        { num: '9', sub: 'WXYZ' },
-                        { num: '*', sub: '' },
-                        { num: '0', sub: '+' },
-                        { num: '#', sub: '' },
-                      ].map((key) => (
-                        <div
-                          key={key.num}
-                          className="bg-[#2A2040] border border-white/[0.04] rounded-lg py-1.5 flex flex-col items-center justify-center hover:bg-[#342850] transition-colors"
-                        >
-                          <span className="text-white/70 text-[11px] font-bold leading-none">{key.num}</span>
-                          {key.sub && <span className="text-white/20 text-[5px] mt-0.5 leading-none">{key.sub}</span>}
+                    {/* Message App Content */}
+                    <div className="bg-[#F2F2F7]">
+                      {/* Message header bar */}
+                      <div className="bg-[#F2F2F7] px-4 pb-3 pt-1">
+                        <div className="flex items-center gap-3">
+                          {/* Back arrow */}
+                          <svg className="w-5 h-5 text-[#007AFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                          </svg>
+                          {/* Avatar circle */}
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#D72444] to-[#7C3AED] flex items-center justify-center shrink-0">
+                            <span className="text-white text-[11px] font-bold">A</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[14px] font-semibold text-black leading-tight">ARUSHA SDA</p>
+                            <p className="text-[11px] text-[#8E8E93] leading-tight">Text Message</p>
+                          </div>
+                          {/* Video call icon */}
+                          <svg className="w-5 h-5 text-[#007AFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
                         </div>
-                      ))}
+                      </div>
+
+                      {/* Timestamp */}
+                      <div className="text-center py-2">
+                        <span className="text-[10px] text-[#8E8E93] bg-white/60 px-3 py-0.5 rounded-full">Sat 9:41 AM</span>
+                      </div>
+
+                      {/* SMS Message Bubble */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 15, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 0.5, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="px-3 pb-3"
+                      >
+                        <div className="relative">
+                          {/* Message bubble */}
+                          <div className="bg-white rounded-[18px] rounded-tl-[4px] px-3.5 py-2.5 shadow-sm max-w-[240px] border border-[#E5E5EA]/50">
+                            {/* Sender name */}
+                            <p className="text-[12px] font-semibold text-[#D72444] mb-1">ARUSHA SDA</p>
+                            {/* Message text */}
+                            <p className="text-[13px] text-black leading-[1.45]">
+                              Happy Sabbath, Godlisten.
+                            </p>
+                            <p className="text-[13px] text-black leading-[1.45] mt-1">
+                              &ldquo;Remember the Sabbath day, to keep it holy.&rdquo; &mdash; Exodus 20:8
+                            </p>
+                            <p className="text-[13px] text-black leading-[1.45] mt-1">
+                              May God bless you with peace and joy today.
+                            </p>
+                            {/* Timestamp inside bubble */}
+                            <div className="flex items-center justify-end gap-1 mt-1.5">
+                              <span className="text-[9px] text-[#8E8E93]">9:41 AM</span>
+                              {/* Read receipt (double check) */}
+                              <svg className="w-[14px] h-[8px] text-[#007AFF]" viewBox="0 0 18 10" fill="none">
+                                <path d="M1 5L4 8L9 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M6 5L9 8L14 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </div>
+                          </div>
+                          {/* Bubble tail */}
+                          <div className="absolute -left-1.5 top-0 w-3 h-3 bg-white border-l border-b border-[#E5E5EA]/50 transform rotate-45 translate-y-[6px]" />
+                        </div>
+                      </motion.div>
+
+                      {/* Sender not in contacts note */}
+                      <div className="px-4 pb-2 text-center">
+                        <p className="text-[10px] text-[#8E8E93]">The sender is not in your contact list.</p>
+                      </div>
                     </div>
 
-                    {/* Call / End buttons */}
-                    <div className="flex items-center justify-center gap-6 mt-3">
-                      <div className="w-10 h-5 rounded-full bg-[#1B5E20]/40 border border-[#4CAF50]/20 flex items-center justify-center">
-                        <span className="text-[8px] text-[#4CAF50]/60">📞</span>
+                    {/* Message input bar at bottom */}
+                    <div className="bg-[#F2F2F7] px-3 pb-4 pt-1">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-white rounded-full px-4 py-2 border border-[#E5E5EA]">
+                          <span className="text-[12px] text-[#C7C7CC]">iMessage</span>
+                        </div>
+                        <div className="w-8 h-8 bg-[#007AFF] rounded-full flex items-center justify-center shrink-0">
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5M5 12l7-7 7 7" />
+                          </svg>
+                        </div>
                       </div>
-                      <div className="w-10 h-5 rounded-full bg-[#B71C1C]/40 border border-[#EF5350]/20 flex items-center justify-center">
-                        <span className="text-[8px] text-[#EF5350]/60">📵</span>
-                      </div>
+                    </div>
+
+                    {/* Home indicator */}
+                    <div className="bg-[#F2F2F7] flex justify-center pb-2">
+                      <div className="w-[100px] h-[4px] bg-black/20 rounded-full" />
                     </div>
                   </div>
                 </div>
 
-                {/* Phone reflection/shine overlay */}
-                <div className="absolute inset-0 rounded-[36px] bg-gradient-to-br from-white/[0.03] via-transparent to-transparent pointer-events-none" />
+                {/* Phone reflection/shine */}
+                <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
           </motion.div>
