@@ -192,3 +192,24 @@ Stage Summary:
 - CRITICAL BUG FIXED: Personal account missing ID fields in submission
 - Prisma schema updated with FreeSend model (for future persistent rate limiting)
 - All changes pushed to GitHub (commit 5a86729)
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix onboard form crash and refactor to email-only attachments (no server file storage)
+
+Work Log:
+- Diagnosed the root cause: API route was using fs/promises (writeFile, mkdir) to save uploaded files to disk, which fails on cPanel where the uploads directory doesn't exist or has wrong permissions
+- User clarified they want a "normal site" — no file storage on server, just email the details
+- Rewrote /src/app/api/onboard/route.ts to remove all fs/promises imports
+- Changed file handling: files are now read in-memory and attached directly to email via nodemailer
+- Personal account ID copy is now properly attached to the admin email
+- Organization files (ID copy, legal docs, auth letter) also attached to email
+- No disk writes at all — everything goes to hello@sdasms.com as email attachments
+- Synced all files from my-project to newsdasms GitHub repo
+- Built successfully and pushed to GitHub (2 commits)
+
+Stage Summary:
+- Key fix: Removed fs/promises file saving, replaced with in-memory email attachments
+- All uploaded files now go as email attachments, NOT saved to server
+- User needs to pull from GitHub and rebuild on cPanel to deploy the fix
+- GitHub repo: https://github.com/vibecodingmind/newsdasms
