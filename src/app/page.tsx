@@ -236,6 +236,7 @@ const ADVANCED_FEATURES_TABS = [
 
 const TRUSTED_LOGOS = [
   { src: '/logo-awr-center.png', alt: 'AWR Center for Digital Evangelism', large: true },
+  { src: '/logo-awr360.png', alt: 'AWR360' },
   { src: '/logo-bb.png', alt: 'Soma Biblia' },
   { src: '/logo-adra.png', alt: 'ADRA' },
   { src: '/logo-onevoice27.png', alt: 'OneVoice27', large: true },
