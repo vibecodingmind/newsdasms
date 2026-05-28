@@ -172,3 +172,23 @@ Each layout.tsx includes:
 - Dynamic robots.txt working
 - No new lint errors introduced
 - Dev server running successfully
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix onboard page crash when clicking Continue from Step 3 (Personal account)
+
+Work Log:
+- Investigated client-side exception on /get-started page for Personal account
+- Found root cause: `isManualPayment` variable used but never defined in StepPayment component (line 1153), causing ReferenceError crash
+- Fixed by replacing `isManualPayment &&` with `data.paymentMethod &&` (all payments are manual anyway)
+- Found secondary bug: submitRegistration() for personal accounts was missing repIdType, repIdNumber, and repIdCopy file fields in the FormData submission
+- Added these missing fields to the personal branch of submitRegistration
+- Added FreeSend model to Prisma schema (prep for persistent rate limiting feature)
+- Build passed successfully
+- Pushed to GitHub
+
+Stage Summary:
+- CRITICAL BUG FIXED: isManualPayment undefined → crash on Step 3→4 transition
+- CRITICAL BUG FIXED: Personal account missing ID fields in submission
+- Prisma schema updated with FreeSend model (for future persistent rate limiting)
+- All changes pushed to GitHub (commit 5a86729)
