@@ -20,6 +20,9 @@ import {
   Users,
   Landmark,
   UserCheck,
+  Upload,
+  X,
+  FileText,
 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -100,6 +103,10 @@ interface FormData {
   sector: 'Private' | 'Government' | ''
   industries: string[]
   otherIndustry: string
+  // File uploads (organization only)
+  repIdCopy: File | null
+  orgRegDoc: File | null
+  authLetter: File | null
   // Step 4 - Payment
   termsAccepted: boolean
 }
@@ -128,7 +135,100 @@ const INITIAL_FORM: FormData = {
   sector: '',
   industries: [],
   otherIndustry: '',
+  repIdCopy: null,
+  orgRegDoc: null,
+  authLetter: null,
   termsAccepted: false,
+}
+
+/* ─── Reusable File Upload Component ─────────────────────── */
+
+function FileUpload({
+  label,
+  id,
+  required,
+  file,
+  onFileChange,
+  accept = '.pdf,.jpg,.jpeg,.png',
+  helpText,
+}: {
+  label: string
+  id: string
+  required?: boolean
+  file: File | null
+  onFileChange: (file: File | null) => void
+  accept?: string
+  helpText?: string
+}) {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const dropped = e.dataTransfer.files[0]
+    if (dropped) onFileChange(dropped)
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+  }
+
+  return (
+    <div>
+      <label htmlFor={id} className={LABEL_CLASS}>
+        {label}
+        {required && <span className="text-[#D72444] ml-1">*</span>}
+      </label>
+      {file ? (
+        <div className="flex items-center gap-3 p-4 rounded-xl border border-[#D72444]/30 bg-[#D72444]/5 dark:bg-[#D72444]/10">
+          <div className="w-10 h-10 rounded-lg bg-[#D72444]/10 flex items-center justify-center shrink-0">
+            <FileText className="w-5 h-5 text-[#D72444]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-black dark:text-white truncate">{file.name}</p>
+            <p className="text-xs text-[#7F7F7F] dark:text-white/50">{(file.size / 1024).toFixed(1)} KB</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onFileChange(null)}
+            className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors shrink-0"
+          >
+            <X className="w-4 h-4 text-red-500 dark:text-red-400" />
+          </button>
+        </div>
+      ) : (
+        <div
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onClick={() => document.getElementById(id)?.click()}
+          className="cursor-pointer border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl p-6 text-center hover:border-[#D72444]/40 hover:bg-[#D72444]/5 dark:hover:bg-[#D72444]/5 transition-all duration-300"
+        >
+          <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center mx-auto mb-3">
+            <Upload className="w-5 h-5 text-gray-400 dark:text-white/30" />
+          </div>
+          <p className="text-sm font-semibold text-black dark:text-white mb-1">
+            Click to upload or drag & drop
+          </p>
+          <p className="text-xs text-[#7F7F7F] dark:text-white/40">
+            {helpText || 'PDF, JPG, PNG (max 5MB)'}
+          </p>
+          <input
+            id={id}
+            type="file"
+            accept={accept}
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0]
+              if (f) {
+                if (f.size > 5 * 1024 * 1024) {
+                  alert('File size must be under 5MB')
+                  return
+                }
+                onFileChange(f)
+              }
+            }}
+          />
+        </div>
+      )}
+    </div>
+  )
 }
 
 /* ─── Reusable Field Component ───────────────────────────── */
@@ -462,10 +562,12 @@ function StepDetails({
   data,
   onChange,
   onToggleIndustry,
+  onFileChange,
 }: {
   data: FormData
   onChange: (field: keyof FormData, value: string) => void
   onToggleIndustry: (industry: string) => void
+  onFileChange: (field: keyof FormData, file: File | null) => void
 }) {
   const isOrg = data.accountType === 'organization'
 
@@ -570,6 +672,15 @@ function StepDetails({
               />
             </FormField>
           </div>
+
+          <FileUpload
+            label="ID Copy"
+            id="repIdCopy"
+            required
+            file={data.repIdCopy}
+            onFileChange={(f) => onFileChange('repIdCopy', f)}
+            helpText="Upload a clear copy of NIDA or Passport (PDF, JPG, PNG max 5MB)"
+          />
         </div>
       )}
 
@@ -645,6 +756,29 @@ function StepDetails({
               </div>
             )}
           </div>
+
+          <div className="flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-white/10 mt-6">
+            <FileText className="w-5 h-5 text-[#D72444]" />
+            <h4 className="text-base font-bold text-black dark:text-white">Organization Documents</h4>
+          </div>
+
+          <FileUpload
+            label="Organization Registration Document"
+            id="orgRegDoc"
+            required
+            file={data.orgRegDoc}
+            onFileChange={(f) => onFileChange('orgRegDoc', f)}
+            helpText="Upload certificate of registration or incorporation (PDF, JPG, PNG max 5MB)"
+          />
+
+          <FileUpload
+            label="Authorization Letter"
+            id="authLetter"
+            required
+            file={data.authLetter}
+            onFileChange={(f) => onFileChange('authLetter', f)}
+            helpText="Upload signed authorization letter on organization letterhead (PDF, JPG, PNG max 5MB)"
+          />
         </div>
       )}
 
@@ -828,6 +962,10 @@ export default function GetStartedPage() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
+  const handleFileChange = (field: keyof FormData, file: File | null) => {
+    setFormData((prev) => ({ ...prev, [field]: file }))
+  }
+
   const handleToggleIndustry = (industry: string) => {
     setFormData((prev) => {
       const industries = prev.industries.includes(industry)
@@ -848,7 +986,7 @@ export default function GetStartedPage() {
         return !!(formData.fullName && formData.email && formData.phone)
       case 3:
         if (formData.accountType === 'organization') {
-          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.sector)
+          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.sector && formData.repIdCopy && formData.orgRegDoc && formData.authLetter)
         }
         return true
       case 4:
@@ -876,10 +1014,44 @@ export default function GetStartedPage() {
     setError('')
 
     try {
+      // Use FormData multipart to support file uploads
+      const fd = new FormData()
+
+      // Add all text fields
+      fd.append('accountType', formData.accountType)
+      if (formData.accountType === 'personal') {
+        fd.append('fullName', formData.fullName)
+        fd.append('email', formData.email)
+        fd.append('phone', formData.phone)
+        fd.append('address', formData.address)
+        fd.append('city', formData.city)
+        fd.append('region', formData.region)
+      } else {
+        fd.append('orgName', formData.orgName)
+        fd.append('orgEmail', formData.orgEmail)
+        fd.append('orgPhone', formData.orgPhone)
+        fd.append('orgAddress', formData.orgAddress)
+        fd.append('orgCity', formData.orgCity)
+        fd.append('orgRegion', formData.orgRegion)
+        fd.append('orgWebsite', formData.orgWebsite)
+        fd.append('repName', formData.repName)
+        fd.append('repEmail', formData.repEmail)
+        fd.append('repPhone', formData.repPhone)
+        fd.append('repIdType', formData.repIdType)
+        fd.append('repIdNumber', formData.repIdNumber)
+        fd.append('repDesignation', formData.repDesignation)
+        fd.append('sector', formData.sector)
+        fd.append('industries', JSON.stringify(formData.industries))
+        fd.append('otherIndustry', formData.otherIndustry)
+        if (formData.repIdCopy) fd.append('repIdCopy', formData.repIdCopy)
+        if (formData.orgRegDoc) fd.append('orgRegDoc', formData.orgRegDoc)
+        if (formData.authLetter) fd.append('authLetter', formData.authLetter)
+      }
+      fd.append('termsAccepted', String(formData.termsAccepted))
+
       const response = await fetch('/api/onboard', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: fd,
       })
 
       const result = await response.json()
@@ -995,6 +1167,7 @@ export default function GetStartedPage() {
                             data={formData}
                             onChange={handleChange}
                             onToggleIndustry={handleToggleIndustry}
+                            onFileChange={handleFileChange}
                           />
                         )}
                         {currentStep === 4 && (

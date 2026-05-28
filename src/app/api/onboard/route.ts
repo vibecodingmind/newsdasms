@@ -1,6 +1,11 @@
 import 'server-only'
 import { NextRequest } from 'next/server'
-import { successResponse, errorResponse, SDASMS_API_TOKEN, validateRequired } from '@/lib/sdasms-api'
+import { successResponse, errorResponse, SDASMS_API_TOKEN } from '@/lib/sdasms-api'
+
+// Helper to get a text field from FormData
+function getTextField(formData: FormData, key: string): string {
+  return (formData.get(key) as string) || ''
+}
 
 export async function POST(request: NextRequest) {
   // 503 guard if API token is missing
@@ -9,72 +14,110 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json()
+    const formData = await request.formData()
+
+    // Extract text fields
+    const accountType = getTextField(formData, 'accountType')
+    const termsAccepted = getTextField(formData, 'termsAccepted')
 
     // Validate account type
-    if (!body.accountType || (body.accountType !== 'personal' && body.accountType !== 'organization')) {
+    if (!accountType || (accountType !== 'personal' && accountType !== 'organization')) {
       return errorResponse('Please select a valid account type (Personal or Organization)')
     }
 
     // Validate based on account type
-    if (body.accountType === 'personal') {
-      const personalValidation = validateRequired(body, ['fullName', 'email', 'phone'])
-      if (!personalValidation.valid) {
-        return errorResponse(`Missing required fields: ${personalValidation.missing.join(', ')}`)
+    if (accountType === 'personal') {
+      const fullName = getTextField(formData, 'fullName')
+      const email = getTextField(formData, 'email')
+      const phone = getTextField(formData, 'phone')
+      if (!fullName || !email || !phone) {
+        return errorResponse('Missing required fields: fullName, email, phone')
       }
     } else {
       // Organization account
-      const orgValidation = validateRequired(body, ['orgName', 'orgEmail', 'orgPhone'])
-      if (!orgValidation.valid) {
-        return errorResponse(`Missing organization fields: ${orgValidation.missing.join(', ')}`)
+      const orgName = getTextField(formData, 'orgName')
+      const orgEmail = getTextField(formData, 'orgEmail')
+      const orgPhone = getTextField(formData, 'orgPhone')
+      if (!orgName || !orgEmail || !orgPhone) {
+        return errorResponse('Missing organization fields: orgName, orgEmail, orgPhone')
       }
 
       // Validate representative details for organization
-      const repValidation = validateRequired(body, ['repName', 'repEmail', 'repPhone', 'repIdNumber'])
-      if (!repValidation.valid) {
-        return errorResponse(`Missing representative fields: ${repValidation.missing.join(', ')}`)
+      const repName = getTextField(formData, 'repName')
+      const repEmail = getTextField(formData, 'repEmail')
+      const repPhone = getTextField(formData, 'repPhone')
+      const repIdNumber = getTextField(formData, 'repIdNumber')
+      if (!repName || !repEmail || !repPhone || !repIdNumber) {
+        return errorResponse('Missing representative fields: repName, repEmail, repPhone, repIdNumber')
       }
 
       // Validate sector for organization
-      if (!body.sector || (body.sector !== 'Private' && body.sector !== 'Government')) {
+      const sector = getTextField(formData, 'sector')
+      if (!sector || (sector !== 'Private' && sector !== 'Government')) {
         return errorResponse('Please select a valid sector (Private or Government)')
+      }
+
+      // Validate file uploads for organization
+      const repIdCopy = formData.get('repIdCopy')
+      const orgRegDoc = formData.get('orgRegDoc')
+      const authLetter = formData.get('authLetter')
+      if (!repIdCopy || !(repIdCopy instanceof File)) {
+        return errorResponse('Representative ID copy is required')
+      }
+      if (!orgRegDoc || !(orgRegDoc instanceof File)) {
+        return errorResponse('Organization registration document is required')
+      }
+      if (!authLetter || !(authLetter instanceof File)) {
+        return errorResponse('Authorization letter is required')
       }
     }
 
     // Validate terms acceptance
-    if (!body.termsAccepted) {
+    if (termsAccepted !== 'true') {
       return errorResponse('You must accept the Terms & Conditions to proceed')
     }
 
+    // Build file info for logging
+    const fileInfo: Record<string, string> = {}
+    if (accountType === 'organization') {
+      const repIdCopy = formData.get('repIdCopy')
+      const orgRegDoc = formData.get('orgRegDoc')
+      const authLetter = formData.get('authLetter')
+      if (repIdCopy instanceof File) fileInfo.repIdCopy = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB)`
+      if (orgRegDoc instanceof File) fileInfo.orgRegDoc = `${orgRegDoc.name} (${(orgRegDoc.size / 1024).toFixed(1)}KB)`
+      if (authLetter instanceof File) fileInfo.authLetter = `${authLetter.name} (${(authLetter.size / 1024).toFixed(1)}KB)`
+    }
+
     // Build registration summary
-    const registrationSummary = body.accountType === 'personal'
+    const registrationSummary = accountType === 'personal'
       ? {
           accountType: 'Personal',
-          name: body.fullName,
-          email: body.email,
-          phone: body.phone,
-          address: body.address || 'N/A',
-          city: body.city || 'N/A',
-          region: body.region || 'N/A',
+          name: getTextField(formData, 'fullName'),
+          email: getTextField(formData, 'email'),
+          phone: getTextField(formData, 'phone'),
+          address: getTextField(formData, 'address') || 'N/A',
+          city: getTextField(formData, 'city') || 'N/A',
+          region: getTextField(formData, 'region') || 'N/A',
         }
       : {
           accountType: 'Organization',
-          organization: body.orgName,
-          orgEmail: body.orgEmail,
-          orgPhone: body.orgPhone,
-          orgAddress: body.orgAddress || 'N/A',
-          orgCity: body.orgCity || 'N/A',
-          orgRegion: body.orgRegion || 'N/A',
-          orgWebsite: body.orgWebsite || 'N/A',
-          representative: body.repName,
-          repEmail: body.repEmail,
-          repPhone: body.repPhone,
-          repIdType: body.repIdType,
-          repIdNumber: body.repIdNumber,
-          repDesignation: body.repDesignation || 'N/A',
-          sector: body.sector,
-          industries: body.industries || [],
-          otherIndustry: body.otherIndustry || 'N/A',
+          organization: getTextField(formData, 'orgName'),
+          orgEmail: getTextField(formData, 'orgEmail'),
+          orgPhone: getTextField(formData, 'orgPhone'),
+          orgAddress: getTextField(formData, 'orgAddress') || 'N/A',
+          orgCity: getTextField(formData, 'orgCity') || 'N/A',
+          orgRegion: getTextField(formData, 'orgRegion') || 'N/A',
+          orgWebsite: getTextField(formData, 'orgWebsite') || 'N/A',
+          representative: getTextField(formData, 'repName'),
+          repEmail: getTextField(formData, 'repEmail'),
+          repPhone: getTextField(formData, 'repPhone'),
+          repIdType: getTextField(formData, 'repIdType'),
+          repIdNumber: getTextField(formData, 'repIdNumber'),
+          repDesignation: getTextField(formData, 'repDesignation') || 'N/A',
+          sector: getTextField(formData, 'sector'),
+          industries: (() => { try { return JSON.parse(getTextField(formData, 'industries')) } catch { return [] } })(),
+          otherIndustry: getTextField(formData, 'otherIndustry') || 'N/A',
+          uploadedFiles: fileInfo,
         }
 
     // Log the registration submission
@@ -88,43 +131,48 @@ export async function POST(request: NextRequest) {
     try {
       const { default: sdk } = await import('z-ai-web-dev-sdk')
       if (sdk?.sendEmail) {
-        const emailBody = body.accountType === 'personal'
+        const emailBody = accountType === 'personal'
           ? `
 New Personal Account Registration:
 
-Name: ${body.fullName}
-Email: ${body.email}
-Phone: ${body.phone}
-Address: ${body.address || 'N/A'}
-City: ${body.city || 'N/A'}, Region: ${body.region || 'N/A'}
+Name: ${getTextField(formData, 'fullName')}
+Email: ${getTextField(formData, 'email')}
+Phone: ${getTextField(formData, 'phone')}
+Address: ${getTextField(formData, 'address') || 'N/A'}
+City: ${getTextField(formData, 'city') || 'N/A'}, Region: ${getTextField(formData, 'region') || 'N/A'}
 
 Package: Starter - Tsh 94,500
           `.trim()
           : `
 New Organization Account Registration:
 
-Organization: ${body.orgName}
-Org Email: ${body.orgEmail}
-Org Phone: ${body.orgPhone}
-Address: ${body.orgAddress || 'N/A'}, ${body.orgCity || 'N/A'}, ${body.orgRegion || 'N/A'}
-Website: ${body.orgWebsite || 'N/A'}
+Organization: ${getTextField(formData, 'orgName')}
+Org Email: ${getTextField(formData, 'orgEmail')}
+Org Phone: ${getTextField(formData, 'orgPhone')}
+Address: ${getTextField(formData, 'orgAddress') || 'N/A'}, ${getTextField(formData, 'orgCity') || 'N/A'}, ${getTextField(formData, 'orgRegion') || 'N/A'}
+Website: ${getTextField(formData, 'orgWebsite') || 'N/A'}
 
-Authorized Representative: ${body.repName}
-Rep Email: ${body.repEmail}
-Rep Phone: ${body.repPhone}
-ID Type: ${body.repIdType} - ${body.repIdNumber}
-Designation: ${body.repDesignation || 'N/A'}
+Authorized Representative: ${getTextField(formData, 'repName')}
+Rep Email: ${getTextField(formData, 'repEmail')}
+Rep Phone: ${getTextField(formData, 'repPhone')}
+ID Type: ${getTextField(formData, 'repIdType')} - ${getTextField(formData, 'repIdNumber')}
+Designation: ${getTextField(formData, 'repDesignation') || 'N/A'}
 
-Sector: ${body.sector}
-Industries: ${body.industries?.join(', ')}
-Other Industry: ${body.otherIndustry || 'N/A'}
+Sector: ${getTextField(formData, 'sector')}
+Industries: ${(() => { try { return JSON.parse(getTextField(formData, 'industries')).join(', ') } catch { return 'N/A' } })()}
+Other Industry: ${getTextField(formData, 'otherIndustry') || 'N/A'}
+
+Uploaded Documents:
+- ID Copy: ${fileInfo.repIdCopy || 'N/A'}
+- Registration Doc: ${fileInfo.orgRegDoc || 'N/A'}
+- Authorization Letter: ${fileInfo.authLetter || 'N/A'}
 
 Package: Starter - Tsh 94,500
           `.trim()
 
         await sdk.sendEmail({
           to: 'hello@sdasms.com',
-          subject: `New SDASMS ${body.accountType === 'personal' ? 'Personal' : 'Organization'} Registration: ${body.accountType === 'personal' ? body.fullName : body.orgName}`,
+          subject: `New SDASMS ${accountType === 'personal' ? 'Personal' : 'Organization'} Registration: ${accountType === 'personal' ? getTextField(formData, 'fullName') : getTextField(formData, 'orgName')}`,
           body: emailBody,
         })
       }
