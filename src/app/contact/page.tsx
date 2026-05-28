@@ -53,7 +53,7 @@ export default function ContactPage() {
     setSubmitting(true)
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/send-contact.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
