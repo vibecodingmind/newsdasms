@@ -583,20 +583,22 @@ function HeroSection() {
                     <label className="text-white/30 text-[10px] font-bold uppercase tracking-[0.12em] mb-2 block">
                       Recipient Number
                     </label>
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+                    <div className="flex items-stretch gap-0">
+                      {/* Country code badge */}
+                      <div className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] border-r-0 rounded-l-xl px-3.5 shrink-0">
                         <img
                           src="https://flagcdn.com/w20/tz.png"
-                          alt="Tanzania"
-                          className="w-5 h-auto rounded-sm"
+                          alt="TZ"
+                          className="w-5 h-3.5 rounded-[3px] object-cover shadow-sm"
                         />
-                        <span className="text-white/40 text-sm font-medium">+255</span>
+                        <span className="text-white/60 text-sm font-semibold tracking-wide">+255</span>
                       </div>
+                      {/* Phone input */}
                       <input
                         type="tel"
                         value={phoneNumber}
                         onChange={handlePhoneChange}
-                        className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl pl-[76px] pr-4 py-3 text-white text-sm font-mono placeholder-white/15 focus:outline-none focus:border-[#D72444]/40 focus:ring-1 focus:ring-[#D72444]/20 transition-all duration-200 tracking-wider hover:bg-white/[0.05]"
+                        className="flex-1 min-w-0 bg-white/[0.03] border border-white/[0.06] rounded-r-xl px-4 py-3 text-white text-sm font-mono placeholder-white/15 focus:outline-none focus:border-[#D72444]/40 focus:ring-1 focus:ring-[#D72444]/20 transition-all duration-200 tracking-widest hover:bg-white/[0.05]"
                         placeholder="7XX XXX XXX"
                         maxLength={9}
                       />
