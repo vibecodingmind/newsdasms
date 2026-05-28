@@ -58,7 +58,7 @@ const RECHARGE_TIERS = [
 const PRICING_FAQ = [
   {
     question: 'What is the Starter Pack?',
-    answer: 'The Starter Pack is our entry-level package at Tsh 34,900 that includes 2,500 SMS credits and 1 Sender ID. It\'s perfect for individuals or small organizations just getting started with bulk messaging.',
+    answer: 'The Starter Pack is our entry-level package at Tsh 94,500 that includes 2,500 SMS credits and 1 Sender ID. It\'s perfect for individuals or small organizations just getting started with bulk messaging.',
   },
   {
     question: 'How does the recharge pricing work?',
@@ -140,7 +140,7 @@ export default function PricingPage() {
                         <div className="text-center">
                           <div className="flex items-baseline gap-1 justify-center">
                             <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-wider">Tsh</span>
-                            <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">34,900</span>
+                            <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">94,500</span>
                           </div>
                           <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time setup</span>
                         </div>

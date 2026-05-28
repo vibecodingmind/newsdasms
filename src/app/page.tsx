@@ -956,7 +956,7 @@ function PricingSection() {
                     <div className="text-center">
                       <div className="flex items-baseline gap-1 justify-center">
                         <span className="text-[#FF8340] text-xs font-semibold uppercase tracking-wider">Tsh</span>
-                        <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">34,900</span>
+                        <span className="text-4xl sm:text-5xl font-extrabold text-black dark:text-white tracking-tight">94,500</span>
                       </div>
                       <span className="text-[#7F7F7F] dark:text-white/50 text-xs font-medium block mt-1">One-time setup</span>
                     </div>
