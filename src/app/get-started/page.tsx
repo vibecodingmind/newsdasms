@@ -16,12 +16,10 @@ import {
   Mail,
   MapPin,
   Shield,
-  Radio,
   Sparkles,
   Zap,
   Users,
   MessageSquare,
-  Church,
   Landmark,
   UserCheck,
 } from 'lucide-react'
@@ -109,8 +107,6 @@ interface FormData {
   sector: 'Private' | 'Government' | ''
   industries: string[]
   otherIndustry: string
-  senderIds: string[]
-  sampleMessages: string[]
   // Step 4 - Payment
   termsAccepted: boolean
 }
@@ -139,8 +135,6 @@ const INITIAL_FORM: FormData = {
   sector: '',
   industries: [],
   otherIndustry: '',
-  senderIds: ['', '', ''],
-  sampleMessages: ['', '', ''],
   termsAccepted: false,
 }
 
@@ -482,19 +476,6 @@ function StepDetails({
 }) {
   const isOrg = data.accountType === 'organization'
 
-  const updateSenderId = (index: number, value: string) => {
-    const newVal = value.slice(0, 11)
-    const updated = [...data.senderIds]
-    updated[index] = newVal
-    onChange('senderIds', JSON.stringify(updated))
-  }
-
-  const updateSampleMessage = (index: number, value: string) => {
-    const updated = [...data.sampleMessages]
-    updated[index] = value
-    onChange('sampleMessages', JSON.stringify(updated))
-  }
-
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-3 mb-6">
@@ -506,7 +487,7 @@ function StepDetails({
             {isOrg ? 'Representative & Organization Details' : 'Account Details'}
           </h3>
           <p className="text-[#7F7F7F] dark:text-white/50 text-sm">
-            {isOrg ? 'Provide authorized person and organization profile' : 'Set up your sender ID and preferences'}
+            {isOrg ? 'Provide authorized person and organization profile' : 'Confirm your details and preferences'}
           </p>
         </div>
       </div>
@@ -674,57 +655,6 @@ function StepDetails({
         </div>
       )}
 
-      {/* Sender ID Section - Both account types */}
-      <div className="space-y-5">
-        <div className="flex items-center gap-2 pb-3 border-b border-gray-200 dark:border-white/10">
-          <Radio className="w-5 h-5 text-[#D72444]" />
-          <h4 className="text-base font-bold text-black dark:text-white">Sender ID Request</h4>
-        </div>
-
-        <p className="text-sm text-[#7F7F7F] dark:text-white/50">
-          A Sender ID is the name that appears on recipients&apos; phones when they receive your SMS (e.g., MYCHURCH). Provide up to 3 Sender IDs and a sample message for each.
-        </p>
-
-        <div className="space-y-4">
-          {[0, 1, 2].map((i) => (
-            <div key={`sender-${i}`} className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-xl p-4 border border-gray-100 dark:border-white/10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-lg bg-[#D72444]/10 flex items-center justify-center">
-                  <span className="text-xs font-bold text-[#D72444]">{i + 1}</span>
-                </div>
-                <span className="text-sm font-semibold text-black dark:text-white">
-                  Sender ID {i + 1}
-                  {i === 0 && <span className="text-[#D72444] ml-1">*</span>}
-                </span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <input
-                    type="text"
-                    maxLength={11}
-                    value={data.senderIds[i] || ''}
-                    onChange={(e) => updateSenderId(i, e.target.value)}
-                    className={INPUT_CLASS}
-                    placeholder={`e.g. MYCHURCH`}
-                  />
-                  <p className="text-xs text-[#7F7F7F] dark:text-white/30 mt-1">
-                    {(data.senderIds[i] || '').length}/11 characters
-                  </p>
-                </div>
-                <div>
-                  <textarea
-                    rows={2}
-                    value={data.sampleMessages[i] || ''}
-                    onChange={(e) => updateSampleMessage(i, e.target.value)}
-                    className={`${INPUT_CLASS} resize-none`}
-                    placeholder="Sample message you plan to send..."
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   )
 }
@@ -925,9 +855,9 @@ export default function GetStartedPage() {
         return !!(formData.fullName && formData.email && formData.phone)
       case 3:
         if (formData.accountType === 'organization') {
-          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.sector && formData.senderIds[0] && formData.sampleMessages[0])
+          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.sector)
         }
-        return !!(formData.senderIds[0] && formData.sampleMessages[0])
+        return true
       case 4:
         return formData.termsAccepted
       default:

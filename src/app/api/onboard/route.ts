@@ -41,13 +41,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Validate sender IDs - at least one required for both account types
-    const senderIds: string[] = body.senderIds || []
-    const validSenderIds = senderIds.filter((id: string) => id && id.trim().length > 0)
-    if (validSenderIds.length === 0) {
-      return errorResponse('At least one Sender ID is required')
-    }
-
     // Validate terms acceptance
     if (!body.termsAccepted) {
       return errorResponse('You must accept the Terms & Conditions to proceed')
@@ -63,8 +56,6 @@ export async function POST(request: NextRequest) {
           address: body.address || 'N/A',
           city: body.city || 'N/A',
           region: body.region || 'N/A',
-          senderIds: validSenderIds,
-          sampleMessages: body.sampleMessages?.filter((m: string) => m?.trim()) || [],
         }
       : {
           accountType: 'Organization',
@@ -84,8 +75,6 @@ export async function POST(request: NextRequest) {
           sector: body.sector,
           industries: body.industries || [],
           otherIndustry: body.otherIndustry || 'N/A',
-          senderIds: validSenderIds,
-          sampleMessages: body.sampleMessages?.filter((m: string) => m?.trim()) || [],
         }
 
     // Log the registration submission
@@ -109,9 +98,6 @@ Phone: ${body.phone}
 Address: ${body.address || 'N/A'}
 City: ${body.city || 'N/A'}, Region: ${body.region || 'N/A'}
 
-Sender IDs: ${validSenderIds.join(', ')}
-Sample Messages: ${body.sampleMessages?.filter((m: string) => m?.trim()).join(' | ') || 'N/A'}
-
 Package: Starter - Tsh 94,500
           `.trim()
           : `
@@ -132,9 +118,6 @@ Designation: ${body.repDesignation || 'N/A'}
 Sector: ${body.sector}
 Industries: ${body.industries?.join(', ')}
 Other Industry: ${body.otherIndustry || 'N/A'}
-
-Sender IDs: ${validSenderIds.join(', ')}
-Sample Messages: ${body.sampleMessages?.filter((m: string) => m?.trim()).join(' | ') || 'N/A'}
 
 Package: Starter - Tsh 94,500
           `.trim()
