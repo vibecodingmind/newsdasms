@@ -625,6 +625,7 @@ function StepInfo({
               <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
               <select
                 id="orgCountry"
+                required
                 value={data.orgCountry}
                 onChange={(e) => onChange('orgCountry', e.target.value)}
                 className={`${INPUT_CLASS} pl-11`}
@@ -742,6 +743,7 @@ function StepInfo({
               <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
               <select
                 id="country"
+                required
                 value={data.country}
                 onChange={(e) => onChange('country', e.target.value)}
                 className={`${INPUT_CLASS} pl-11`}
@@ -802,6 +804,7 @@ function StepDetails({
             <FormField label="ID Type" id="repIdType" required>
               <select
                 id="repIdType"
+                required
                 value={data.repIdType}
                 onChange={(e) => onChange('repIdType', e.target.value)}
                 className={INPUT_CLASS}
@@ -889,6 +892,7 @@ function StepDetails({
             <FormField label="ID Type" id="repIdType" required>
               <select
                 id="repIdType"
+                required
                 value={data.repIdType}
                 onChange={(e) => onChange('repIdType', e.target.value)}
                 className={INPUT_CLASS}
@@ -970,6 +974,7 @@ function StepDetails({
               <div className="mt-3">
                 <input
                   type="text"
+                  required
                   value={data.orgTypeOther}
                   onChange={(e) => onChange('orgTypeOther', e.target.value)}
                   className={INPUT_CLASS}
@@ -1036,7 +1041,7 @@ function StepPayment({
   data: FormData
   onChange: (field: keyof FormData, value: string | boolean) => void
 }) {
-  const isManualPayment = data.paymentMethod === 'mpesa' || data.paymentMethod === 'bank'
+  // All payments are manual (Bank + M-PESA only)
 
   return (
     <div className="space-y-8">

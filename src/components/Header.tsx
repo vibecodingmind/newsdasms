@@ -114,9 +114,9 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || !isHome
-          ? 'dark:bg-[#1A0A2E]/95 bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
+        isTransparent
+          ? 'bg-transparent'
+          : 'dark:bg-[#1A0A2E]/95 bg-white/95 backdrop-blur-md shadow-lg'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -155,7 +155,7 @@ export default function Header() {
                     ? 'text-[#FF8340]'
                     : isTransparent
                       ? 'text-white hover:text-[#FF8340]'
-                      : 'dark:text-white text-gray-900 hover:text-[#FF8340]'
+                      : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
                 }`}
               >
                 Products
@@ -186,7 +186,7 @@ export default function Header() {
                         <div className="flex items-center justify-between px-7 pt-6 pb-4">
                           <div className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-[#D72444]" />
-                            <span className="text-gray-500 dark:text-white/70 text-[11px] font-semibold uppercase tracking-widest">
+                            <span className="text-gray-700 dark:text-white/90 text-[11px] font-semibold uppercase tracking-widest">
                               Products & Integrations
                             </span>
                           </div>
@@ -196,7 +196,7 @@ export default function Header() {
                         <div className="grid grid-cols-[1fr_1fr_220px] gap-0">
                           {/* Column 1 — Channels */}
                           <div className="px-5 pb-6 border-r border-gray-100 dark:border-white/10">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 dark:text-white/70 mb-4 px-2">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-700 dark:text-white/90 mb-4 px-2">
                               Channels
                             </p>
                             <div className="space-y-0.5">
@@ -222,7 +222,7 @@ export default function Header() {
                                     <span className="text-sm font-semibold text-gray-900 dark:text-white group-hover/item:text-[#D72444] transition-colors block">
                                       {item.label}
                                     </span>
-                                    <span className="text-[11px] text-gray-500 dark:text-white/70 group-hover/item:text-gray-600 dark:group-hover/item:text-white/80 transition-colors block leading-tight">
+                                    <span className="text-[11px] text-gray-700 dark:text-white/85 group-hover/item:text-gray-800 dark:group-hover/item:text-white/95 transition-colors block leading-tight">
                                       {item.desc}
                                     </span>
                                   </div>
@@ -233,7 +233,7 @@ export default function Header() {
 
                           {/* Column 2 — Business APIs */}
                           <div className="px-5 pb-6 border-r border-gray-100 dark:border-white/10">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 dark:text-white/70 mb-4 px-2">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-700 dark:text-white/90 mb-4 px-2">
                               Business APIs
                             </p>
                             <div className="space-y-0.5">
@@ -259,7 +259,7 @@ export default function Header() {
                                     <span className="text-sm font-semibold text-gray-900 dark:text-white group-hover/item:text-[#D72444] transition-colors block">
                                       {item.label}
                                     </span>
-                                    <span className="text-[11px] text-gray-500 dark:text-white/70 group-hover/item:text-gray-600 dark:group-hover/item:text-white/80 transition-colors block leading-tight">
+                                    <span className="text-[11px] text-gray-700 dark:text-white/85 group-hover/item:text-gray-800 dark:group-hover/item:text-white/95 transition-colors block leading-tight">
                                       {item.desc}
                                     </span>
                                   </div>
@@ -280,7 +280,7 @@ export default function Header() {
                                   <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1.5 leading-tight">
                                     Omnichannel Platform
                                   </h4>
-                                  <p className="text-gray-600 dark:text-white/75 text-[11px] leading-relaxed">
+                                  <p className="text-gray-700 dark:text-white/90 text-[11px] leading-relaxed">
                                     Unify all your messaging channels in one powerful dashboard.
                                   </p>
                                 </div>
@@ -297,11 +297,11 @@ export default function Header() {
                               <div className="mt-4 space-y-2.5">
                                 <div className="flex items-center gap-2 px-2">
                                   <Zap className="w-3 h-3 text-[#FF8340]" />
-                                  <span className="text-gray-600 dark:text-white/75 text-[10px] font-medium">99.2% delivery rate</span>
+                                  <span className="text-gray-700 dark:text-white/90 text-[10px] font-medium">99.2% delivery rate</span>
                                 </div>
                                 <div className="flex items-center gap-2 px-2">
                                   <MessageSquare className="w-3 h-3 text-[#D72444]" />
-                                  <span className="text-gray-600 dark:text-white/75 text-[10px] font-medium">10M+ messages delivered</span>
+                                  <span className="text-gray-700 dark:text-white/90 text-[10px] font-medium">10M+ messages delivered</span>
                                 </div>
                               </div>
                             </div>
@@ -312,7 +312,7 @@ export default function Header() {
                         <div className="px-7 py-4 border-t border-gray-100 dark:border-white/10 flex items-center justify-between">
                           <a
                             href="/features"
-                            className="group/link inline-flex items-center gap-2 text-gray-600 dark:text-white/75 hover:text-[#D72444] text-xs font-semibold transition-colors duration-200"
+                            className="group/link inline-flex items-center gap-2 text-gray-700 dark:text-white/90 hover:text-[#D72444] text-xs font-semibold transition-colors duration-200"
                           >
                             View all platform features
                             <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
@@ -342,7 +342,7 @@ export default function Header() {
                     ? 'text-[#FF8340]'
                     : isTransparent
                       ? 'text-white hover:text-[#FF8340]'
-                      : 'dark:text-white text-gray-900 hover:text-[#FF8340]'
+                      : 'dark:text-white text-gray-800 hover:text-[#FF8340]'
                 }`}
               >
                 {link.label}
@@ -377,7 +377,7 @@ export default function Header() {
             <ThemeToggle />
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className={`hover:bg-black/10 dark:hover:bg-white/10 h-11 w-11 ${isTransparent ? 'text-white' : 'text-gray-900 dark:text-white'}`}>
+                <Button variant="ghost" size="icon" className={`hover:bg-black/10 dark:hover:bg-white/10 h-11 w-11 ${isTransparent ? 'text-white' : 'text-gray-800 dark:text-white'}`}>
                   <Menu className="w-6 h-6" />
                   <span className="sr-only">Open menu</span>
                 </Button>
