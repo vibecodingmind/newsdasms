@@ -1,8 +1,6 @@
 import 'server-only'
 import { NextRequest } from 'next/server'
 import { successResponse, errorResponse, SDASMS_API_TOKEN } from '@/lib/sdasms-api'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
 import nodemailer from 'nodemailer'
 
 // Pricing constants
@@ -16,24 +14,14 @@ function getTextField(formData: FormData, key: string): string {
   return (formData.get(key) as string) || ''
 }
 
-// Save uploaded file to disk and return the stored path
-async function saveUploadedFile(file: File, prefix: string): Promise<string> {
-  const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
-
-  // Create uploads directory if it doesn't exist
-  const uploadDir = path.join(process.cwd(), 'uploads', 'onboard')
-  await mkdir(uploadDir, { recursive: true })
-
-  // Generate unique filename
-  const ext = path.extname(file.name) || '.pdf'
-  const timestamp = Date.now()
-  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').slice(0, 30)
-  const filename = `${prefix}_${timestamp}_${safeName}`
-  const filepath = path.join(uploadDir, filename)
-
-  await writeFile(filepath, buffer)
-  return filepath
+// Convert an uploaded File to a nodemailer-compatible attachment (in-memory, no disk writes)
+async function fileToAttachment(file: File, prefix: string): Promise<nodemailer.SendMailOptions['attachments']>[number] {
+  const arrayBuffer = await file.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
+  return {
+    filename: `${prefix}_${file.name}`,
+    content: buffer,
+  }
 }
 
 // Create email transporter using environment variables
@@ -121,7 +109,7 @@ function buildUserConfirmationHtml(data: {
   `
 }
 
-// Build HTML email body for registration
+// Build HTML email body for admin notification
 function buildEmailHtml(data: {
   accountType: string
   fields: Record<string, string>
@@ -177,7 +165,7 @@ function buildEmailHtml(data: {
         </table>
 
         ${fileInfoRows ? `
-        <h3 style="color: #374151; font-size: 16px; margin: 24px 0 12px;">Uploaded Documents</h3>
+        <h3 style="color: #374151; font-size: 16px; margin: 24px 0 12px;">Uploaded Documents (Attached)</h3>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
           <tbody>
             ${fileInfoRows}
@@ -273,7 +261,7 @@ export async function POST(request: NextRequest) {
     const paymentMethod = getTextField(formData, 'paymentMethod')
     const paymentConfirmed = getTextField(formData, 'paymentConfirmed')
 
-    // Payment method label map (manual only — no Stripe/PesaPal)
+    // Payment method label map (manual only)
     const paymentLabels: Record<string, string> = {
       mpesa: 'M-PESA (Lipa Number: 51720044)',
       bank: 'Bank Transfer — Equity Bank Tanzania, Acc: SDASMS MARKETING AGENCY, 3002211802039',
@@ -294,44 +282,52 @@ export async function POST(request: NextRequest) {
       return errorResponse('Please confirm your payment to proceed')
     }
 
-    // Save uploaded files to disk (organization only)
-    const savedFiles: Record<string, string> = {}
+    // ──────────────────────────────────────────────────────────
+    // Build email attachments from uploaded files (IN-MEMORY, no disk writes)
+    // ──────────────────────────────────────────────────────────
+    const attachments: nodemailer.SendMailOptions['attachments'] = []
     const fileInfo: Record<string, string> = {}
 
-    if (accountType === 'organization') {
-      const orgName = getTextField(formData, 'orgName').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20)
-
-      try {
+    try {
+      // Personal account: attach ID copy
+      if (accountType === 'personal') {
         const repIdCopy = formData.get('repIdCopy')
         if (repIdCopy instanceof File) {
-          savedFiles.repIdCopy = await saveUploadedFile(repIdCopy, `${orgName}_idcopy`)
-          fileInfo.repIdCopy = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB)`
+          attachments.push(await fileToAttachment(repIdCopy, 'idcopy'))
+          fileInfo['ID Copy'] = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB) — see attachment`
+        }
+      }
+
+      // Organization account: attach ID copy, legal docs, auth letter
+      if (accountType === 'organization') {
+        const repIdCopy = formData.get('repIdCopy')
+        if (repIdCopy instanceof File) {
+          attachments.push(await fileToAttachment(repIdCopy, 'idcopy'))
+          fileInfo['Rep ID Copy'] = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB) — see attachment`
         }
 
-        // Handle multiple legal documents
         const legalDocsEntries = formData.getAll('legalDocs')
         const legalDocInfos: string[] = []
         for (let i = 0; i < legalDocsEntries.length; i++) {
           const doc = legalDocsEntries[i]
           if (doc instanceof File) {
-            const key = `legalDoc_${i}`
-            savedFiles[key] = await saveUploadedFile(doc, `${orgName}_legaldoc_${i}`)
+            attachments.push(await fileToAttachment(doc, `legaldoc_${i}`))
             legalDocInfos.push(`${doc.name} (${(doc.size / 1024).toFixed(1)}KB)`)
           }
         }
         if (legalDocInfos.length > 0) {
-          fileInfo.legalDocs = legalDocInfos.join(', ')
+          fileInfo['Legal Documents'] = legalDocInfos.join(', ') + ' — see attachments'
         }
 
         const authLetter = formData.get('authLetter')
         if (authLetter instanceof File) {
-          savedFiles.authLetter = await saveUploadedFile(authLetter, `${orgName}_authletter`)
-          fileInfo.authLetter = `${authLetter.name} (${(authLetter.size / 1024).toFixed(1)}KB)`
+          attachments.push(await fileToAttachment(authLetter, 'authletter'))
+          fileInfo['Auth Letter'] = `${authLetter.name} (${(authLetter.size / 1024).toFixed(1)}KB) — see attachment`
         }
-      } catch (fileErr) {
-        console.error('[onboard] Error saving files:', fileErr)
-        // Continue even if file saving fails - files are logged but not blocking
       }
+    } catch (fileErr) {
+      console.error('[onboard] Error processing file attachments:', fileErr)
+      // Continue even if file attachment fails — text data still gets emailed
     }
 
     // Build registration fields for email
@@ -382,6 +378,7 @@ export async function POST(request: NextRequest) {
       package: `${pricing.label} - Tsh ${pricing.display}`,
       paymentMethod: paymentLabel,
       paymentConfirmed: paymentConfirmed === 'true',
+      attachmentCount: attachments.length,
       submittedAt: new Date().toISOString(),
     })
 
@@ -397,43 +394,10 @@ export async function POST(request: NextRequest) {
           paymentMethod,
           paymentLabel,
           paymentConfirmed: paymentConfirmed === 'true',
-          fileInfo: accountType === 'organization' ? fileInfo : undefined,
+          fileInfo: Object.keys(fileInfo).length > 0 ? fileInfo : undefined,
           priceDisplay: pricing.display,
           packLabel: pricing.label,
         })
-
-        // Attach uploaded files for organization registrations
-        const attachments: nodemailer.SendMailOptions['attachments'] = []
-        if (accountType === 'organization') {
-          for (const [key, filepath] of Object.entries(savedFiles)) {
-            attachments.push({
-              filename: path.basename(filepath),
-              path: filepath,
-            })
-          }
-        } else {
-          // Personal account: attach ID copy if saved
-          if (savedFiles.repIdCopy) {
-            attachments.push({
-              filename: path.basename(savedFiles.repIdCopy),
-              path: savedFiles.repIdCopy,
-            })
-          }
-        }
-
-        // Save personal ID copy too
-        if (accountType === 'personal') {
-          const repIdCopy = formData.get('repIdCopy')
-          if (repIdCopy instanceof File) {
-            const userName = getTextField(formData, 'fullName').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20)
-            savedFiles.repIdCopy = await saveUploadedFile(repIdCopy, `${userName}_idcopy`)
-            fileInfo.repIdCopy = `${repIdCopy.name} (${(repIdCopy.size / 1024).toFixed(1)}KB)`
-            attachments.push({
-              filename: path.basename(savedFiles.repIdCopy),
-              path: savedFiles.repIdCopy,
-            })
-          }
-        }
 
         await transporter.sendMail({
           from: `"SDASMS Onboard" <${process.env.SMTP_USER}>`,
@@ -444,7 +408,7 @@ export async function POST(request: NextRequest) {
         })
 
         emailSent = true
-        console.log('[onboard] Email notification sent to hello@sdasms.com')
+        console.log('[onboard] Email notification sent to hello@sdasms.com with', attachments.length, 'attachments')
       } catch (emailErr) {
         console.error('[onboard] Failed to send admin email notification:', emailErr)
       }
