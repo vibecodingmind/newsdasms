@@ -24,9 +24,14 @@ export async function POST(request: NextRequest) {
       return errorResponse("Service not configured. Please contact support.", 503);
     }
 
-    // Rate limiting check
+    // Rate limiting check — uses IP + device fingerprint for anti-bypass
     const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "unknown";
-    const rateLimitResult = checkRateLimit(ip);
+
+    // Parse request body to get fingerprint
+    const body = await request.json();
+    const { senderId, phoneNumber, message, fingerprint } = body;
+
+    const rateLimitResult = checkRateLimit(ip, fingerprint);
 
     if (!rateLimitResult.allowed) {
       return errorResponse(
@@ -34,10 +39,6 @@ export async function POST(request: NextRequest) {
         429
       );
     }
-
-    // Parse request body
-    const body = await request.json();
-    const { senderId, phoneNumber, message } = body;
 
     // Validate required fields
     const validation = validateRequired({ senderId, phoneNumber, message }, [

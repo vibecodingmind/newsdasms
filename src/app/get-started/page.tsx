@@ -24,8 +24,6 @@ import {
   Plus,
   Trash2,
   CreditCard,
-  Wallet,
-  Zap,
 } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -136,7 +134,7 @@ interface FormData {
   legalDocs: File[]
   authLetter: File | null
   // Step 4 - Payment
-  paymentMethod: '' | 'mpesa' | 'bank' | 'pesapal' | 'stripe'
+  paymentMethod: '' | 'mpesa' | 'bank'
   paymentConfirmed: boolean
   termsAccepted: boolean
 }
@@ -582,12 +580,13 @@ function StepInfo({
             </div>
           </FormField>
 
-          <FormField label="Address" id="orgAddress">
+          <FormField label="Address" id="orgAddress" required>
             <div className="relative">
               <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
               <input
                 id="orgAddress"
                 type="text"
+                required
                 value={data.orgAddress}
                 onChange={(e) => onChange('orgAddress', e.target.value)}
                 className={`${INPUT_CLASS} pl-11`}
@@ -597,20 +596,22 @@ function StepInfo({
           </FormField>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <FormField label="City" id="orgCity">
+            <FormField label="City" id="orgCity" required>
               <input
                 id="orgCity"
                 type="text"
+                required
                 value={data.orgCity}
                 onChange={(e) => onChange('orgCity', e.target.value)}
                 className={INPUT_CLASS}
                 placeholder="City"
               />
             </FormField>
-            <FormField label="Region" id="orgRegion">
+            <FormField label="Region" id="orgRegion" required>
               <input
                 id="orgRegion"
                 type="text"
+                required
                 value={data.orgRegion}
                 onChange={(e) => onChange('orgRegion', e.target.value)}
                 className={INPUT_CLASS}
@@ -636,12 +637,13 @@ function StepInfo({
             </div>
           </FormField>
 
-          <FormField label="Website" id="orgWebsite">
+          <FormField label="Website" id="orgWebsite" required>
             <div className="relative">
               <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
               <input
                 id="orgWebsite"
                 type="url"
+                required
                 value={data.orgWebsite}
                 onChange={(e) => onChange('orgWebsite', e.target.value)}
                 className={`${INPUT_CLASS} pl-11`}
@@ -695,12 +697,13 @@ function StepInfo({
             </div>
           </FormField>
 
-          <FormField label="Address" id="address">
+          <FormField label="Address" id="address" required>
             <div className="relative">
               <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-white/30" />
               <input
                 id="address"
                 type="text"
+                required
                 value={data.address}
                 onChange={(e) => onChange('address', e.target.value)}
                 className={`${INPUT_CLASS} pl-11`}
@@ -710,20 +713,22 @@ function StepInfo({
           </FormField>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <FormField label="City" id="city">
+            <FormField label="City" id="city" required>
               <input
                 id="city"
                 type="text"
+                required
                 value={data.city}
                 onChange={(e) => onChange('city', e.target.value)}
                 className={INPUT_CLASS}
                 placeholder="City"
               />
             </FormField>
-            <FormField label="Region" id="region">
+            <FormField label="Region" id="region" required>
               <input
                 id="region"
                 type="text"
+                required
                 value={data.region}
                 onChange={(e) => onChange('region', e.target.value)}
                 className={INPUT_CLASS}
@@ -903,10 +908,11 @@ function StepDetails({
                 placeholder="Enter your ID number"
               />
             </FormField>
-            <FormField label="Designation" id="repDesignation">
+            <FormField label="Designation" id="repDesignation" required>
               <input
                 id="repDesignation"
                 type="text"
+                required
                 value={data.repDesignation}
                 onChange={(e) => onChange('repDesignation', e.target.value)}
                 className={INPUT_CLASS}
@@ -1023,23 +1029,6 @@ const MANUAL_PAYMENT_METHODS = [
   },
 ]
 
-const AUTO_PAYMENT_METHODS = [
-  {
-    id: 'pesapal' as const,
-    title: 'PesaPal',
-    color: '#00A651',
-    icon: Wallet,
-    description: 'Pay via M-PESA, Bank, or Card (East Africa)',
-  },
-  {
-    id: 'stripe' as const,
-    title: 'Stripe',
-    color: '#635BFF',
-    icon: CreditCard,
-    description: 'Pay with debit or credit card (International)',
-  },
-]
-
 function StepPayment({
   data,
   onChange,
@@ -1048,75 +1037,6 @@ function StepPayment({
   onChange: (field: keyof FormData, value: string | boolean) => void
 }) {
   const isManualPayment = data.paymentMethod === 'mpesa' || data.paymentMethod === 'bank'
-  const isAutoPayment = data.paymentMethod === 'pesapal' || data.paymentMethod === 'stripe'
-
-  const handleAutoPayment = async (method: 'pesapal' | 'stripe') => {
-    try {
-      if (method === 'stripe') {
-        const res = await fetch('/api/payment/stripe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: 94500, currency: 'TZS' }),
-        })
-        const result = await res.json()
-        if (result.url) {
-          window.location.href = result.url
-        }
-      } else if (method === 'pesapal') {
-        const res = await fetch('/api/payment/pesapal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: 94500, currency: 'TZS' }),
-        })
-        const result = await res.json()
-        if (result.url) {
-          window.location.href = result.url
-        }
-      }
-    } catch {
-      // Auto payment failed — fall back to manual confirmation
-    }
-  }
-
-  const renderPaymentMethodButton = (method: { id: string; title: string; color: string; icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; description: string }, isManual: boolean) => (
-    <button
-      key={method.id}
-      type="button"
-      onClick={() => {
-        onChange('paymentMethod', method.id)
-        onChange('paymentConfirmed', false)
-      }}
-      className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer text-left ${
-        data.paymentMethod === method.id
-          ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10 shadow-md'
-          : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 hover:shadow-sm'
-      }`}
-    >
-      {data.paymentMethod === method.id && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="shrink-0"
-        >
-          <CheckCircle2 className="w-5 h-5 text-[#D72444]" />
-        </motion.div>
-      )}
-      <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${method.color}15` }}>
-        <method.icon className="w-6 h-6" style={{ color: method.color }} />
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <p className="font-bold text-black dark:text-white">{method.title}</p>
-          {isManual ? (
-            <span className="text-[9px] font-bold uppercase tracking-wider bg-[#FF8340]/10 text-[#FF8340] px-2 py-0.5 rounded-md">Manual</span>
-          ) : (
-            <span className="text-[9px] font-bold uppercase tracking-wider bg-green-500/10 text-green-500 px-2 py-0.5 rounded-md">Auto</span>
-          )}
-        </div>
-        <p className="text-sm text-[#7F7F7F] dark:text-white/50">{method.description}</p>
-      </div>
-    </button>
-  )
 
   return (
     <div className="space-y-8">
@@ -1172,31 +1092,42 @@ function StepPayment({
           for admin verification.
         </p>
 
-        {/* Manual Payment Section */}
-        <div className="mb-5">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#FF8340]" />
-            <span className="text-xs font-bold uppercase tracking-widest text-[#FF8340]">Manual Payment</span>
-            <span className="text-[10px] text-[#7F7F7F] dark:text-white/40">— You pay, then confirm</span>
-          </div>
-          <div className="space-y-3">
-            {MANUAL_PAYMENT_METHODS.map((method) => renderPaymentMethodButton(method, true))}
-          </div>
+        <div className="space-y-3">
+          {MANUAL_PAYMENT_METHODS.map((method) => (
+            <button
+              key={method.id}
+              type="button"
+              onClick={() => {
+                onChange('paymentMethod', method.id)
+                onChange('paymentConfirmed', false)
+              }}
+              className={`w-full flex items-center gap-4 p-5 rounded-xl border-2 transition-all duration-300 cursor-pointer text-left ${
+                data.paymentMethod === method.id
+                  ? 'border-[#D72444] bg-[#D72444]/5 dark:bg-[#D72444]/10 shadow-md'
+                  : 'border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 hover:shadow-sm'
+              }`}
+            >
+              {data.paymentMethod === method.id && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="shrink-0"
+                >
+                  <CheckCircle2 className="w-5 h-5 text-[#D72444]" />
+                </motion.div>
+              )}
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${method.color}15` }}>
+                <method.icon className="w-6 h-6" style={{ color: method.color }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-bold text-black dark:text-white">{method.title}</p>
+                <p className="text-sm text-[#7F7F7F] dark:text-white/50">{method.description}</p>
+              </div>
+            </button>
+          ))}
         </div>
 
-        {/* Auto Payment Section */}
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-            <span className="text-xs font-bold uppercase tracking-widest text-green-500">Auto Payment</span>
-            <span className="text-[10px] text-[#7F7F7F] dark:text-white/40">— Instant processing</span>
-          </div>
-          <div className="space-y-3">
-            {AUTO_PAYMENT_METHODS.map((method) => renderPaymentMethodButton(method, false))}
-          </div>
-        </div>
-
-        {/* Manual Payment Details - shown when a manual method is selected */}
+        {/* Payment Details - shown when a method is selected */}
         {isManualPayment && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -1265,55 +1196,6 @@ function StepPayment({
           </motion.div>
         )}
 
-        {/* Auto Payment Details - shown when auto method is selected */}
-        {isAutoPayment && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="mt-5"
-          >
-            <div className="bg-[#F6F6F6] dark:bg-[#1A0A2E] rounded-2xl p-6 border border-green-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
-                  <Zap className="w-5 h-5 text-green-500" />
-                </div>
-                <div>
-                  <h5 className="text-sm font-bold text-black dark:text-white">
-                    Auto Payment — {data.paymentMethod === 'pesapal' ? 'PesaPal' : 'Stripe'}
-                  </h5>
-                  <p className="text-xs text-[#7F7F7F] dark:text-white/50">
-                    {data.paymentMethod === 'pesapal'
-                      ? 'You will be redirected to PesaPal to complete payment securely'
-                      : 'You will be redirected to Stripe to complete payment securely'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                  <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Amount</span>
-                  <span className="text-base font-bold text-[#D72444]">94,500 TZS</span>
-                </div>
-                <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                  <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Provider</span>
-                  <span className="text-sm font-semibold text-black dark:text-white">{data.paymentMethod === 'pesapal' ? 'PesaPal' : 'Stripe'}</span>
-                </div>
-                {data.paymentMethod === 'pesapal' && (
-                  <div className="flex items-center justify-between py-3 px-4 bg-white dark:bg-[#0D0B1A] rounded-xl border border-gray-100 dark:border-white/10">
-                    <span className="text-sm font-medium text-[#7F7F7F] dark:text-white/50">Supports</span>
-                    <span className="text-sm font-semibold text-black dark:text-white">M-PESA, Bank, Card</span>
-                  </div>
-                )}
-              </div>
-
-              <p className="text-xs text-[#7F7F7F] dark:text-white/40 mt-4 leading-relaxed">
-                Payment is processed automatically. You will receive confirmation via email at hello@sdasms.com.
-              </p>
-            </div>
-          </motion.div>
-        )}
       </div>
 
       {/* Terms */}
@@ -1368,19 +1250,19 @@ export default function GetStartedPage() {
         return formData.accountType !== ''
       case 2:
         if (formData.accountType === 'organization') {
-          return !!(formData.orgName && formData.orgEmail && formData.orgPhone && formData.orgCountry)
+          return !!(formData.orgName && formData.orgEmail && formData.orgPhone && formData.orgAddress && formData.orgCity && formData.orgRegion && formData.orgCountry && formData.orgWebsite)
         }
-        return !!(formData.fullName && formData.email && formData.phone && formData.country)
+        return !!(formData.fullName && formData.email && formData.phone && formData.address && formData.city && formData.region && formData.country)
       case 3:
         if (formData.accountType === 'organization') {
-          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.orgType && formData.repIdCopy && formData.legalDocs.length >= 1 && formData.authLetter)
+          return !!(formData.repName && formData.repEmail && formData.repPhone && formData.repIdNumber && formData.repDesignation && formData.orgType && formData.repIdCopy && formData.legalDocs.length >= 1 && formData.authLetter)
         }
         // Personal: requires ID number and ID copy
         return !!(formData.repIdNumber && formData.repIdCopy)
       case 4:
         if (!formData.paymentMethod) return false
-        // Manual payments require user confirmation
-        if ((formData.paymentMethod === 'mpesa' || formData.paymentMethod === 'bank') && !formData.paymentConfirmed) return false
+        // All payments are manual — require user confirmation
+        if (!formData.paymentConfirmed) return false
         return formData.termsAccepted
       default:
         return false

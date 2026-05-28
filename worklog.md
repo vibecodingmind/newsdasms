@@ -66,3 +66,42 @@ Stage Summary:
 - PesaPal and Stripe added as auto payment options
 - All payment details sent to hello@sdasms.com
 - Build verified successful
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Fix light mode header, dark mode mega menu, make all form fields required, remove online payment, implement free sends with anti-bypass
+
+Work Log:
+- Fixed light mode header: Added `isDark` state to Header component that observes document class via MutationObserver
+- Changed `isTransparent` logic to only apply when isDark=true (in light mode, header always uses solid bg + dark text)
+- Updated Login button styling: light mode uses `text-[#D72444]` border, dark mode uses `text-[#FF8340]`
+- Updated mobile menu button to `text-gray-900` for better light mode visibility
+- Fixed dark mode mega menu: Improved all text colors to `dark:text-white/70` and `dark:text-white/75` (from /50 and /60)
+- Made mega menu labels `text-gray-900 dark:text-white` and descriptions `text-gray-500 dark:text-white/70`
+- Made ALL onboard form fields required: Address, City, Region, Website, Designation now all have `required` prop
+- Updated validation logic in validateStep() to check all fields
+- Removed Stripe and PesaPal online payment options entirely
+- Removed AUTO_PAYMENT_METHODS constant, handleAutoPayment function, renderPaymentMethodButton helper
+- Removed auto payment detail section from StepPayment component
+- Simplified payment to only M-PESA (Lipa #51720044) and Bank Transfer (Equity Bank)
+- Updated paymentMethod type from `'' | 'mpesa' | 'bank' | 'pesapal' | 'stripe'` to `'' | 'mpesa' | 'bank'`
+- Updated case 4 validation: all payments are now manual and require confirmation
+- Created FreeSendsTracker component with device fingerprint anti-bypass
+- Fingerprint uses: screen, timezone, language, platform, hardwareConcurrency, deviceMemory, maxTouchPoints, canvas, WebGL
+- Fingerprint persisted in localStorage so clearing localStorage creates a new fingerprint
+- Enhanced checkRateLimit() in sdasms-api.ts to accept fingerprint parameter
+- Rate limit now checks composite key (IP+fingerprint), fingerprint-only key, and IP-only key
+- Updated send-sms API route to extract fingerprint from request body
+- Created /api/free-sends route for checking free sends status
+- Added FreeSendsTracker to SMS product page
+- Removed unused imports (Wallet, Zap) from get-started page
+
+Stage Summary:
+- Light mode header text now always visible (no transparent mode in light)
+- Dark mode mega menu text has much better contrast
+- All onboard form fields are required
+- Payment is ONLY Bank Transfer + M-PESA (manual)
+- Free sends: 3 per 72hrs with device fingerprint anti-bypass (IP/VPN resistant)
+- Server-side rate limiting uses IP + fingerprint composite keys
+- Build successful

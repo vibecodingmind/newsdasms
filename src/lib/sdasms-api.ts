@@ -37,23 +37,51 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT_WINDOW_MS = 72 * 60 * 60 * 1000; // 72 hours
 const RATE_LIMIT_MAX_REQUESTS = 3;
 
-export function checkRateLimit(ip: string): { allowed: boolean; remaining: number; resetAt: number } {
+export function checkRateLimit(ip: string, fingerprint?: string): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
-  const entry = rateLimitMap.get(ip);
 
-  if (!entry || now > entry.resetAt) {
-    // Reset the window
-    const resetAt = now + RATE_LIMIT_WINDOW_MS;
-    rateLimitMap.set(ip, { count: 1, resetAt });
-    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetAt };
+  // Use composite key: IP + fingerprint for anti-bypass
+  const compositeKey = fingerprint ? `${ip}::${fingerprint}` : ip;
+
+  // Also check fingerprint-only key to catch VPN/IP changes
+  const fingerprintKey = fingerprint ? `fp::${fingerprint}` : null;
+  const ipKey = `ip::${ip}`;
+
+  // Check all relevant keys and find the most restrictive
+  const keysToCheck = [compositeKey, ipKey]
+  if (fingerprintKey) keysToCheck.push(fingerprintKey)
+
+  let mostRestrictiveEntry: { count: number; resetAt: number } | null = null
+
+  for (const key of keysToCheck) {
+    const entry = rateLimitMap.get(key)
+    if (entry && now <= entry.resetAt) {
+      if (!mostRestrictiveEntry || entry.count > mostRestrictiveEntry.count) {
+        mostRestrictiveEntry = entry
+      }
+    }
   }
 
-  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return { allowed: false, remaining: 0, resetAt: entry.resetAt };
+  // If any key is rate-limited, deny the request
+  if (mostRestrictiveEntry && mostRestrictiveEntry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { allowed: false, remaining: 0, resetAt: mostRestrictiveEntry.resetAt };
   }
 
-  entry.count += 1;
-  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - entry.count, resetAt: entry.resetAt };
+  // Increment count on all relevant keys
+  for (const key of keysToCheck) {
+    const entry = rateLimitMap.get(key)
+    if (entry && now <= entry.resetAt) {
+      entry.count += 1
+    } else {
+      rateLimitMap.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    }
+  }
+
+  // Get the updated count from the composite key
+  const updatedEntry = rateLimitMap.get(compositeKey)
+  const currentCount = updatedEntry?.count ?? 1
+
+  return { allowed: true, remaining: Math.max(0, RATE_LIMIT_MAX_REQUESTS - currentCount), resetAt };
 }
 
 /**

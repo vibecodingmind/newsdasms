@@ -24,6 +24,7 @@ import {
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PageHero from '@/components/PageHero'
+import FreeSendsTracker from '@/components/FreeSendsTracker'
 import { FadeInWhenVisible, StaggerContainer, StaggerItem } from '@/components/AnimationHelpers'
 
 const PRODUCT_COLOR = '#D72444'
@@ -471,6 +472,32 @@ export default function SMSPage() {
                 <FAQItem key={i} question={faq.question} answer={faq.answer} color={PRODUCT_COLOR} />
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Free Sends Tracker */}
+        <section className="py-12 bg-[#F6F6F6] dark:bg-[#1A0A2E]">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <FadeInWhenVisible>
+              <div className="bg-white dark:bg-[#0D0B1A] rounded-2xl p-6 sm:p-8 border border-gray-100 dark:border-white/10 shadow-lg">
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center"
+                    style={{ backgroundColor: `${PRODUCT_COLOR}10` }}
+                  >
+                    <MessageSquare className="w-5 h-5" style={{ color: PRODUCT_COLOR }} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-black dark:text-white">Free Trial Sends</h3>
+                    <p className="text-xs text-[#7F7F7F] dark:text-white/50">Try SDASMS SMS before you buy</p>
+                  </div>
+                </div>
+                <FreeSendsTracker />
+                <p className="text-[11px] text-[#7F7F7F] dark:text-white/40 mt-3 text-center">
+                  3 free SMS per device every 72 hours. Device-verified to prevent bypass.
+                </p>
+              </div>
+            </FadeInWhenVisible>
           </div>
         </section>
 
